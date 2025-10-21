@@ -11,7 +11,7 @@ q = 1.602e-19;  % Charge of an electron (C)
 k_B = 1.38e-23; % Boltzmann constant (J/K)
 
 % Variables
-V = linspace(0, V_oc, n);
+V = linspace(0, V_oc + 0.01, n);
 J = zeros(1, n);
 P = zeros(1, n);
 
