@@ -14,15 +14,13 @@ k_B = 1.38e-23; % Boltzmann constant (J/K)
 V = linspace(0, V_oc, n);
 J = zeros(1, n);
 P = zeros(1, n);
-MPP = [];
-index = [];
-Vmpp = [];
-Jmpp = [];
+
 
 
 %% Current Density Calculations
 J_0 = J_sc * (exp((V_oc * q)/(k_B * T)) - 1)^-1;
 J = J_sc - J_0*(exp((q * V)/(k_B * T)) - 1);
+
 
 
 %% Maximum Power Point Calculation
@@ -31,8 +29,13 @@ P = J .* V;
 Vmpp = V(index);
 Jmpp = J(index);
 
+% Fill Factor calculation
+FF = (Jmpp * Vmpp)/(J_sc * V_oc);
+
+
 
 %% Plot
+% J-V Plot
 figure;
 plot(V, J);
 hold on;
@@ -49,3 +52,11 @@ hold off;
 xlabel('Bias Voltage (V)');
 ylabel('Current Density (mA/cm2)');
 title('Plot of Current Density vs Bias Voltage for an ideal PV');
+
+% P-V Plot
+figure;
+plot(V, P);
+
+xlabel('Bias Voltage (V)');
+ylabel('Power Density (mW/cm2)');
+title('Plot of Power Density vs Bias Voltage for an ideal PV');
