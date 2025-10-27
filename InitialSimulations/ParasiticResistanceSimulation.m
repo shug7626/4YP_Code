@@ -7,15 +7,18 @@ A = 1;          % Area (cm2)
 R_s = [0, 2e-3, 5e-3, 1e-2];        % Series resistance (Ohm)
 R_sh = [Inf, 1e-1, 5e-2, 3e-2];     % Parallel (shunt) resistance (Ohm)
 T = 300;        % Temperature (K)
-n = 100;        % Number of voltages to calculate for
+n = 100;        % Number of points to calculate for
+
+V_dispadj = 0.003;      % Small change to the voltage for display purposes
 
 % Constants
 q = 1.602e-19;  % Charge of an electron (C)
 k_B = 1.38e-23; % Boltzmann constant (J/K)
 
 % Variables
-V = linspace(0, V_oc, n);
+V = linspace(0, (V_oc + V_dispadj), n);
 J = zeros((length(R_s) + length(R_sh)), n);
+P = zeros(size(J));
 
 
 
@@ -43,17 +46,63 @@ end
 
 
 
+%% Power Calculations
+P = J .* V;
+
+
+
 %% Plot Results
-figure;
+tiledlayout(2, 2);
+ax1_1 = nexttile;
 hold on
 for i = 1:length(R_s)
     plot(V, J(i, :));
 end
+xlabel('Bias Voltage (V)');
+ylabel('Current Density (mA/cm2)');
+title('Current Density vs Bias Voltage for a Variety of Series Resistances');
+xline(0);
+yline(0);
 hold off
 
-figure;
+ax1_2 = nexttile;
 hold on
 for i = 1:length(R_sh)
     plot(V, J((i + length(R_s)), :));
 end
+xlabel('Bias Voltage (V)');
+ylabel('Current Density (mA/cm2)');
+title('Current Density vs Bias Voltage for a Variety of Shunt Resistances');
+xline(0);
+yline(0);
 hold off
+
+% Set the Y-axes of the two current densities to be the same
+linkaxes([ax1_1, ax1_2], 'y');
+
+ax2_1 = nexttile;
+hold on
+for i = 1:length(R_s)
+    plot(V, P((i), :));
+end
+xlabel('Bias Voltage (V)');
+ylabel('Power Density (mW/cm2)');
+title('Power Density vs Bias Voltage for a Variety of Series Resistances');
+xline(0);
+yline(0);
+hold off
+
+ax2_2 = nexttile;
+hold on
+for i = 1:length(R_sh)
+    plot(V, P((i + length(R_s)), :));
+end
+xlabel('Bias Voltage (V)');
+ylabel('Power Density (mW/cm2)');
+title('Power Density vs Bias Voltage for a Variety of Shunt Resistances');
+xline(0);
+yline(0);
+hold off
+
+% Set the Y-axes of the two power densities to be the same
+linkaxes([ax2_1, ax2_2], 'y');
