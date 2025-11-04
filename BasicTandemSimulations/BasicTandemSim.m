@@ -58,3 +58,6 @@ end
 
 
 %% Plot
+plot(V, J);
+xlabel('Bias Volatge (V)');
+ylabel('Current Density (mA/cm2)');
