@@ -6,21 +6,22 @@
 % Cell 2 - PVK
 
 % Parameters
-Rs1 = 0;        % Series resistance (Ohm/cm2) (=1)
-Rs2 = 0;        % (=3)
-params.Rsh1 = Inf;    % Shunt (parallel) resistance (Ohm/cm2) (=10e3)
-params.Rsh2 = Inf;     % (=1e3)
+Rs1 = 5e-3;        % Series resistance (Ohm/cm2) (=1)
+Rs2 = 5e-3;        % (=3)
+params.Rsh1 = 5e-2;    % Shunt (parallel) resistance (Ohm/cm2) (=10e3)
+params.Rsh2 = 5e-2;     % (=1e3)
 params.J01 = 3.9e-10;    % A/cm2 (=2e-12)
-params.J02 = 2.6e-15;    % (=1e-15)
-params.Voc1 = 0.7;   % Open circuit voltage (V) (=0.654)
-params.Voc2 = 1.085;   % (=1.075)
-params.N1 = 1.2;       % Ideality factor
-params.N2 = 1.4;
+params.J02 = 3.9e-10;    % (=1e-15)
+params.Voc1 = 0.654;   % Open circuit voltage (V) (=0.654)
+params.Voc2 = 0.654;   % (=1.075)
+params.N1 = 1.0;       % Ideality factor (=1.2)
+params.N2 = 1.0;       % (=1.4)
 params.A = 1;          % Area (cm2)
 T = 300;        % Temperature (Kelvin)
 n = 100;        % Number of points to calculate
 
-V_calc = params.Voc1 + params.Voc2 + 0.28;
+V_dispadj = 0.003;      % Small change to the voltage for display purposes
+V_calc = params.Voc1 + params.Voc2 + V_dispadj;
 
 % Constants
 q = 1.602e-19;  % Charge of an electron (C)
@@ -39,10 +40,10 @@ params.Vt = k_B * T/q;
 
 % params.Jsc1 = params.J01 * (exp(params.Voc1/(params.Vt * params.N1)) - 1);
 % params.Jsc2 = params.J02 * (exp(params.Voc2/(params.Vt * params.N2)) - 1);
-params.Jsc1 = 12.33;
-params.Jsc2 = 13.03;
+params.Jsc1 = 38.1;        % (=12.33)
+params.Jsc2 = 38.1;        % (=13.03)
 
-%% Calculations
+%% J, V1, V2 Calculations
 options = optimoptions('fsolve', 'Display', 'none');
 
 % Set initial guesses
@@ -60,7 +61,46 @@ for i = 1:n
 end
 
 
+%% Calculate Contribution of Each Cell to the Series Voltage
+% Cell 1 series voltages
+V1s = params.A * Rs1 * J;
+
+% Cell 2 series voltages
+V2s = params.A * Rs2 * J;
+
+% Set the cell voltages
+V1T = V1 - V1s;
+V2T = V2 - V2s;
+
+
 %% Plot
+tiledlayout(1, 3);
+
+% Plot total current density output
+ax1 = nexttile;
 plot(V, J);
 xlabel('Bias Volatge (V)');
 ylabel('Current Density (mA/cm2)');
+xline(0);
+yline(0);
+
+% Plot Cell 2 contribution
+ax2 = nexttile;
+plot(V2T, J);
+xlabel('Cell 2 Voltage (V)');
+ylabel('J (ma/cm2)');
+title('Cell 2 Contribution');
+xline(0);
+yline(0);
+
+% Plot Cell 1 contribution
+ax3 = nexttile;
+plot(V1T, J);
+xlabel('Cell 1 Voltage (V)');
+ylabel('J (mA/cm2)');
+title('Cell 1 contribution');
+xline(0);
+yline(0);
+
+% Set Y axis
+linkaxes([ax1, ax2, ax3], 'y');
