@@ -76,6 +76,7 @@ V2T = V2 - V2s;
 
 
 %% Plot
+figure(1);
 tiledlayout(1, 3);
 
 % Plot total current density output
@@ -83,6 +84,7 @@ ax1 = nexttile;
 plot(V, J);
 xlabel('Bias Volatge (V)');
 ylabel('Current Density (mA/cm2)');
+title('System J-V');
 xline(0);
 yline(0);
 
@@ -91,7 +93,7 @@ ax2 = nexttile;
 plot(V2T, J);
 xlabel('Cell 2 Voltage (V)');
 ylabel('J (ma/cm2)');
-title('Cell 2 Contribution');
+title('Cell 2 J-V Contribution');
 xline(0);
 yline(0);
 xline(params.Voc2);
@@ -101,7 +103,7 @@ ax3 = nexttile;
 plot(V1T, J);
 xlabel('Cell 1 Voltage (V)');
 ylabel('J (mA/cm2)');
-title('Cell 1 contribution');
+title('Cell 1 J-V Contribution');
 xline(0);
 yline(0);
 xline(params.Voc1);
@@ -112,7 +114,7 @@ linkaxes([ax1, ax2, ax3], 'y');
 
 %% Area Plot
 % A plot to show the contributions of the various voltages (V1, V2, Vs)
-figure;
+figure(2);
 Y = [(V1.') (V2.') (Vs.')];
 x = V;
 area(x, Y);
@@ -124,24 +126,27 @@ legend({'V1','V2','Vs'});
 
 
 %% Separate Voltage Plots
-figure;
+figure(3);
 tiledlayout(1,3);
 ax4 = nexttile;
 plot(V, V1);
 xlabel('Bias Voltage (V)');
 ylabel('V1 (V)');
+title('Cell 1 Voltage');
 yline(0);
 
 ax5 = nexttile;
 plot(V, V2);
 xlabel('Bias Voltage (V)');
 ylabel('V2 (V)');
+title('Cell 2 Voltage');
 yline(0);
 
 ax6 = nexttile;
 plot(V, Vs);
 xlabel('Bias Voltage (V)');
 ylabel('Vs (V)');
+title('Combined Series Resistor Voltage');
 yline(0);
 
 linkaxes([ax4, ax5, ax6], 'y');
