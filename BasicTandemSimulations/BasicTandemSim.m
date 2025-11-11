@@ -8,13 +8,13 @@
 % Parameters
 Rs1 = 5e-3;        % Series resistance (Ohm/cm2) (=1)
 Rs2 = 5e-3;        % (=3)
-params.Rsh1 = 1e3;     % Shunt (parallel) resistance (Ohm/cm2) (=10e3)
-params.Rsh2 = 1e3;      % (=1e3)
+params.Rsh1 = 1e2;     % Shunt (parallel) resistance (Ohm/cm2) (=10e3)
+params.Rsh2 = 1e2;      % (=1e3)
 params.J01 = 1e-10;    % A/cm2 (=2e-12)
 params.J02 = 1e-10;    % (=1e-15)
 params.Voc1 = 0.654;   % Open circuit voltage (V) (=0.72)
 params.Voc2 = 0.654;   % (=1.11)
-params.N1 = 1.0;       % Ideality factor (=1.2)
+params.N1 = 1.01;       % Ideality factor (=1.2)
 params.N2 = 1.0;       % (=1.4)
 params.A = 1;          % Area (cm2)
 T = 300;        % Temperature (Kelvin)
@@ -63,16 +63,16 @@ end
 
 %% Calculate Contribution of Each Cell to the Series Voltage
 % Cell 1 series voltages
-V1s = params.A * Rs1 * J;
+V1s = -params.A * Rs1 * J;
 
 % Cell 2 series voltages
-V2s = params.A * Rs2 * J;
+V2s = -params.A * Rs2 * J;
 
 Vs = V1s + V2s;
 
 % Set the cell voltages
-V1T = V1 - V1s;
-V2T = V2 - V2s;
+V1T = V1 + V1s;
+V2T = V2 + V2s;
 
 
 %% Plot
@@ -115,38 +115,38 @@ linkaxes([ax1, ax2, ax3], 'y');
 %% Area Plot
 % A plot to show the contributions of the various voltages (V1, V2, Vs)
 figure(2);
-Y = [(V1.') (V2.') (Vs.')];
+Y = [(V1T.') (V2T.')];
 x = V;
 area(x, Y);
 xline(params.Voc1 + params.Voc2, 'r');
 yline(params.Voc1 + params.Voc2, 'r');
 xlabel('Bias Voltage (V)');
 ylabel('Voltage Components');
-legend({'V1','V2','Vs'});
+legend({'V1T','V2T'});
 
 
 %% Separate Voltage Plots
-figure(3);
-tiledlayout(1,3);
-ax4 = nexttile;
-plot(V, V1);
-xlabel('Bias Voltage (V)');
-ylabel('V1 (V)');
-title('Cell 1 Voltage');
-yline(0);
-
-ax5 = nexttile;
-plot(V, V2);
-xlabel('Bias Voltage (V)');
-ylabel('V2 (V)');
-title('Cell 2 Voltage');
-yline(0);
-
-ax6 = nexttile;
-plot(V, Vs);
-xlabel('Bias Voltage (V)');
-ylabel('Vs (V)');
-title('Combined Series Resistor Voltage');
-yline(0);
-
-linkaxes([ax4, ax5, ax6], 'y');
+% figure(3);
+% tiledlayout(1,3);
+% ax4 = nexttile;
+% plot(V, V1);
+% xlabel('Bias Voltage (V)');
+% ylabel('V1 (V)');
+% title('Cell 1 Voltage');
+% yline(0);
+% 
+% ax5 = nexttile;
+% plot(V, V2);
+% xlabel('Bias Voltage (V)');
+% ylabel('V2 (V)');
+% title('Cell 2 Voltage');
+% yline(0);
+% 
+% ax6 = nexttile;
+% plot(V, Vs);
+% xlabel('Bias Voltage (V)');
+% ylabel('Vs (V)');
+% title('Combined Series Resistor Voltage');
+% yline(0);
+% 
+% linkaxes([ax4, ax5, ax6], 'y');
