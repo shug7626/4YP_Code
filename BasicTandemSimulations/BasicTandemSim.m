@@ -8,12 +8,12 @@
 % Parameters
 Rs1 = 5e-3;        % Series resistance (Ohm/cm2) (=1)
 Rs2 = 5e-3;        % (=3)
-params.Rsh1 = 5e-2;    % Shunt (parallel) resistance (Ohm/cm2) (=10e3)
-params.Rsh2 = 5e-2;     % (=1e3)
-params.J01 = 3.9e-10;    % A/cm2 (=2e-12)
-params.J02 = 3.9e-10;    % (=1e-15)
-params.Voc1 = 0.654;   % Open circuit voltage (V) (=0.654)
-params.Voc2 = 0.654;   % (=1.075)
+params.Rsh1 = 1e3;     % Shunt (parallel) resistance (Ohm/cm2) (=10e3)
+params.Rsh2 = 1e3;      % (=1e3)
+params.J01 = 1e-10;    % A/cm2 (=2e-12)
+params.J02 = 1e-10;    % (=1e-15)
+params.Voc1 = 0.654;   % Open circuit voltage (V) (=0.72)
+params.Voc2 = 0.654;   % (=1.11)
 params.N1 = 1.0;       % Ideality factor (=1.2)
 params.N2 = 1.0;       % (=1.4)
 params.A = 1;          % Area (cm2)
@@ -38,10 +38,10 @@ J = zeros(0, n);
 params.Rs = Rs1 + Rs2;
 params.Vt = k_B * T/q;
 
-% params.Jsc1 = params.J01 * (exp(params.Voc1/(params.Vt * params.N1)) - 1);
-% params.Jsc2 = params.J02 * (exp(params.Voc2/(params.Vt * params.N2)) - 1);
-params.Jsc1 = 38.1;        % (=12.33)
-params.Jsc2 = 38.1;        % (=13.03)
+params.Jsc1 = params.J01 * (exp(params.Voc1/(params.Vt * params.N1)) - 1);
+params.Jsc2 = params.J02 * (exp(params.Voc2/(params.Vt * params.N2)) - 1);
+% params.Jsc1 = 38.1;        % (=12.33)
+% params.Jsc2 = 38.1;        % (=13.03)
 
 %% J, V1, V2 Calculations
 options = optimoptions('fsolve', 'Display', 'none');
@@ -68,6 +68,8 @@ V1s = params.A * Rs1 * J;
 % Cell 2 series voltages
 V2s = params.A * Rs2 * J;
 
+Vs = V1s + V2s;
+
 % Set the cell voltages
 V1T = V1 - V1s;
 V2T = V2 - V2s;
@@ -92,6 +94,7 @@ ylabel('J (ma/cm2)');
 title('Cell 2 Contribution');
 xline(0);
 yline(0);
+xline(params.Voc2);
 
 % Plot Cell 1 contribution
 ax3 = nexttile;
@@ -101,6 +104,44 @@ ylabel('J (mA/cm2)');
 title('Cell 1 contribution');
 xline(0);
 yline(0);
+xline(params.Voc1);
 
 % Set Y axis
 linkaxes([ax1, ax2, ax3], 'y');
+
+
+%% Area Plot
+% A plot to show the contributions of the various voltages (V1, V2, Vs)
+figure;
+Y = [(V1.') (V2.') (Vs.')];
+x = V;
+area(x, Y);
+xline(params.Voc1 + params.Voc2, 'r');
+yline(params.Voc1 + params.Voc2, 'r');
+xlabel('Bias Voltage (V)');
+ylabel('Voltage Components');
+legend({'V1','V2','Vs'});
+
+
+%% Separate Voltage Plots
+figure;
+tiledlayout(1,3);
+ax4 = nexttile;
+plot(V, V1);
+xlabel('Bias Voltage (V)');
+ylabel('V1 (V)');
+yline(0);
+
+ax5 = nexttile;
+plot(V, V2);
+xlabel('Bias Voltage (V)');
+ylabel('V2 (V)');
+yline(0);
+
+ax6 = nexttile;
+plot(V, Vs);
+xlabel('Bias Voltage (V)');
+ylabel('Vs (V)');
+yline(0);
+
+linkaxes([ax4, ax5, ax6], 'y');
