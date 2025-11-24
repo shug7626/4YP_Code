@@ -14,8 +14,8 @@ params.J01 = 1e-10;    % A/cm2 (=2e-12)
 params.J02 = 1e-10;    % (=1e-15)
 params.Voc1 = 0.654;   % Open circuit voltage (V) (=0.72)
 params.Voc2 = 0.654;   % (=1.11)
-params.N1 = 1.1;       % Ideality factor (=1.2)
-params.N2 = 1.1;       % (=1.4)
+params.N1 = 1.0;       % Ideality factor (=1.2)
+params.N2 = 1.0;       % (=1.4)
 params.A = 1;          % Area (cm2)
 T = 300;        % Temperature (Kelvin)
 n = 100;        % Number of points to calculate
@@ -37,13 +37,13 @@ J = zeros(1, n);
 
 %% Display and Calculate Settings
 % Display Current Contributions?
-disp_1 = false;
+disp_1 = true;
 
 % Display Area Voltage Plot?
-disp_2 = false;
+disp_2 = true;
 
 % Display Voltage Contributions?
-disp_3 = false;
+disp_3 = true;
 
 % Display Surf Varying N?
 disp_4 = true;
