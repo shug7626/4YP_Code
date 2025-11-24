@@ -7,4 +7,4 @@ IndividualParasiticResistanceSim.m - A non-ideal simulation of a PV cell with pa
 ParasiticResistances.m - Multiple simulations of a PV cell with a variety of parasitic (series and shunt) resistances  
 
 ## Basic Tandem Simulations
-Beginning work on creating code to calculate the J-V relation for two cells in tandem with basic parasitic resistances.  
+Calculates the J-V relation for two cells in tandem with basic parasitic resistances.  
