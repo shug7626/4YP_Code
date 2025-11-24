@@ -8,3 +8,6 @@ ParasiticResistances.m - Multiple simulations of a PV cell with a variety of par
 
 ## Basic Tandem Simulations
 Calculates the J-V relation for two cells in tandem with basic parasitic resistances.  
+
+## Ideality Factor Free Tandem Simulation
+Performs a similar calculation to the basic tandem simulation but replaces the ideality factor with the semiconductor properties.
