@@ -19,14 +19,14 @@ n1 = 0;                 % Electron concentration (cm-3)
 p1 = 0;
 Dn1 = 0;                % Electron diffusion coefficient
 Dp1 = 0;
-Ln1 = 0;                % Electron diffusion length (cm)
-Lp1 = 0;
-Na1 = 0;                % Acceptor doping concentration (cm-3)
-Nd1 = 0;
+Ln1 = 1;                % Electron diffusion length (cm)
+Lp1 = 1;
+Na1 = 1;                % Acceptor doping concentration (cm-3)
+Nd1 = 1;
 wn1 = 0;                % Width of n region (cm)
 wp1 = 0;
-tn1 = 0;                % Electron lifetime (s)
-tp1 = 0;
+tn1 = 1;                % Electron lifetime (s)
+tp1 = 1;
 beta1 = 0;              % Bimolecular recombination rate (m3/s)
 
 % Cell 2
@@ -39,14 +39,14 @@ n2 = 0;                 % Electron concentration (cm-3)
 p2 = 0;
 Dn2 = 0;                % Electron diffusion coefficient
 Dp2 = 0;
-Ln2 = 0;                % Electron diffusion length (cm)
-Lp2 = 0;
-Na2 = 0;                % Acceptor doping concentration (cm-3)
-Nd2 = 0;
+Ln2 = 1;                % Electron diffusion length (cm)
+Lp2 = 1;
+Na2 = 1;                % Acceptor doping concentration (cm-3)
+Nd2 = 1;
 wn2 = 0;                % Width of n region (cm)
 wp2 = 0;
-tn2 = 0;                % Electron lifetime (s)
-tp2 = 0;
+tn2 = 1;                % Electron lifetime (s)
+tp2 = 1;
 beta2 = 0;              % Bimolecular recombination rate (m3/s)
 
 
@@ -75,7 +75,7 @@ J = zeros(size(V));
 params.Rs = Rs1 + Rs2;
 
 % Calculate the thermal voltage
-params.Vt = k_B * T/q;
+params.Vt = kB * T/q;
 
 % Calculate the diffusion, recombination, and radiative recombination
 % currents
@@ -106,9 +106,9 @@ for iter = 1:N
     x_solution = fsolve(fun, x0, options);
     
     % Unpack
-    J(iter) = x_solutions(1);
-    V1(iter) = x_solutions(2);
-    V2(iter) = x_solutions(3);
+    J(iter) = x_solution(1);
+    V1(iter) = x_solution(2);
+    V2(iter) = x_solution(3);
 end
 
 
@@ -124,4 +124,24 @@ V2s = -params.A * Rs2 * J;
 V1T = V1 + V1s;
 V2T = V2 + V2s;
 
+
+
+%% Plot Results
+figure(1);
+tiledlayout(1,3);
+
+% Plot the total current density - voltage
+ax1 = nexttile;
+plot(V, J);
+
+% Plot Cell 1 contribution
+ax2 = nexttile;
+plot(V1, J);
+
+% Plot Cell 2 contribution
+ax3 = nexttile;
+plot(V2, J);
+
+% Set Y axis equal
+linkaxes([ax1, ax2, ax3], 'y');
 
