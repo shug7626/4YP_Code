@@ -62,16 +62,16 @@ q = 1.602e-19;      % Charge of an electron (C)
 kB = 1.38e-23;     % Boltzmann constant (J/K)
 
 
-% Variables
+% Variables to store the voltages and current density
 V = linspace(0, V_calc, N);
 V1 = zeros(size(V));
 V2 = zeros(size(V));
-J = zeros(1, N);
+J = zeros(size(V));
 
 
 
 %% Constants Calculation
-% Combine the series resistances
+% Combine the series resistances into one variable
 params.Rs = Rs1 + Rs2;
 
 % Calculate the thermal voltage
@@ -87,5 +87,41 @@ params.J_scr02 = q * ni2 * (wn2 + wp2) / sqrt(tn2 * tp2);
 
 params.J_rad01 = beta1 * (n1*p1 - ni1^2);
 params.J_rad02 = beta2 * (n2*p2 - ni2^2);
+
+
+
+%% Calculate J, V1, V2
+% Set the fsolve options to not display
+options = optimoptions('fsolve', 'Display', 'none');
+
+% Set initial guesses for the current density and voltages
+J_guess = (params.Jsc1 + params.Jsc2) / 4;
+V1_guess = params.Voc1;
+V2_guess = params.Voc2;
+x0 = [J_guess, V1_guess, V2_guess];
+
+% Loop through the bias voltages to calculate for
+for iter = 1:N
+    fun = @(x)evaluate_NFree_tandem(x, V(iter), params);
+    x_solution = fsolve(fun, x0, options);
+    
+    % Unpack
+    J(iter) = x_solutions(1);
+    V1(iter) = x_solutions(2);
+    V2(iter) = x_solutions(3);
+end
+
+
+
+%% Calculate Contribution of Each Cell to the Series Voltage
+% Cell 1 series voltage
+V1s = -params.A * Rs1 * J;
+
+% Cell 2 series voltage
+V2s = -params.A * Rs2 * J;
+
+% Total contributions
+V1T = V1 + V1s;
+V2T = V2 + V2s;
 
 
