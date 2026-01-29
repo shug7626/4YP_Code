@@ -37,7 +37,7 @@ J = zeros(1, n);
 
 %% Display and Calculate Settings
 % Display Current Contributions?
-disp_1 = false;
+disp_1 = true;
 
 % Display Area Voltage Plot?
 disp_2 = false;
@@ -112,6 +112,20 @@ if disp_1
     % Plot Cell 2 contribution
     ax2 = nexttile;
     plot(V2T, J);
+    
+    % Add the full potential of the cell
+    hold on
+    xx = xlim(ax2);
+    vv = linspace(xx(1), xx(2), n);
+    J2 = zeros(size(vv));
+    J2_guess = params.Jsc2/2;
+    for i = 1:n
+        fun2 = @(J_temp) evaluate_J(J_temp, params.Jsc2, params.J02, vv(i), params.A, Rs2, params.Rsh2, params.N2, q, k_B, T);
+        J2(i) = fsolve(fun2, J2_guess, options);
+        J2_guess = J2(i);
+    end
+    plot(vv, J2, 'k--');
+    
     xlabel('Cell 2 Voltage (V)');
     ylabel('J (ma/cm2)');
     title('Cell 2 J-V Contribution');
@@ -122,6 +136,20 @@ if disp_1
     % Plot Cell 1 contribution
     ax3 = nexttile;
     plot(V1T, J);
+    
+    % Add the full potential of the cell
+    hold on
+    xx = xlim(ax3);
+    vv = linspace(xx(1), xx(2), n);
+    J1 = zeros(size(vv));
+    J1_guess = params.Jsc1/2;
+    for i = 1:n
+        fun1 = @(J_temp) evaluate_J(J_temp, params.Jsc1, params.J01, vv(i), params.A, Rs1, params.Rsh1, params.N1, q, k_B, T);
+        J1(i) = fsolve(fun1, J1_guess, options);
+        J1_guess = J1(i);
+    end
+    plot(vv, J1, 'k--');
+    
     xlabel('Cell 1 Voltage (V)');
     ylabel('J (mA/cm2)');
     title('Cell 1 J-V Contribution');
