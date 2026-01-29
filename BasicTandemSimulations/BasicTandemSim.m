@@ -37,10 +37,10 @@ J = zeros(1, n);
 
 %% Display and Calculate Settings
 % Display Current Contributions?
-disp_1 = true;
+disp_1 = false;
 
 % Display Area Voltage Plot?
-disp_2 = false;
+disp_2 = true;
 
 % Display Voltage Contributions?
 disp_3 = false;
@@ -108,6 +108,7 @@ if disp_1
     title('System J-V');
     xline(0);
     yline(0);
+    
 
     % Plot Cell 2 contribution
     ax2 = nexttile;
@@ -132,6 +133,7 @@ if disp_1
     xline(0);
     yline(0);
     xline(params.Voc2);
+    
 
     % Plot Cell 1 contribution
     ax3 = nexttile;
@@ -169,11 +171,17 @@ if disp_2
     Y = [(V1T.') (V2T.')];
     x = V;
     area(x, Y);
+    
+    % Add a bold line to show the sum
+    hold on;
+    V_Total = V1T + V2T;
+    plot(x, V_Total, 'k-', 'LineWidth', 3);
+    
     xline(params.Voc1 + params.Voc2, 'r');
     yline(params.Voc1 + params.Voc2, 'r');
     xlabel('Bias Voltage (V)');
     ylabel('Voltage Components');
-    legend({'V1T','V2T'});
+    legend({'V1T','V2T','Total Voltage'});
 end
 
 
