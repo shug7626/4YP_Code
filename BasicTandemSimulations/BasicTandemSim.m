@@ -37,16 +37,16 @@ J = zeros(1, n);
 
 %% Display and Calculate Settings
 % Display Current Contributions?
-disp_1 = true;
+disp_1 = false;
 
 % Display Area Voltage Plot?
-disp_2 = true;
+disp_2 = false;
 
 % Display Voltage Contributions?
-disp_3 = true;
+disp_3 = false;
 
 % Display Surf Varying N?
-disp_4 = true;
+disp_4 = false;
 
 
 

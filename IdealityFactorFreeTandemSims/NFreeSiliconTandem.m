@@ -5,6 +5,8 @@
 % Cell 1 - Silicon
 % Cell 2 - Silicon
 
+% Data from https://doi.org/10.1016/j.matpr.2021.11.092
+
 % Parameters
 params.A = 1;           % Area (cm2)
 T = 300;                % Temperature (Kelvin)
@@ -14,19 +16,19 @@ Rs1 = 0;             % Series resistance (Ohm/cm2) (=5e-3)
 params.Rsh1 = Inf;      % Shunt (parallel) resistance (Ohm/cm2) (=1e2)
 params.Voc1 = 0.654;    % Open circuit voltage (V)
 params.Jsc1 = 38.1;     % (=12.33)
-ni1 = 0;                % Intrinsic carrier concentration (cm-3)
-n1 = 0;                 % Electron concentration (cm-3)
-p1 = 0;
+ni1 = 1e10;             % Intrinsic carrier concentration (cm-3)
+n1 = 2e17;              % Electron concentration (cm-3)
+p1 = 1e17;
 Dn1 = 0;                % Electron diffusion coefficient
 Dp1 = 0;
 Ln1 = 1;                % Electron diffusion length (cm)
 Lp1 = 1;
 Na1 = 1;                % Acceptor doping concentration (cm-3)
 Nd1 = 1;
-wn1 = 0;                % Width of n region (cm)
-wp1 = 0;
-tn1 = 1;                % Electron lifetime (s)
-tp1 = 1;
+wn1 = 150e-6;           % Width of n region (cm)
+wp1 = 150e-6;
+tn1 = 1e-3;             % Electron lifetime (s)
+tp1 = 1e-3;
 beta1 = 0;              % Bimolecular recombination rate (m3/s)
 
 % Cell 2
@@ -34,19 +36,19 @@ Rs2 = 0;
 params.Rsh2 = Inf;
 params.Voc2 = 0.654;
 params.Jsc2 = 38.1;     % (=13.03)
-ni2 = 0;                % Intrinsic carrier concentration (cm-3)
-n2 = 0;                 % Electron concentration (cm-3)
-p2 = 0;
+ni2 = 1e10;             % Intrinsic carrier concentration (cm-3)
+n2 = 2e17;              % Electron concentration (cm-3)
+p2 = 1e17;
 Dn2 = 0;                % Electron diffusion coefficient
 Dp2 = 0;
 Ln2 = 1;                % Electron diffusion length (cm)
 Lp2 = 1;
 Na2 = 1;                % Acceptor doping concentration (cm-3)
 Nd2 = 1;
-wn2 = 0;                % Width of n region (cm)
-wp2 = 0;
-tn2 = 1;                % Electron lifetime (s)
-tp2 = 1;
+wn2 = 150e-6;           % Width of n region (cm)
+wp2 = 150e-6;
+tn2 = 1e-3;             % Electron lifetime (s)
+tp2 = 1e-3;
 beta2 = 0;              % Bimolecular recombination rate (m3/s)
 
 
@@ -133,14 +135,23 @@ tiledlayout(1,3);
 % Plot the total current density - voltage
 ax1 = nexttile;
 plot(V, J);
+xlabel('Bias Voltage (V)');
+ylabel('Current Density (mA/cm2)');
+title('Tandem Cell Current Density - Voltage Plot');
 
 % Plot Cell 1 contribution
 ax2 = nexttile;
 plot(V1, J);
+xlabel('Cell 1 Voltage (V)');
+ylabel('Current Density (mA/cm2)');
+title('Cell 1 Current Density - Voltage Plot');
 
 % Plot Cell 2 contribution
 ax3 = nexttile;
 plot(V2, J);
+xlabel('Cell 2 Voltage (V)');
+ylabel('Current Density (mA/cm2)');
+title('Cell 2 Current Density - Voltage Plot');
 
 % Set Y axis equal
 linkaxes([ax1, ax2, ax3], 'y');
