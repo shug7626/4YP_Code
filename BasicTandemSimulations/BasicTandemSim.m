@@ -40,13 +40,13 @@ J = zeros(1, n);
 disp_1 = false;
 
 % Display Area Voltage Plot?
-disp_2 = true;
+disp_2 = false;
 
 % Display Voltage Contributions?
 disp_3 = false;
 
 % Display Surf Varying N?
-disp_4 = false;
+disp_4 = true;
 
 
 
@@ -227,8 +227,8 @@ if disp_4
         params.N1 = N1(j);
         for k = 1:length(N2)
             params.N2 = N2(k);
-            params.Jsc1 = params.J01 * (exp(params.Voc1/(params.Vt * params.N1)) - 1);
-            params.Jsc2 = params.J02 * (exp(params.Voc2/(params.Vt * params.N2)) - 1);
+%             params.Jsc1 = params.J01 * (exp(params.Voc1/(params.Vt * params.N1)) - 1);
+%             params.Jsc2 = params.J02 * (exp(params.Voc2/(params.Vt * params.N2)) - 1);
 
             % Set initial guesses
             J_guess = (params.Jsc1 + params.Jsc2)/4;
