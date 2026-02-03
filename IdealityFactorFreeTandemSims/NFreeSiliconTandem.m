@@ -12,9 +12,8 @@ params.A = 1;           % Area (cm2)
 T = 300;                % Temperature (Kelvin)
 
 % Cell 1
-Rs1 = 0;             % Series resistance (Ohm/cm2) (=5e-3)
+Rs1 = 0;                % Series resistance (Ohm/cm2) (=5e-3)
 params.Rsh1 = Inf;      % Shunt (parallel) resistance (Ohm/cm2) (=1e2)
-params.Voc1 = 0.654;    % Open circuit voltage (V)
 params.Jsc1 = 38.1;     % (=12.33)
 ni1 = 1e10;             % Intrinsic carrier concentration (cm-3)
 n1 = 2e17;              % Electron concentration (cm-3)
@@ -34,7 +33,6 @@ beta1 = 0;              % Bimolecular recombination rate (m3/s)
 % Cell 2
 Rs2 = 0;
 params.Rsh2 = Inf;
-params.Voc2 = 0.654;
 params.Jsc2 = 38.1;     % (=13.03)
 ni2 = 1e10;             % Intrinsic carrier concentration (cm-3)
 n2 = 2e17;              % Electron concentration (cm-3)
@@ -52,23 +50,9 @@ tp2 = 1e-3;
 beta2 = 0;              % Bimolecular recombination rate (m3/s)
 
 
-
-% Display parameters for modifying the range of voltage
-N = 100;                % Number of points to calculate
-V_dispadj = 0.003;      % Small change to the voltage for display purposes
-V_calc = params.Voc1 + params.Voc2 + V_dispadj;
-
-
 % Constants
 q = 1.602e-19;      % Charge of an electron (C)
 kB = 1.38e-23;     % Boltzmann constant (J/K)
-
-
-% Variables to store the voltages and current density
-V = linspace(0, V_calc, N);
-V1 = zeros(size(V));
-V2 = zeros(size(V));
-J = zeros(size(V));
 
 
 
@@ -92,10 +76,38 @@ params.J_rad02 = beta2 * (n2*p2 - ni2^2);
 
 
 
-%% Calculate J, V1, V2
+%% Calculate the Open Circuit Voltages of the two cells
 % Set the fsolve options to not display
 options = optimoptions('fsolve', 'Display', 'none');
 
+% Set initial guesses for the voltages
+v1_0 = 0.5;
+v2_0 = 0.5;
+v0 = [v1_0, v2_0];
+
+% Find the point where the total cell current is zero
+func = @(v) evaluate_NFree_Voc(v, params);
+v_sol = fsolve(func, v0, options);
+params.Voc1 = v_sol(1);
+params.Voc2 = v_sol(2);
+
+
+% Display parameters for modifying the range of voltage
+N = 100;                % Number of points to calculate
+V_dispadj = 0.003;      % Small change to the voltage for display purposes
+V_calc = params.Voc1 + params.Voc2 + V_dispadj;
+
+
+
+%% Variables to store the voltages and current density
+V = linspace(0, V_calc, N);
+V1 = zeros(size(V));
+V2 = zeros(size(V));
+J = zeros(size(V));
+
+
+
+%% Calculate J, V1, V2
 % Set initial guesses for the current density and voltages
 J_guess = (params.Jsc1 + params.Jsc2) / 4;
 V1_guess = params.Voc1;
@@ -135,6 +147,8 @@ tiledlayout(1,3);
 % Plot the total current density - voltage
 ax1 = nexttile;
 plot(V, J);
+xline(0);
+yline(0);
 xlabel('Bias Voltage (V)');
 ylabel('Current Density (mA/cm2)');
 title('Tandem Cell Current Density - Voltage Plot');
@@ -142,6 +156,8 @@ title('Tandem Cell Current Density - Voltage Plot');
 % Plot Cell 1 contribution
 ax2 = nexttile;
 plot(V1, J);
+xline(0);
+yline(0);
 xlabel('Cell 1 Voltage (V)');
 ylabel('Current Density (mA/cm2)');
 title('Cell 1 Current Density - Voltage Plot');
@@ -149,6 +165,8 @@ title('Cell 1 Current Density - Voltage Plot');
 % Plot Cell 2 contribution
 ax3 = nexttile;
 plot(V2, J);
+xline(0);
+yline(0);
 xlabel('Cell 2 Voltage (V)');
 ylabel('Current Density (mA/cm2)');
 title('Cell 2 Current Density - Voltage Plot');

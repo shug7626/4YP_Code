@@ -37,16 +37,19 @@ J = zeros(1, n);
 
 %% Display and Calculate Settings
 % Display Current Contributions?
-disp_1 = false;
+disp_1 = true;
 
 % Display Area Voltage Plot?
-disp_2 = false;
+disp_2 = true;
 
 % Display Voltage Contributions?
-disp_3 = false;
+disp_3 = true;
 
 % Display Surf Varying N?
 disp_4 = true;
+
+% Display Surf MPP?
+disp_5 = false;
 
 
 
@@ -250,4 +253,34 @@ if disp_4
     xlabel('N1');
     ylabel('N2');
     zlabel('J (mA/cm2) @ V=0');
+end
+
+
+
+%% Calculate and plot MPP for varying cell properties
+if disp_5
+    N1 = linspace(1, 2, n);
+    N2 = linspace(1, 2, n);
+    MPP = zeros(n);
+    
+    for j = 1:length(N1)
+        params.N1 = N1(j);
+        for k = 1:length(N2)
+            params.N2 = N2(k);
+            
+            % Set initial guesses
+            V_guess = (params.Voc1 + params.Voc2) / 2;
+
+            % Calculate the MPP numerically
+            PowFun = @(v) -1*v*evaluate_tandem_J(x, v, params);
+            options = optimoptions('fmincon', 'Display', 'off');
+            [Vmpp_num, MPP(j, k)] = fmincon(PowFun, V_guess, [], [], [], [], 0, V_oc, [], options);
+        end
+    end
+    
+    figure(5);
+    surf(N1, N2, -1*MPP);
+    xlabel('N1');
+    ylabel('N2');
+    zlabel('MPP (mW/cm2)');
 end
