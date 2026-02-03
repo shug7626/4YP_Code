@@ -61,7 +61,10 @@ kB = 1.38e-23;     % Boltzmann constant (J/K)
 
 %% Display Settings
 % Display J-V curves (figure 1)
-disp_jv = true;
+disp_jv = false;
+
+% Display the area voltage plot (figure 2)
+disp_Varea = true;
 
 
 
@@ -133,20 +136,20 @@ end
 
 
 
-%% Calculate Contribution of Each Cell to the Series Voltage
-% Cell 1 series voltage
+%% Calculate Contribution of Each Cell to the Series Resistor Voltage
+% Cell 1 series resistor voltage
 V1s = -params.A * Rs1 * J;
 
-% Cell 2 series voltage
+% Cell 2 series resistor voltage
 V2s = -params.A * Rs2 * J;
 
-% Total contributions
+% Total cell contributions
 V1T = V1 + V1s;
 V2T = V2 + V2s;
 
 
 
-%% Plot Results
+%% Plot Voltage Results
 if disp_jv
     figure(1);
     tiledlayout(1,3);
@@ -162,7 +165,7 @@ if disp_jv
 
     % Plot Cell 1 contribution
     ax2 = nexttile;
-    plot(V1, J);
+    plot(V1T, J);
     xline(0);
     yline(0);
     xlabel('Cell 1 Voltage (V)');
@@ -171,7 +174,7 @@ if disp_jv
 
     % Plot Cell 2 contribution
     ax3 = nexttile;
-    plot(V2, J);
+    plot(V2T, J);
     xline(0);
     yline(0);
     xlabel('Cell 2 Voltage (V)');
@@ -181,3 +184,26 @@ if disp_jv
     % Set Y axis equal
     linkaxes([ax1, ax2, ax3], 'y');
 end
+
+
+
+%% Plot Area Voltage Plot
+if disp_Varea
+    figure(2);
+    Y = [(V1T.') (V2T.')];
+    x = V;
+    area(x, Y);
+    
+    % Add a bold line to show the sum
+    hold on;
+    V_Total = V1T + V2T;
+    plot(x, V_Total, 'k-', 'LineWidth', 3);
+    
+    xline(params.Voc1 + params.Voc2, 'r');
+    yline(params.Voc1 + params.Voc2, 'r');
+    xlabel('Bias Voltage (V)');
+    ylabel('Voltage Components');
+    legend({'V1T','V2T','Total Voltage'});
+end
+
+
