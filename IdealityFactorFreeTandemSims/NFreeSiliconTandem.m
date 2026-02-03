@@ -64,7 +64,11 @@ kB = 1.38e-23;     % Boltzmann constant (J/K)
 disp_jv = false;
 
 % Display the area voltage plot (figure 2)
-disp_Varea = true;
+disp_Varea = false;
+
+% Display the contributions of the cells and the combined series resistors
+% (figure 3)
+disp_Vcontribution = true;
 
 
 
@@ -143,6 +147,9 @@ V1s = -params.A * Rs1 * J;
 % Cell 2 series resistor voltage
 V2s = -params.A * Rs2 * J;
 
+% Sum of series resistor voltages
+Vs = V1s + V2s;
+
 % Total cell contributions
 V1T = V1 + V1s;
 V2T = V2 + V2s;
@@ -204,6 +211,36 @@ if disp_Varea
     xlabel('Bias Voltage (V)');
     ylabel('Voltage Components');
     legend({'V1T','V2T','Total Voltage'});
+end
+
+
+
+%% Plot Voltage Contributions
+if disp_Vcontribution
+   figure(3);
+    tiledlayout(1,3);
+    ax4 = nexttile;
+    plot(V, V1);
+    xlabel('Bias Voltage (V)');
+    ylabel('V1 (V)');
+    title('Cell 1 Voltage');
+    yline(0);
+
+    ax5 = nexttile;
+    plot(V, V2);
+    xlabel('Bias Voltage (V)');
+    ylabel('V2 (V)');
+    title('Cell 2 Voltage');
+    yline(0);
+
+    ax6 = nexttile;
+    plot(V, Vs);
+    xlabel('Bias Voltage (V)');
+    ylabel('Vs (V)');
+    title('Combined Series Resistor Voltage');
+    yline(0);
+
+    linkaxes([ax4, ax5, ax6], 'y'); 
 end
 
 
