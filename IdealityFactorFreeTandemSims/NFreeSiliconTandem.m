@@ -49,10 +49,19 @@ tn2 = 1e-3;             % Electron lifetime (s)
 tp2 = 1e-3;
 beta2 = 0;              % Bimolecular recombination rate (m3/s)
 
+% Display parameters for modifying the range of voltage
+N = 100;                % Number of points to calculate
+V_dispadj = 0.003;      % Small change to the voltage for display purposes
 
 % Constants
 q = 1.602e-19;      % Charge of an electron (C)
 kB = 1.38e-23;     % Boltzmann constant (J/K)
+
+
+
+%% Display Settings
+% Display J-V curves (figure 1)
+disp_jv = true;
 
 
 
@@ -91,10 +100,7 @@ v_sol = fsolve(func, v0, options);
 params.Voc1 = v_sol(1);
 params.Voc2 = v_sol(2);
 
-
-% Display parameters for modifying the range of voltage
-N = 100;                % Number of points to calculate
-V_dispadj = 0.003;      % Small change to the voltage for display purposes
+% Voltage range to perform the calculations over
 V_calc = params.Voc1 + params.Voc2 + V_dispadj;
 
 
@@ -141,36 +147,37 @@ V2T = V2 + V2s;
 
 
 %% Plot Results
-figure(1);
-tiledlayout(1,3);
+if disp_jv
+    figure(1);
+    tiledlayout(1,3);
 
-% Plot the total current density - voltage
-ax1 = nexttile;
-plot(V, J);
-xline(0);
-yline(0);
-xlabel('Bias Voltage (V)');
-ylabel('Current Density (mA/cm2)');
-title('Tandem Cell Current Density - Voltage Plot');
+    % Plot the total current density - voltage
+    ax1 = nexttile;
+    plot(V, J);
+    xline(0);
+    yline(0);
+    xlabel('Bias Voltage (V)');
+    ylabel('Current Density (mA/cm2)');
+    title('Tandem Cell Current Density - Voltage Plot');
 
-% Plot Cell 1 contribution
-ax2 = nexttile;
-plot(V1, J);
-xline(0);
-yline(0);
-xlabel('Cell 1 Voltage (V)');
-ylabel('Current Density (mA/cm2)');
-title('Cell 1 Current Density - Voltage Plot');
+    % Plot Cell 1 contribution
+    ax2 = nexttile;
+    plot(V1, J);
+    xline(0);
+    yline(0);
+    xlabel('Cell 1 Voltage (V)');
+    ylabel('Current Density (mA/cm2)');
+    title('Cell 1 Current Density - Voltage Plot');
 
-% Plot Cell 2 contribution
-ax3 = nexttile;
-plot(V2, J);
-xline(0);
-yline(0);
-xlabel('Cell 2 Voltage (V)');
-ylabel('Current Density (mA/cm2)');
-title('Cell 2 Current Density - Voltage Plot');
+    % Plot Cell 2 contribution
+    ax3 = nexttile;
+    plot(V2, J);
+    xline(0);
+    yline(0);
+    xlabel('Cell 2 Voltage (V)');
+    ylabel('Current Density (mA/cm2)');
+    title('Cell 2 Current Density - Voltage Plot');
 
-% Set Y axis equal
-linkaxes([ax1, ax2, ax3], 'y');
-
+    % Set Y axis equal
+    linkaxes([ax1, ax2, ax3], 'y');
+end
