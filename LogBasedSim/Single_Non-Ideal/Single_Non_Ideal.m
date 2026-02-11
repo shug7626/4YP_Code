@@ -3,15 +3,15 @@
 
 % Units as in the Parameters Table
 % Calculation parameters
-N = 100;        % Number of points to perform the calculation on
+N = 1000;        % Number of points to perform the calculation on
 
 % Parameters
 T = 300;
 params.A = 1;
 
 Jsc = 38.1;
-params.Rs = 0;
-params.Rsh = Inf;
+params.Rs = 5e-3;
+params.Rsh = 1e3;
 ni = 1.45e10;
 Nd = 5e16;
 Na = 1.5e15;
@@ -86,11 +86,30 @@ x0 = [j0, v10];
 for iter = 1:N
     % Solve
    fun = @(x)evaluate_single_non_ideal(x, V(iter), params);
-   x_sol = fsolve(fun, j0, options);
+   x_sol = fsolve(fun, x0, options);
    
    % Unpack output
    J(iter) = real(x_sol(1));
    V1(iter) = x_sol(2);
 end
+
+
+
+%% Plot
+figure(1);
+plot(V,J);
+xline(0);
+yline(0);
+xlabel('Bias Voltage (V)');
+ylabel('Current Density (mA/cm2)')
+title('Single, Ideal Current Density - Voltage Plot');
+
+figure(2);
+plot(V, J.*V);
+xline(0);
+yline(0);
+xlabel('Bias Voltage (V)');
+ylabel('Power Density (mW/cm2)');
+title('Single, Ideal Power Density - Voltage Plot');
 
 
