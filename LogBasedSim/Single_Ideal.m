@@ -8,12 +8,27 @@ N = 100;        % Number of points to perform the calculation on
 T = 300;
 
 % Cell Properties
+% Jsc = 38.1;
+% ni = 1.45e10;
+% Nd = 1.7e15;
+% Na = 1e15;
+% n = 1.7e15;
+% p = 1e15;
+% Dn = 0;
+% Dp = 0;
+% tn = 1000e-6;
+% tp = 1000e-6;
+% Ln = 1;
+% Lp = 1;
+% beta = 0;
+% eps = 11.7 * 8.854e-10;
+
 Jsc = 38.1;
 ni = 1.45e10;
-Nd = 1.7e15;
-Na = 1e15;
-n = 1.7e15;
-p = 1e15;
+Nd = 5e16;
+Na = 1.5e15;
+n = 1.4e5;
+p = 1.5e15;
 Dn = 38.7;
 Dp = 11.61;
 tn = 1000e-6;
@@ -21,7 +36,7 @@ tp = 1000e-6;
 Ln = sqrt(Dn*tn);
 Lp = sqrt(Dp*tp);
 beta = 0;
-eps = 11.7 * 8.854e-10;
+eps = 11.7 * 8.854e-14;
 
 % Constants
 q = 1.602e-19;
@@ -56,7 +71,7 @@ params.Jillum = Jsc + Jdiff0 + Jrad0 + Jscr0;
 
 %% Calculate the open circuit voltage of the cell
 % Set fsolve to not display each calculation
-options = optimoptions('fsolve', 'Display', 'none', 'FunctionTolerance', 1e-14);
+options = optimoptions('fsolve', 'Display', 'none');
 
 % Set initial guess for Voc
 v0 = 0.5;
@@ -64,5 +79,32 @@ v0 = 0.5;
 % Find where the total current is zero
 func = @(v) evaluate_single_ideal_Voc(v, params);
 Voc = fsolve(func, v0, options);
+
+
+
+%% Set range of voltages and vectors to store results
+V = linspace(0, Voc, N);
+J = zeros(size(V));
+
+
+
+%% Calculate J for each V
+% Set initial guess
+j0 = Jsc / 2;
+
+for iter = 1:N
+   fun = @(j)evaluate_single_ideal(j, V(iter), params);
+   J_sol = fsolve(fun, j0, options);
+   J(iter) = real(J_sol);
+end
+
+
+
+%% Plot
+figure(1);
+% tiledlayout(1,2);
+% 
+% ax1 = nexttile;
+plot(V,J);
 
 
