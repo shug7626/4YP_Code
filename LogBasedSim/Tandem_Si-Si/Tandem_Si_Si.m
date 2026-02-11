@@ -129,20 +129,65 @@ for iter = 1:N
     
     % Unpack output
     J(iter) = real(x_sol(1));
-    V1(iter) = x_sol(2);
-    V2(iter) = x_sol(3);
+    V1(iter) = real(x_sol(2));
+    V2(iter) = real(x_sol(3));
 end
+
+
+
+%% Calculate Contribution of Each Cell to the Series Resistor Voltage
+% Cell 1 series resistor voltage
+V1s = -params.A * Rs1 * J;
+
+% Cell 2 series resistor voltage
+V2s = -params.A * Rs2 * J;
+
+% Sum of series resistor voltages
+Vs = V1s + V2s;
+
+% Total cell contributions
+V1T = V1 + V1s;
+V2T = V2 + V2s;
 
 
 
 %% Plot
 figure(1);
+tiledlayout(1,4);
+
+ax1 = nexttile;
 plot(V,J);
 xline(0);
 yline(0);
 xlabel('Bias Voltage (V)');
 ylabel('Current Density (mA/cm2)')
 title('Tandem Si-Si Current Density - Voltage Plot');
+
+ax2 = nexttile;
+plot(V1,J);
+xline(0);
+yline(0);
+xlabel('Cell 1 Voltage (V)');
+ylabel('Current Density (mA/cm2)');
+title('Cell 1 Current Density - Voltage Plot');
+
+ax3 = nexttile;
+plot(V2,J);
+xline(0);
+yline(0);
+xlabel('Cell 2 Voltage (V)');
+ylabel('Cell 2 Current Density - Votlage Plot');
+
+ax4 = nexttile;
+plot((J * params.A * params.Rs),J);
+xline(0);
+yline(0);
+xlabel('Series Resistor Voltage (V)');
+ylabel('Series Resistor Current Density - Voltage Plot');
+
+linkaxes([ax1, ax2, ax3, ax4], 'y');
+
+
 
 figure(2);
 plot(V, J.*V);
