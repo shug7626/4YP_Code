@@ -7,6 +7,7 @@ N = 100;        % Number of points to perform the calculation on
 
 % Parameters
 T = 300;
+params.A = 1;
 
 Jsc = 38.1;
 params.Rs = 0;
@@ -54,5 +55,42 @@ params.Jscrd = Nd * Na * sqrt(2 * q * eps * ((1/Na) + (1/Nd)) * params.Vbi / (tn
 % Illumination current
 params.Jillum = Jsc + Jdiff0 + Jrad0 + Jscr0;
 
+
+
+%% Calculate the open circuit voltage of the cell
+% Set fsolve to not display each calculation
+options = optimoptions('fsolve', 'Display', 'none');
+
+% Set initial guess for Voc
+v0 = 0.5;
+
+% Find where the total current is zero
+func = @(v) evaluate_single_non_ideal_Voc(v, params);
+Voc = fsolve(func, v0, options);
+
+
+
+%% Set range of voltages and vectors to store results
+V = linspace(0, Voc, N);
+V1 = zeros(size(V));
+J = zeros(size(V));
+
+
+
+%% Calculate J for each V
+% Set initial guess
+j0 = Jsc / 2;
+v10 = Voc/2;
+x0 = [j0, v10];
+
+for iter = 1:N
+    % Solve
+   fun = @(x)evaluate_single_non_ideal(x, V(iter), params);
+   x_sol = fsolve(fun, j0, options);
+   
+   % Unpack output
+   J(iter) = real(x_sol(1));
+   V1(iter) = x_sol(2);
+end
 
 
