@@ -10,8 +10,8 @@ T = 300;
 params.A = 1;
 
 Jsc = 38.1;
-params.Rs = 5e-3;
-params.Rsh = 1e3;
+params.Rs = 1e-2;
+params.Rsh = 1e4;
 ni = 1.45e10;
 Nd = 5e16;
 Na = 1.5e15;
