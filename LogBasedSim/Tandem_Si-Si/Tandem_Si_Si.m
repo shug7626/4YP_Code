@@ -137,23 +137,24 @@ end
 
 %% Calculate Contribution of Each Cell to the Series Resistor Voltage
 % Cell 1 series resistor voltage
-V1s = -params.A * Rs1 * J;
+Vs1 = -params.A * Rs1 * J;
 
 % Cell 2 series resistor voltage
-V2s = -params.A * Rs2 * J;
+Vs2 = -params.A * Rs2 * J;
 
 % Sum of series resistor voltages
-Vs = V1s + V2s;
+Vs = Vs1 + Vs2;
 
 % Total cell contributions
-V1T = V1 + V1s;
-V2T = V2 + V2s;
+V1T = V1 + Vs1;
+V2T = V2 + Vs2;
 
 
 
 %% Plot
+% Current - Voltage Plot
 figure(1);
-tiledlayout(1,4);
+tiledlayout(1,3);
 
 ax1 = nexttile;
 plot(V,J);
@@ -164,7 +165,7 @@ ylabel('Current Density (mA/cm2)')
 title('Tandem Si-Si Current Density - Voltage Plot');
 
 ax2 = nexttile;
-plot(V1,J);
+plot(V1T,J);
 xline(0);
 yline(0);
 xlabel('Cell 1 Voltage (V)');
@@ -172,24 +173,46 @@ ylabel('Current Density (mA/cm2)');
 title('Cell 1 Current Density - Voltage Plot');
 
 ax3 = nexttile;
-plot(V2,J);
+plot(V2T,J);
 xline(0);
 yline(0);
 xlabel('Cell 2 Voltage (V)');
 ylabel('Cell 2 Current Density - Votlage Plot');
+title('Cell 2 Current Density - Voltage Plot');
 
-ax4 = nexttile;
-plot((J * params.A * params.Rs),J);
-xline(0);
-yline(0);
-xlabel('Series Resistor Voltage (V)');
-ylabel('Series Resistor Current Density - Voltage Plot');
+% ax4 = nexttile;
+% plot(Vs,J);
+% xline(0);
+% yline(0);
+% xlabel('Series Resistor Voltage (V)');
+% ylabel('Series Resistor Current Density - Voltage Plot');
+% title('Series Resistors Current Density - Voltage Plot');
 
-linkaxes([ax1, ax2, ax3, ax4], 'y');
+linkaxes([ax1, ax2, ax3], 'y');
 
 
 
+%% Voltage Area Plot
 figure(2);
+Y = [(V1T.') (V2T.')];
+x = V;
+area(x, Y);
+
+% Add a bold line to show the sum
+hold on;
+V_Total = V1T + V2T;
+plot(x, V_Total, 'k-', 'LineWidth', 3);
+
+xline(Voc1 + Voc2, 'r');
+yline(Voc1 + Voc2, 'r');
+xlabel('Bias Voltage (V)');
+ylabel('Voltage Components');
+legend({'V1T','V2T','Total Voltage'});
+
+
+
+%% Power - Voltage Plot
+figure(3);
 plot(V, J.*V);
 xline(0);
 yline(0);
