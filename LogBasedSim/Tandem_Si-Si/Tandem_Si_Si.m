@@ -53,3 +53,38 @@ q = 1.602e-19;
 k = 1.38e-23;
 
 
+
+%% Diode Constant Calculations
+% Thermal voltage
+params.VT = k*T/q;
+
+% Built in voltage
+params.Vbi1 = params.VT * log(Na1 * Nd1 / (ni1 ^ 2));
+params.Vbi2 = params.VT * log(Na2 * Nd2 / (ni2 ^ 2));
+
+% Diffusion current constant
+Jdiff01 = q * (ni1^2) * ((Dn1 / (Na1 * Ln1)) + (Dp1 / (Nd1 * Lp1)));
+params.Jdiffd1 = q * Nd1 * Na1 * ((Dn1 / (Na1 * Ln1)) + (Dp1 / (Nd1 * Lp1)));
+Jdiff02 = q * (ni2^2) * ((Dn2 / (Na2 * Ln2)) + (Dp2 / (Nd2 * Lp2)));
+params.Jdiffd2 = q * Nd2 * Na2 * ((Dn2 / (Na2 * Ln2)) + (Dp2 / (Nd2 * Lp2)));
+
+% Radiative recombination current constant
+Jrad01 = beta1 * ((n1 * p1) - (ni1 ^ 2));
+params.Jradd1 = beta1 * ((n1 * p1 * exp(params.Vbi1/params.VT)) - (Nd1 * Na1));
+Jrad02 = beta2 * ((n2 * p2) - (ni2 ^ 2));
+params.Jradd2 = beta2 * ((n2 * p2 * exp(params.Vbi2/params.VT)) - (Nd2 * Na2));
+
+% Recombination in the depletion region (SCR) current constant
+Jscr01 = (ni1 ^ 2) * sqrt(2 * q * eps1 * ((1/Na1) + (1/Nd1)) * params.Vbi1 / (tn1 * tp1));
+params.Jscrd1 = Nd1 * Na1 * sqrt(2 * q * eps1 * ((1/Na1) + (1/Nd1)) * params.Vbi1 / (tn1 * tp1)) ...
+    * exp(-params.Vbi1 / (2 * params.VT));
+Jscr02 = (ni2 ^ 2) * sqrt(2 * q * eps2 * ((1/Na2) + (1/Nd2)) * params.Vbi2 / (tn2 * tp2));
+params.Jscrd2 = Nd2 * Na2 * sqrt(2 * q * eps2 * ((1/Na2) + (1/Nd2)) * params.Vbi2 / (tn2 * tp2)) ...
+    * exp(-params.Vbi2 / (2 * params.VT));
+
+% Illumination current
+params.Jillum1 = Jsc1 + Jdiff01 + Jrad01 + Jscr01;
+params.Jillum2 = Jsc2 + Jdiff02 + Jrad02 + Jscr02;
+
+
+
