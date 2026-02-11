@@ -1,24 +1,27 @@
 % Code based on the log form of the three diode model
 
 % Units as in the Parameters Table
+% Calculation parameters
+N = 100;        % Number of points to perform the calculation on
+
 % Parameters
 T = 300;
 
 % Cell Properties
 Jsc = 38.1;
-ni = 1e10;
-Nd = 2e17;
-Na = 1e17;
-n = 2e17;
-p = 1e17;
-Dn = 0;
-Dp = 0;
-Ln = 1;
-Lp = 1;
-tn = 1e-3;
-tp = 1e-3;
+ni = 1.45e10;
+Nd = 1.7e15;
+Na = 1e15;
+n = 1.7e15;
+p = 1e15;
+Dn = 38.7;
+Dp = 11.61;
+tn = 1000e-6;
+tp = 1000e-6;
+Ln = sqrt(Dn*tn);
+Lp = sqrt(Dp*tp);
 beta = 0;
-eps = 1;
+eps = 11.7 * 8.854e-10;
 
 % Constants
 q = 1.602e-19;
@@ -48,5 +51,18 @@ params.Jscrd = Nd * Na * sqrt(2 * q * eps * ((1/Na) + (1/Nd)) * params.Vbi / (tn
 
 % Illumination current
 params.Jillum = Jsc + Jdiff0 + Jrad0 + Jscr0;
+
+
+
+%% Calculate the open circuit voltage of the cell
+% Set fsolve to not display each calculation
+options = optimoptions('fsolve', 'Display', 'none', 'FunctionTolerance', 1e-14);
+
+% Set initial guess for Voc
+v0 = 0.5;
+
+% Find where the total current is zero
+func = @(v) evaluate_single_ideal_Voc(v, params);
+Voc = fsolve(func, v0, options);
 
 
