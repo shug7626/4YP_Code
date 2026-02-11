@@ -102,9 +102,18 @@ end
 
 %% Plot
 figure(1);
-% tiledlayout(1,2);
-% 
-% ax1 = nexttile;
 plot(V,J);
+xline(0);
+yline(0);
+xlabel('Bias Voltage (V)');
+ylabel('Current Density (mA/cm2)')
+title('Single, Ideal Current Density - Voltage Plot');
 
+figure(2);
+plot(V, J.*V);
+xline(0);
+yline(0);
+xlabel('Bias Voltage (V)');
+ylabel('Power Density (mW/cm2)');
+title('Single, Ideal Power Density - Voltage Plot');
 
