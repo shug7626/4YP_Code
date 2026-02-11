@@ -14,7 +14,7 @@ params.A = 1;
 
 % Cell 1
 Jsc1 = 38.1;
-params.Rs1 = 1e-2;
+Rs1 = 1e-2;
 params.Rsh1 = 1e4;
 ni1 = 1.45e10;
 Nd1 = 5e16;
@@ -32,7 +32,7 @@ eps1 = 11.7 * 8.854e-14;
 
 % Cell 2
 Jsc2 = 38.1;
-params.Rs2 = 1e-2;
+Rs2 = 1e-2;
 params.Rsh2 = 1e4;
 ni2 = 1.45e10;
 Nd2 = 5e16;
@@ -47,6 +47,8 @@ Ln2 = sqrt(Dn2*tn2);
 Lp2 = sqrt(Dp2*tp2);
 beta2 = 0;
 eps2 = 11.7 * 8.854e-14;
+
+params.Rs = Rs1 + Rs2;
 
 % Constants
 q = 1.602e-19;
@@ -103,5 +105,51 @@ Voc_sol = fsolve(func, v0, options);
 Voc1 = Voc_sol(1);
 Voc2 = Voc_sol(2);
 
+
+
+%% Set range of voltages and vectors to store results
+V = linspace(0, (Voc1 + Voc2), N);
+V1 = zeros(size(V));
+V2 = zeros(size(V));
+J = zeros(size(V));
+
+
+
+%% Calculate J for each V
+% Set initial guess
+j0 = (Jsc1 + Jsc2) / 2;
+v01 = Voc1/2;
+v02 = Voc2/2;
+x0 = [j0, v01, v02];
+
+for iter = 1:N
+    % Solve
+    fun = @(x)evaluate_tandem_si_si(x, V(iter), params);
+    x_sol = fsolve(fun, x0, options);
+    
+    % Unpack output
+    J(iter) = real(x_sol(1));
+    V1(iter) = x_sol(2);
+    V2(iter) = x_sol(3);
+end
+
+
+
+%% Plot
+figure(1);
+plot(V,J);
+xline(0);
+yline(0);
+xlabel('Bias Voltage (V)');
+ylabel('Current Density (mA/cm2)')
+title('Single, Ideal Current Density - Voltage Plot');
+
+figure(2);
+plot(V, J.*V);
+xline(0);
+yline(0);
+xlabel('Bias Voltage (V)');
+ylabel('Power Density (mW/cm2)');
+title('Single, Ideal Power Density - Voltage Plot');
 
 
