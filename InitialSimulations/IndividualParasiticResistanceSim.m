@@ -47,6 +47,7 @@ P_ideal = J_ideal .* V;
 
 
 %% Plot Results
+figure(1);
 tiledlayout(1, 2);
 nexttile;
 

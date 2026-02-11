@@ -2,8 +2,8 @@
 % parasitic resistances (shunt and series) and using modifiable material
 % properties
 
-% Cell 1 - Silicon
-% Cell 2 - Silicon
+% Cell 1 - Non-ideal Silicon
+% Cell 2 - "Ideal" Silicon
 
 % Data from https://doi.org/10.1016/j.matpr.2021.11.092
 
@@ -12,13 +12,13 @@ params.A = 1;           % Area (cm2)
 T = 300;                % Temperature (Kelvin)
 
 % Cell 1
-Rs1 = 0;                % Series resistance (Ohm/cm2) (=5e-3)
-params.Rsh1 = Inf;      % Shunt (parallel) resistance (Ohm/cm2) (=1e2)
+Rs1 = 5e-3;                % Series resistance (Ohm/cm2) (=5e-3)
+params.Rsh1 = 1e8;      % Shunt (parallel) resistance (Ohm/cm2) (=1e4)
 params.Jsc1 = 38.1;     % (=12.33)
 ni1 = 1e10;             % Intrinsic carrier concentration (cm-3)
 n1 = 2e17;              % Electron concentration (cm-3)
 p1 = 1e17;
-Dn1 = 0;                % Electron diffusion coefficient
+Dn1 = 0;                % Electron diffusion coefficient (cm2/s)
 Dp1 = 0;
 Ln1 = 1;                % Electron diffusion length (cm)
 Lp1 = 1;
@@ -28,7 +28,7 @@ wn1 = 150e-6;           % Width of n region (cm)
 wp1 = 150e-6;
 tn1 = 1e-3;             % Electron lifetime (s)
 tp1 = 1e-3;
-beta1 = 0;              % Bimolecular recombination rate (m3/s)
+beta1 = 0;              % Bimolecular recombination rate (cm3/s)
 
 % Cell 2
 Rs2 = 0;
@@ -61,10 +61,10 @@ kB = 1.38e-23;     % Boltzmann constant (J/K)
 
 %% Display Settings
 % Display J-V curves (figure 1)
-disp_jv = false;
+disp_jv = true;
 
 % Display the area voltage plot (figure 2)
-disp_Varea = false;
+disp_Varea = true;
 
 % Display the contributions of the cells and the combined series resistors
 % (figure 3)
@@ -94,7 +94,7 @@ params.J_rad02 = beta2 * (n2*p2 - ni2^2);
 
 %% Calculate the Open Circuit Voltages of the two cells
 % Set the fsolve options to not display
-options = optimoptions('fsolve', 'Display', 'none');
+options = optimoptions('fsolve', 'Display', 'none', 'FunctionTolerance', 1e-14);
 
 % Set initial guesses for the voltages
 v1_0 = 0.5;
