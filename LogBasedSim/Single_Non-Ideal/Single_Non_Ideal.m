@@ -85,12 +85,12 @@ x0 = [j0, v10];
 
 for iter = 1:N
     % Solve
-   fun = @(x)evaluate_single_non_ideal(x, V(iter), params);
-   x_sol = fsolve(fun, x0, options);
-   
-   % Unpack output
-   J(iter) = real(x_sol(1));
-   V1(iter) = x_sol(2);
+    fun = @(x)evaluate_single_non_ideal(x, V(iter), params);
+    x_sol = fsolve(fun, x0, options);
+    
+    % Unpack output
+    J(iter) = real(x_sol(1));
+    V1(iter) = x_sol(2);
 end
 
 
