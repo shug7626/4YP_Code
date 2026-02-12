@@ -128,19 +128,19 @@ for iter = 1:N
     x_sol = fsolve(fun, x0, options);
     
     % Unpack output
-    J(iter) = real(x_sol(1));
-    V1(iter) = real(x_sol(2));
-    V2(iter) = real(x_sol(3));
+    J(iter) = x_sol(1);
+    V1(iter) = x_sol(2);
+    V2(iter) = x_sol(3);
 end
 
 
 
 %% Calculate Contribution of Each Cell to the Series Resistor Voltage
 % Cell 1 series resistor voltage
-Vs1 = -params.A * Rs1 * J;
+Vs1 = -J * params.A * Rs1;
 
 % Cell 2 series resistor voltage
-Vs2 = -params.A * Rs2 * J;
+Vs2 = -J * params.A * Rs2;
 
 % Sum of series resistor voltages
 Vs = Vs1 + Vs2;
