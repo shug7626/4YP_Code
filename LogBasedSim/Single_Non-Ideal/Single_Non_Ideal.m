@@ -80,8 +80,8 @@ J = zeros(size(V));
 %% Calculate J for each V
 % Set initial guess
 j0 = Jsc / 2;
-v10 = Voc/2;
-x0 = [j0, v10];
+v01 = Voc/2;
+x0 = [j0, v01];
 
 for iter = 1:N
     % Solve
