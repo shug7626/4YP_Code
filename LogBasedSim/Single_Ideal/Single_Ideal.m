@@ -60,9 +60,8 @@ Jrad0 = beta * ((n * p) - (ni ^ 2));
 params.Jradd = beta * ((n * p * exp(params.Vbi/params.VT)) - (Nd * Na));
 
 % Recombination in the depletion region (SCR) current constant
-Jscr0 = (ni ^ 2) * sqrt(2 * q * eps * ((1/Na) + (1/Nd)) * params.Vbi / (tn * tp));
-params.Jscrd = Nd * Na * sqrt(2 * q * eps * ((1/Na) + (1/Nd)) * params.Vbi / (tn * tp)) ...
-    * exp(-params.Vbi / (2 * params.VT));
+Jscr0 = ni * sqrt(2 * q * eps * ((1/Na) + (1/Nd)) * params.Vbi / (tn * tp));
+params.Jscrd = sqrt(2 * q * eps * (Nd + Na) * params.Vbi / (tn * tp));
 
 % Illumination current
 params.Jillum = Jsc + Jdiff0 + Jrad0 + Jscr0;
