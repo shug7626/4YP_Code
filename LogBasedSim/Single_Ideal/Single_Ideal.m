@@ -2,7 +2,7 @@
 
 % Units as in the Parameters Table
 % Calculation parameters
-N = 100;        % Number of points to perform the calculation on
+N = 1000;        % Number of points to perform the calculation on
 
 % Parameters
 T = 300;
