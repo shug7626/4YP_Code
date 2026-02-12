@@ -89,7 +89,7 @@ for iter = 1:N
     x_sol = fsolve(fun, x0, options);
     
     % Unpack output
-    J(iter) = real(x_sol(1));
+    J(iter) = x_sol(1);
     V1(iter) = x_sol(2);
 end
 
