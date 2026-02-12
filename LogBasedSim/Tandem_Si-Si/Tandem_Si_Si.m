@@ -14,9 +14,10 @@ params.A = 1;
 
 % Cell 1
 Jsc1 = 38.1;
-Rs1 = 1e-2;
-params.Rsh1 = 1e4;
+Rs1 = 1e-3;
+params.Rsh1 = 1e6;
 ni1 = 1.45e10;
+% params.Vbi1 = 0.65;
 Nd1 = 5e16;
 Na1 = 1.5e15;
 n1 = 1.4e5;
@@ -32,9 +33,10 @@ eps1 = 11.7 * 8.854e-14;
 
 % Cell 2
 Jsc2 = 38.1;
-Rs2 = 1e-2;
-params.Rsh2 = 1e4;
+Rs2 = 0;
+params.Rsh2 = Inf;
 ni2 = 1.45e10;
+% params.Vbi2 = 0.65;
 Nd2 = 5e16;
 Na2 = 1.5e15;
 n2 = 1.4e5;
@@ -63,6 +65,8 @@ params.VT = k*T/q;
 % Built in voltage
 params.Vbi1 = params.VT * log(Na1 * Nd1 / (ni1 ^ 2));
 params.Vbi2 = params.VT * log(Na2 * Nd2 / (ni2 ^ 2));
+% ni1 = sqrt(exp(-params.Vbi1 / params.VT) * Na1 * Nd1);
+% ni2 = sqrt(exp(-params.Vbi2 / params.VT) * Na2 * Nd2);
 
 % Diffusion current constant
 Jdiff01 = q * (ni1^2) * ((Dn1 / (Na1 * Ln1)) + (Dp1 / (Nd1 * Lp1)));
@@ -77,12 +81,11 @@ Jrad02 = beta2 * ((n2 * p2) - (ni2 ^ 2));
 params.Jradd2 = beta2 * ((n2 * p2 * exp(params.Vbi2/params.VT)) - (Nd2 * Na2));
 
 % Recombination in the depletion region (SCR) current constant
-Jscr01 = (ni1 ^ 2) * sqrt(2 * q * eps1 * ((1/Na1) + (1/Nd1)) * params.Vbi1 / (tn1 * tp1));
-params.Jscrd1 = Nd1 * Na1 * sqrt(2 * q * eps1 * ((1/Na1) + (1/Nd1)) * params.Vbi1 / (tn1 * tp1)) ...
-    * exp(-params.Vbi1 / (2 * params.VT));
-Jscr02 = (ni2 ^ 2) * sqrt(2 * q * eps2 * ((1/Na2) + (1/Nd2)) * params.Vbi2 / (tn2 * tp2));
-params.Jscrd2 = Nd2 * Na2 * sqrt(2 * q * eps2 * ((1/Na2) + (1/Nd2)) * params.Vbi2 / (tn2 * tp2)) ...
-    * exp(-params.Vbi2 / (2 * params.VT));
+Jscr01 = ni1 * sqrt(2 * q * eps1 * ((1/Na1) + (1/Nd1)) * params.Vbi1 / (tn1 * tp1));
+params.Jscrd1 = sqrt(2 * q * eps1 * (Nd1 + Na1) * params.Vbi1 / (tn1 * tp1));
+Jscr02 = ni2 * sqrt(2 * q * eps2 * ((1/Na2) + (1/Nd2)) * params.Vbi2 / (tn2 * tp2));
+params.Jscrd2 = sqrt(2 * q * eps2 * (Nd2 + Na2) * params.Vbi2 / (tn2 * tp2));
+
 
 % Illumination current
 params.Jillum1 = Jsc1 + Jdiff01 + Jrad01 + Jscr01;
@@ -219,5 +222,11 @@ yline(0);
 xlabel('Bias Voltage (V)');
 ylabel('Power Density (mW/cm2)');
 title('Tandem Si-Si Power Density - Voltage Plot');
+
+
+
+%% Current Contribution Plot
+% figure(4);
+
 
 
