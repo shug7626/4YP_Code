@@ -1,5 +1,5 @@
 function F = evaluate_single_ideal(j, V, params)
     F = (((V - params.Vbi)/params.VT) * log(abs((params.Jdiffd + params.Jradd) ...
         + params.Jscrd * exp(-(V - params.Vbi)/(2*params.VT))))) ...
-        - log(abs(params.Jillum - j));
+        - log(params.Jillum - j);
 end
