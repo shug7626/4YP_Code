@@ -147,3 +147,8 @@ if set.plot3
     fig3 = Plotting.V_VBias(res);
 end
 
+% Power - Voltage plot
+if set.plot4
+    fig4 = Plotting.P_V(res);
+end
+

@@ -10,4 +10,7 @@ function s = tandem_settings()
     
     % Plot the voltage - bias voltage plots
     s.plot3 = true;
+    
+    % Plot the power - voltage plot
+    s.plot4 = true;
 end
