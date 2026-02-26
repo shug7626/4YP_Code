@@ -70,5 +70,19 @@ par.Jillum2 = Jsc2 + Jdiff02 + Jrad02 + Jscr02;
 
 
 
+%% Calculate the open circuit voltage of the cell
+% Set fsolve to not display each calculation
+options = optimoptions('fsolve', 'Display', 'none');
+
+% Set initial guess for Voc
+v01 = 0.5;
+v02 = 0.5;
+v0 = [v01, v02];
+
+% Find where the total current is zero
+func = @(v) evaluate_tandem_pvk_si_Voc(v, par);
+Voc_sol = fsolve(func, v0, options);
+Voc1 = Voc_sol(1);
+Voc2 = Voc_sol(2);
 
 
