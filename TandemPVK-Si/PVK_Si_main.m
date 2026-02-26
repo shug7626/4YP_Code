@@ -13,5 +13,7 @@ spectrum_table = readmatrix("Spectrum.xlsx");
 wavelengths = spectrum_table(:,1);
 photon_flux = spectrum_table(:,2);
 
-% Convert the wavelengths to photon energies
-E = params.h * params.c ./wavelengths;
+% Convert the wavelengths to photon energies (converting from nm to m)
+E = params.h * params.c ./(wavelengths / 1e9);
+
+% Evaluate Jsc1 by summing each valid discrete value
