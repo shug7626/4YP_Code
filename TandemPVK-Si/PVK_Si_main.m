@@ -9,6 +9,9 @@ set = tandem_settings();
 
 %% Calculate the short circuit current densities based on incident spectrum
 % Import the spectrum data
-spectrum_table = readtable("Spectrum.xlsx");
+spectrum_table = readmatrix("Spectrum.xlsx");
 wavelengths = spectrum_table(:,1);
 photon_flux = spectrum_table(:,2);
+
+% Convert the wavelengths to photon energies
+E = params.h * params.c ./wavelengths;
