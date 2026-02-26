@@ -82,13 +82,13 @@ v0 = [v01, v02];
 % Find where the total current is zero
 func = @(v) evaluate_tandem_pvk_si_Voc(v, par);
 Voc_sol = fsolve(func, v0, options);
-Voc1 = Voc_sol(1);
-Voc2 = Voc_sol(2);
+res.Voc1 = Voc_sol(1);
+res.Voc2 = Voc_sol(2);
 
 
 
 %% Set range of voltages and vectors to store results
-res.V = linspace(0, (Voc1 + Voc2), par.N);
+res.V = linspace(0, (res.Voc1 + res.Voc2), par.N);
 res.V1 = zeros(size(res.V));
 res.V2 = zeros(size(res.V));
 res.J = zeros(size(res.V));
@@ -98,8 +98,8 @@ res.J = zeros(size(res.V));
 %% Calculate J for each V
 % Set initial guess
 j0 = (Jsc1 + Jsc2) / 2;
-v01 = Voc1/2;
-v02 = Voc2/2;
+v01 = res.Voc1/2;
+v02 = res.Voc2/2;
 x0 = [j0, v01, v02];
 
 for iter = 1:par.N
@@ -135,5 +135,10 @@ res.V2T = res.V2 + res.Vs2;
 % Current - Voltage Plot
 if set.plot1
     fig1 = Plotting.J_V(res);
+end
+
+% Voltage area plot
+if set.plot2
+    fig2 = Plotting.V_Area(res);
 end
 
