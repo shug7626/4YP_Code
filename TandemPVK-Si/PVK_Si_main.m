@@ -130,3 +130,44 @@ V1T = V1 + Vs1;
 V2T = V2 + Vs2;
 
 
+
+%% Plot
+% Current - Voltage Plot
+figure(1);
+tiledlayout(1,3);
+
+ax1 = nexttile;
+plot(V,J);
+xline(0);
+yline(0);
+xlabel('Bias Voltage (V)');
+ylabel('Current Density (mA/cm2)')
+title('Tandem Si-Si Current Density - Voltage Plot');
+
+ax2 = nexttile;
+plot(V1T,J);
+xline(0);
+yline(0);
+xlabel('Cell 1 Voltage (V)');
+ylabel('Current Density (mA/cm2)');
+title('Cell 1 Current Density - Voltage Plot');
+
+ax3 = nexttile;
+plot(V2T,J);
+xline(0);
+yline(0);
+xlabel('Cell 2 Voltage (V)');
+ylabel('Cell 2 Current Density - Votlage Plot');
+title('Cell 2 Current Density - Voltage Plot');
+
+% ax4 = nexttile;
+% plot(Vs,J);
+% xline(0);
+% yline(0);
+% xlabel('Series Resistor Voltage (V)');
+% ylabel('Series Resistor Current Density - Voltage Plot');
+% title('Series Resistors Current Density - Voltage Plot');
+
+linkaxes([ax1, ax2, ax3], 'y');
+
+
