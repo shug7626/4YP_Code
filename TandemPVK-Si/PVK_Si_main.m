@@ -88,10 +88,10 @@ Voc2 = Voc_sol(2);
 
 
 %% Set range of voltages and vectors to store results
-V = linspace(0, (Voc1 + Voc2), par.N);
-V1 = zeros(size(V));
-V2 = zeros(size(V));
-J = zeros(size(V));
+res.V = linspace(0, (Voc1 + Voc2), par.N);
+res.V1 = zeros(size(res.V));
+res.V2 = zeros(size(res.V));
+res.J = zeros(size(res.V));
 
 
 
@@ -104,70 +104,36 @@ x0 = [j0, v01, v02];
 
 for iter = 1:par.N
     % Solve
-    fun = @(x)evaluate_tandem_pvk_si(x, V(iter), par);
+    fun = @(x)evaluate_tandem_pvk_si(x, res.V(iter), par);
     x_sol = fsolve(fun, x0, options);
     
     % Unpack output
-    J(iter) = real(x_sol(1));
-    V1(iter) = real(x_sol(2));
-    V2(iter) = real(x_sol(3));
+    res.J(iter) = real(x_sol(1));
+    res.V1(iter) = real(x_sol(2));
+    res.V2(iter) = real(x_sol(3));
 end
 
 
 
 %% Calculate Contribution of Each Cell to the Series Resistor Voltage
 % Cell 1 series resistor voltage
-Vs1 = -J * par.A * par.Rs1;
+res.Vs1 = -res.J * par.A * par.Rs1;
 
 % Cell 2 series resistor voltage
-Vs2 = -J * par.A * par.Rs2;
+res.Vs2 = -res.J * par.A * par.Rs2;
 
 % Sum of series resistor voltages
-Vs = Vs1 + Vs2;
+res.Vs = res.Vs1 + res.Vs2;
 
 % Total cell contributions
-V1T = V1 + Vs1;
-V2T = V2 + Vs2;
+res.V1T = res.V1 + res.Vs1;
+res.V2T = res.V2 + res.Vs2;
 
 
 
-%% Plot
+%% Plots
 % Current - Voltage Plot
-figure(1);
-tiledlayout(1,3);
-
-ax1 = nexttile;
-plot(V,J);
-xline(0);
-yline(0);
-xlabel('Bias Voltage (V)');
-ylabel('Current Density (mA/cm2)')
-title('Tandem Si-Si Current Density - Voltage Plot');
-
-ax2 = nexttile;
-plot(V1T,J);
-xline(0);
-yline(0);
-xlabel('Cell 1 Voltage (V)');
-ylabel('Current Density (mA/cm2)');
-title('Cell 1 Current Density - Voltage Plot');
-
-ax3 = nexttile;
-plot(V2T,J);
-xline(0);
-yline(0);
-xlabel('Cell 2 Voltage (V)');
-ylabel('Cell 2 Current Density - Votlage Plot');
-title('Cell 2 Current Density - Voltage Plot');
-
-% ax4 = nexttile;
-% plot(Vs,J);
-% xline(0);
-% yline(0);
-% xlabel('Series Resistor Voltage (V)');
-% ylabel('Series Resistor Current Density - Voltage Plot');
-% title('Series Resistors Current Density - Voltage Plot');
-
-linkaxes([ax1, ax2, ax3], 'y');
-
+if set.plot1
+    fig1 = Plotting.J_V(res);
+end
 
