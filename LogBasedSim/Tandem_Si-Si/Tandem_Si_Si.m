@@ -14,18 +14,17 @@ params.A = 1;
 
 % Cell 1
 Jsc1 = 38.1;
-Rs1 = 1e-3;
-params.Rsh1 = 1e6;
-ni1 = 1.45e10;
-% params.Vbi1 = 0.65;
-Nd1 = 5e16;
-Na1 = 1.5e15;
-n1 = 1.4e5;
-p1 = 1.5e15;
+Rs1 = 12e-3;
+params.Rsh1 = 50e3;
+ni1 = 1e10;
+Nd1 = 2e20;
+Na1 = 3e18;
+n1 = Nd1;
+p1 = Na1;
 Dn1 = 38.7;
 Dp1 = 11.61;
-tn1 = 1000e-6;
-tp1 = 1000e-6;
+tn1 = 30e-6;
+tp1 = 30e-6;
 Ln1 = sqrt(Dn1*tn1);
 Lp1 = sqrt(Dp1*tp1);
 beta1 = 0;
@@ -33,18 +32,17 @@ eps1 = 11.7 * 8.854e-14;
 
 % Cell 2
 Jsc2 = 38.1;
-Rs2 = 0;
-params.Rsh2 = Inf;
-ni2 = 1.45e10;
-% params.Vbi2 = 0.65;
-Nd2 = 5e16;
-Na2 = 1.5e15;
-n2 = 1.4e5;
-p2 = 1.5e15;
+Rs2 = 12e-3;
+params.Rsh2 = 50e3;
+ni2 = 1e10;
+Nd2 = 2e20;
+Na2 = 3e18;
+n2 = Nd2;
+p2 = Na2;
 Dn2 = 38.7;
 Dp2 = 11.61;
-tn2 = 1000e-6;
-tp2 = 1000e-6;
+tn2 = 30e-6;
+tp2 = 30e-6;
 Ln2 = sqrt(Dn2*tn2);
 Lp2 = sqrt(Dp2*tp2);
 beta2 = 0;
@@ -131,9 +129,9 @@ for iter = 1:N
     x_sol = fsolve(fun, x0, options);
     
     % Unpack output
-    J(iter) = x_sol(1);
-    V1(iter) = x_sol(2);
-    V2(iter) = x_sol(3);
+    J(iter) = real(x_sol(1));
+    V1(iter) = real(x_sol(2));
+    V2(iter) = real(x_sol(3));
 end
 
 
@@ -214,8 +212,36 @@ legend({'V1T','V2T','Total Voltage'});
 
 
 
-%% Power - Voltage Plot
+%% Voltage - Bias Voltage Plot
 figure(3);
+tiledlayout(1,3);
+ax4 = nexttile;
+plot(V, V1);
+xlabel('Bias Voltage (V)');
+ylabel('V1 (V)');
+title('Cell 1 Voltage');
+yline(0);
+
+ax5 = nexttile;
+plot(V, V2);
+xlabel('Bias Voltage (V)');
+ylabel('V2 (V)');
+title('Cell 2 Voltage');
+yline(0);
+
+ax6 = nexttile;
+plot(V, Vs);
+xlabel('Bias Voltage (V)');
+ylabel('Vs (V)');
+title('Combined Series Resistor Voltage');
+yline(0);
+
+linkaxes([ax4, ax5, ax6], 'y');
+
+
+
+%% Power - Voltage Plot
+figure(4);
 plot(V, J.*V);
 xline(0);
 yline(0);
