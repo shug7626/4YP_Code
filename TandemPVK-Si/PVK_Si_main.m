@@ -114,3 +114,19 @@ for iter = 1:par.N
 end
 
 
+
+%% Calculate Contribution of Each Cell to the Series Resistor Voltage
+% Cell 1 series resistor voltage
+Vs1 = -J * par.A * par.Rs1;
+
+% Cell 2 series resistor voltage
+Vs2 = -J * par.A * par.Rs2;
+
+% Sum of series resistor voltages
+Vs = Vs1 + Vs2;
+
+% Total cell contributions
+V1T = V1 + Vs1;
+V2T = V2 + Vs2;
+
+
