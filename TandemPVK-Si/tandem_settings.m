@@ -7,4 +7,7 @@ function s = tandem_settings()
     
     % Plot the voltage area plot
     s.plot2 = true;
+    
+    % Plot the voltage - bias voltage plots
+    s.plot3 = true;
 end

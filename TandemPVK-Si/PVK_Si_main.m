@@ -142,3 +142,8 @@ if set.plot2
     fig2 = Plotting.V_Area(res);
 end
 
+% Voltage - Voltage Bias plot
+if set.plot3
+    fig3 = Plotting.V_VBias(res);
+end
+
