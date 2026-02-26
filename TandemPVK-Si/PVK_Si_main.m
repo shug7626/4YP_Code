@@ -2,7 +2,7 @@
 % shunt resistors for a perovskite on silicon tandem cell
 
 %% Fetch parameters and settings
-params = parameters();
+par = parameters();
 set = tandem_settings();
 
 
@@ -14,25 +14,61 @@ wavelengths = spectrum_table(:,1);
 bs = spectrum_table(:,2);
 
 % Convert the wavelengths to photon energies (converting from nm to m)
-E = params.h * params.c ./(wavelengths / 1e9);
+E = par.h * par.c ./(wavelengths / 1e9);
 
 % Find each valid discrete value of energy
-validE1 = E(:) >= params.Eg1;
-validE2 = E(:) >= params.Eg2;
+validE1 = E(:) >= par.Eg1;
+validE2 = E(:) >= par.Eg2;
 
 % Create vectors for the reflectivity, absorptivity, and probability
-R1 = validE1 * params.R1;
-R2 = validE2 * params.R2;
-a1 = validE1 * params.a1;
-a2 = validE2 * params.a2;
-etac1 = validE1 * params.etac1;
-etac2 = validE2 * params.etac2;
+R1 = validE1 * par.R1;
+R2 = validE2 * par.R2;
+a1 = validE1 * par.a1;
+a2 = validE2 * par.a2;
+etac1 = validE1 * par.etac1;
+etac2 = validE2 * par.etac2;
 
 % Calculate the spectrum seen by cell 2
 bs2 = (ones(size(R1))-R1) .* (ones(size(R2))-R2) .* (ones(size(a1))-a1) .* bs;
 
 % Evaluate Jsc1 and Jsc2
-Jsc1 = params.q * sum(etac1 .* (ones(size(R1))-R1) .* a1 .* (bs .* validE1));
-Jsc2 = params.q * sum(etac2 .* (ones(size(R2))-R2) .* a2 .* (bs2 .* validE2));
+Jsc1 = par.q * sum(etac1 .* (ones(size(R1))-R1) .* a1 .* (bs .* validE1));
+Jsc2 = par.q * sum(etac2 .* (ones(size(R2))-R2) .* a2 .* (bs2 .* validE2));
+
+
+
+%% Diode Constant Calculations
+% Thermal voltage
+par.VT = par.k*par.T/par.q;
+
+% Built in voltage
+par.Vbi1 = par.VT * log(par.Na1 * par.Nd1 / (par.ni1 ^ 2));
+par.Vbi2 = par.VT * log(par.Na2 * par.Nd2 / (par.ni2 ^ 2));
+
+% Diffusion current constant
+Jdiff01 = par.q * (par.ni1^2) * ((par.Dn1 / (par.Na1 * par.Ln1)) + (par.Dp1 / (par.Nd1 * par.Lp1)));
+par.Jdiffd1 = par.q * par.Nd1 * par.Na1 * ((par.Dn1 / (par.Na1 * par.Ln1)) + (par.Dp1 / (par.Nd1 * par.Lp1)));
+Jdiff02 = par.q * (par.ni2^2) * ((par.Dn2 / (par.Na2 * par.Ln2)) + (par.Dp2 / (par.Nd2 * par.Lp2)));
+par.Jdiffd2 = par.q * par.Nd2 * par.Na2 * ((par.Dn2 / (par.Na2 * par.Ln2)) + (par.Dp2 / (par.Nd2 * par.Lp2)));
+
+% Radiative recombination current constant
+Jrad01 = par.beta1 * ((par.n1 * par.p1) - (par.ni1 ^ 2));
+par.Jradd1 = par.beta1 * ((par.n1 * par.p1 * exp(par.Vbi1/par.VT)) - (par.Nd1 * par.Na1));
+Jrad02 = par.beta2 * ((par.n2 * par.p2) - (par.ni2 ^ 2));
+par.Jradd2 = par.beta2 * ((par.n2 * par.p2 * exp(par.Vbi2/par.VT)) - (par.Nd2 * par.Na2));
+
+% Recombination in the depletion region (SCR) current constant
+Jscr01 = par.ni1 * sqrt(2 * par.q * par.eps1 * ((1/par.Na1) + (1/par.Nd1)) * par.Vbi1 / (par.tn1 * par.tp1));
+par.Jscrd1 = sqrt(2 * par.q * par.eps1 * (par.Nd1 + par.Na1) * par.Vbi1 / (par.tn1 * par.tp1));
+Jscr02 = par.ni2 * sqrt(2 * par.q * par.eps2 * ((1/par.Na2) + (1/par.Nd2)) * par.Vbi2 / (par.tn2 * par.tp2));
+par.Jscrd2 = sqrt(2 * par.q * par.eps2 * (par.Nd2 + par.Na2) * par.Vbi2 / (par.tn2 * par.tp2));
+
+
+% Illumination current
+par.Jillum1 = Jsc1 + Jdiff01 + Jrad01 + Jscr01;
+par.Jillum2 = Jsc2 + Jdiff02 + Jrad02 + Jscr02;
+
+
+
 
 
