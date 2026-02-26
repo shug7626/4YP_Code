@@ -86,3 +86,31 @@ Voc1 = Voc_sol(1);
 Voc2 = Voc_sol(2);
 
 
+
+%% Set range of voltages and vectors to store results
+V = linspace(0, (Voc1 + Voc2), par.N);
+V1 = zeros(size(V));
+V2 = zeros(size(V));
+J = zeros(size(V));
+
+
+
+%% Calculate J for each V
+% Set initial guess
+j0 = (Jsc1 + Jsc2) / 2;
+v01 = Voc1/2;
+v02 = Voc2/2;
+x0 = [j0, v01, v02];
+
+for iter = 1:par.N
+    % Solve
+    fun = @(x)evaluate_tandem_pvk_si(x, V(iter), par);
+    x_sol = fsolve(fun, x0, options);
+    
+    % Unpack output
+    J(iter) = real(x_sol(1));
+    V1(iter) = real(x_sol(2));
+    V2(iter) = real(x_sol(3));
+end
+
+
