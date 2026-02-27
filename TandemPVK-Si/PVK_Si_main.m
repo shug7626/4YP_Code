@@ -3,7 +3,7 @@
 
 %% Fetch parameters and settings
 par = parameters();
-set = tandem_settings();
+set = plotting_settings();
 
 
 
