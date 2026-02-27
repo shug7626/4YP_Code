@@ -147,7 +147,7 @@ res.V2T = res.V2 + res.Vs2;
 % Incident photon power (converting to (mW cm-2) from (W cm-2))
 Pin = sum(spectrums.bs .* E) * par.q * 1e3;
 Pout = max(res.J .* res.V);
-Efficiency = Pout / Pin
+Efficiency = Pout / Pin;
 
 Jincident = par.q * sum(spectrums.bs);
 
@@ -176,7 +176,7 @@ end
 
 % Spectrum Plot
 if set.plot5
-    [fig5, spectrums] = Plotting.spectrum(spectrums, par);
+    [fig5, spectrums] = Plotting.spectrum(spectrums, par, set);
 end
 
 
