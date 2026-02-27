@@ -1,6 +1,6 @@
 % Plots the spectrum and the proportion of absorbed photons in each layer
 
-function [fig, s] = spectrum(s, p)
+function [fig, s] = spectrum(s, p, set)
     fig = figure(5);
     
     % Use a plotting factor to add some extra wavelengths to the end of the
@@ -23,8 +23,18 @@ function [fig, s] = spectrum(s, p)
     s.cell2 = p.etac2 .* p.a2 .* (s.bs2 .* p.validE2);
     
     % Plot up to that index
-    plot(s.wavelengths(1:index), s.bs(1:index));
+    plot(s.wavelengths(1:index), s.bs(1:index), 'DisplayName', 'Photon Spectrum');
     hold on
-    plot(s.wavelengths(1:index), s.cell1(1:index));
-    plot(s.wavelengths(1:index), s.cell2(1:index));
+    if set.individual_spectrums
+        plot(s.wavelengths(1:index), s.cell1(1:index), 'DisplayName', 'Cell 1 Electron Collection');
+        plot(s.wavelengths(1:index), s.cell2(1:index), 'DisplayName', 'Cell 2 Electron Collection');
+    end
+    if set.total_spectrum
+        plot(s.wavelengths(1:index), (s.cell1(1:index) + s.cell2(1:index)), 'DisplayName', 'Total Electron Collection');
+    end
+    xlabel('Wavelength (nm)');
+    ylabel('Number of Photons / Electrons (cm-2)');
+    title('Incident Photon Spectrum and Electron Collection Spectrums');
+    legend();
+    hold off
 end
