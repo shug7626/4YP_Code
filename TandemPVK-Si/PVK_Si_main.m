@@ -147,9 +147,10 @@ res.V2T = res.V2 + res.Vs2;
 % Incident photon power (converting to (mW cm-2) from (W cm-2))
 Pin = sum(spectrums.bs .* E) * par.q * 1e3;
 Pout = max(res.J .* res.V);
-Efficiency = Pout / Pin;
+Efficiency = Pout / Pin * 100;
 
-Jincident = par.q * sum(spectrums.bs);
+% Print the efficiency
+fprintf('Efficiency: %5.3f%%\n', Efficiency);
 
 
 
