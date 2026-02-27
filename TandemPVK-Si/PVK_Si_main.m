@@ -10,17 +10,25 @@ set = tandem_settings();
 %% Calculate the short circuit current densities based on incident spectrum
 % Import the spectrum data
 spectrum_table = readmatrix("Spectrum_full.xlsx");
-wavelengths = spectrum_table(:,1);
-bs = spectrum_table(:,2);
+spectrums.wavelengths = spectrum_table(:,1);
+spectrums.spectrums.bs_cumulative = spectrum_table(:,2);      % (photons cm-2 s-1)
 
-% Convert the wavelengths to photon energies (converting from nm to m)
-E = par.h * par.c ./(wavelengths / 1e9);
+% Switch from the cumulative spectrum to the photon flux
+cumulative_spec = 0;
+spectrums.bs = zeros(size(spectrums.spectrums.bs_cumulative));
+for i = 1:length(spectrums.wavelengths)
+    spectrums.bs(i) = spectrums.spectrums.bs_cumulative(i) - cumulative_spec;
+    cumulative_spec = cumulative_spec + spectrums.bs(i);
+end
+
+% Convert the spectrums.wavelengths to photon energies (converting from nm to m)
+E = par.h * par.c ./(spectrums.wavelengths / 1e9);  % (eV)
 
 % Find each valid discrete value of energy
-validE1 = E(:) >= par.Eg1;
-validE2 = E(:) >= par.Eg2;
+validE1 = E >= par.Eg1;
+validE2 = E >= par.Eg2;
 
-% Create vectors for the reflectivity, absorptivity, and probability
+% Create vectors for the reflectivity, aspectrums.bsorptivity, and probability
 R1 = validE1 * par.R1;
 R2 = validE2 * par.R2;
 a1 = validE1 * par.a1;
@@ -29,11 +37,15 @@ etac1 = validE1 * par.etac1;
 etac2 = validE2 * par.etac2;
 
 % Calculate the spectrum seen by cell 2
-bs2 = (ones(size(R1))-R1) .* (ones(size(R2))-R2) .* (ones(size(a1))-a1) .* bs;
+spectrums.bs2 = (ones(size(R1))-R1) .* (ones(size(R2))-R2) .* (ones(size(a1))-a1) .* spectrums.bs;
 
 % Evaluate Jsc1 and Jsc2
-Jsc1 = par.q * sum(etac1 .* (ones(size(R1))-R1) .* a1 .* (bs .* validE1));
-Jsc2 = par.q * sum(etac2 .* (ones(size(R2))-R2) .* a2 .* (bs2 .* validE2));
+Jsc1 = par.q * sum(etac1 .* (ones(size(R1))-R1) .* a1 .* (spectrums.bs .* validE1));  % (A cm-2)
+Jsc2 = par.q * sum(etac2 .* (ones(size(R2))-R2) .* a2 .* (spectrums.bs2 .* validE2));
+
+% Convert to (mA cm-2)
+Jsc1 = Jsc1 * 1e3;
+Jsc2 = Jsc2 * 1e3;
 
 
 
@@ -64,7 +76,7 @@ Jscr02 = par.ni2 * sqrt(2 * par.q * par.eps2 * ((1/par.Na2) + (1/par.Nd2)) * par
 par.Jscrd2 = sqrt(2 * par.q * par.eps2 * (par.Nd2 + par.Na2) * par.Vbi2 / (par.tn2 * par.tp2));
 
 
-% Illumination current
+% Illumination current (mA m-2)
 par.Jillum1 = Jsc1 + Jdiff01 + Jrad01 + Jscr01;
 par.Jillum2 = Jsc2 + Jdiff02 + Jrad02 + Jscr02;
 
@@ -131,6 +143,16 @@ res.V2T = res.V2 + res.Vs2;
 
 
 
+%% Calculate the Efficiency
+% Incident photon power (converting to (mW cm-2) from (W cm-2))
+Pin = sum(spectrums.bs .* E) * par.q * 1e3;
+Pout = max(res.J .* res.V);
+Efficiency = Pout / Pin
+
+Jincident = par.q * sum(spectrums.bs);
+
+
+
 %% Plots
 % Current - Voltage Plot
 if set.plot1
@@ -151,4 +173,10 @@ end
 if set.plot4
     fig4 = Plotting.P_V(res);
 end
+
+% Spectrum Plot
+if set.plot5
+    fig5 = Plotting.spectrum(spectrums, par);
+end
+
 
