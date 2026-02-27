@@ -25,23 +25,23 @@ end
 E = par.h * par.c ./(spectrums.wavelengths / 1e9);  % (eV)
 
 % Find each valid discrete value of energy
-validE1 = E >= par.Eg1;
-validE2 = E >= par.Eg2;
+par.validE1 = E >= par.Eg1;
+par.validE2 = E >= par.Eg2;
 
 % Create vectors for the reflectivity, aspectrums.bsorptivity, and probability
-R1 = validE1 * par.R1;
-R2 = validE2 * par.R2;
-a1 = validE1 * par.a1;
-a2 = validE2 * par.a2;
-etac1 = validE1 * par.etac1;
-etac2 = validE2 * par.etac2;
+R1 = par.validE1 * par.R1;
+R2 = par.validE2 * par.R2;
+a1 = par.validE1 * par.a1;
+a2 = par.validE2 * par.a2;
+etac1 = par.validE1 * par.etac1;
+etac2 = par.validE2 * par.etac2;
 
 % Calculate the spectrum seen by cell 2
 spectrums.bs2 = (ones(size(R1))-R1) .* (ones(size(R2))-R2) .* (ones(size(a1))-a1) .* spectrums.bs;
 
 % Evaluate Jsc1 and Jsc2
-Jsc1 = par.q * sum(etac1 .* (ones(size(R1))-R1) .* a1 .* (spectrums.bs .* validE1));  % (A cm-2)
-Jsc2 = par.q * sum(etac2 .* (ones(size(R2))-R2) .* a2 .* (spectrums.bs2 .* validE2));
+Jsc1 = par.q * sum(etac1 .* (ones(size(R1))-R1) .* a1 .* (spectrums.bs .* par.validE1));  % (A cm-2)
+Jsc2 = par.q * sum(etac2 .* (ones(size(R2))-R2) .* a2 .* (spectrums.bs2 .* par.validE2));
 
 % Convert to (mA cm-2)
 Jsc1 = Jsc1 * 1e3;
@@ -176,7 +176,7 @@ end
 
 % Spectrum Plot
 if set.plot5
-    fig5 = Plotting.spectrum(spectrums, par);
+    [fig5, spectrums] = Plotting.spectrum(spectrums, par);
 end
 
 

@@ -1,11 +1,11 @@
 % Plots the spectrum and the proportion of absorbed photons in each layer
 
-function fig = spectrum(s, p)
+function [fig, s] = spectrum(s, p)
     fig = figure(5);
     
     % Use a plotting factor to add some extra wavelengths to the end of the
     % plot
-    plot_factor = 1.1;
+    plot_factor = 1.2;
     
     % Use the lower bandgap energy
     min_energy = min([p.Eg1, p.Eg2]) / plot_factor;
@@ -16,6 +16,15 @@ function fig = spectrum(s, p)
     % Find where the max wavelength occurs in wavelengths
     index = find(s.wavelengths < max_wavelength, 1, 'last');
     
+    % Calculate the spectrum which excited electrons in cell 1
+    s.cell1 = p.etac1 .* (ones(size(p.R1)) - p.R1) .* p.a1 .* (s.bs .* p.validE1);
+    
+    % Calculate for cell 2
+    s.cell2 = p.etac2 .* p.a2 .* (s.bs2 .* p.validE2);
+    
     % Plot up to that index
     plot(s.wavelengths(1:index), s.bs(1:index));
+    hold on
+    plot(s.wavelengths(1:index), s.cell1(1:index));
+    plot(s.wavelengths(1:index), s.cell2(1:index));
 end
