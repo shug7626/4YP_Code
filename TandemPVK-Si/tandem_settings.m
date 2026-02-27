@@ -3,14 +3,17 @@
 
 function s = tandem_settings()
     % Plot the J-V curves for the total device and cell 1 and 2
-    s.plot1 = true;
+    s.plot1 = 1;
     
     % Plot the voltage area plot
-    s.plot2 = true;
+    s.plot2 = 1;
     
     % Plot the voltage - bias voltage plots
-    s.plot3 = true;
+    s.plot3 = 1;
     
     % Plot the power - voltage plot
-    s.plot4 = true;
+    s.plot4 = 1;
+    
+    % Plot the spectrums
+    s.plot5 = 1;
 end
