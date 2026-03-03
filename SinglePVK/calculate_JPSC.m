@@ -56,9 +56,9 @@ function J = calculate_JPSC(par, Vin, options)
     Jd_sol = Jd(maxI);
     F_sol = F(maxI);
     
-    fprintf('R chosen: %f\n', maxI);
-    fprintf('Jd_sol: %f\n', Jd_sol);
-    fprintf('F_sol: %f\n', F_sol);
+%     fprintf('R chosen: %f\n', maxI);
+%     fprintf('Jd_sol: %f\n', Jd_sol);
+%     fprintf('F_sol: %f\n', F_sol);
     
     % Calculate the current density through the PSC current source
     J = par.Jsc - Jd_sol * exp(-F_sol/par.VT);
