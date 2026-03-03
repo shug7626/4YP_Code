@@ -1,9 +1,10 @@
 % Script to calculate the the dark current density constant and the
-% potential barrier function
+% potential barrier function and then calculate the current through the
+% PSC
 
 % Input V is the internal voltages V1-4
 
-function x = calculate_Jd_F(par, Vin, options)
+function x = calculate_JPSC(par, Vin, options)
     % Set the initial conditions
     V0 = 0.2;
     Q0 = 1e-2;
