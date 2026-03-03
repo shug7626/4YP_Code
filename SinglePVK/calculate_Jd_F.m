@@ -1,8 +1,22 @@
-% Script to calculate the recombination rates
+% Script to calculate the the dark current density constant and the
+% potential barrier function
 
 % Input V is the internal voltages V1-4
 
-function x = calculate_Jd_F(par, n, p, V)
+function x = calculate_Jd_F(par, Vin, options)
+    % Set the initial conditions
+    V0 = 0.2;
+    Q0 = 1e-2;
+    x0 = [V0, V0, V0, V0, Q0];
+    
+    % Solve for the internal voltages V1-4
+    Vfunc = @(x) solve_pvk_v(x, Vin, par);
+    V = fsolve(Vfunc, x0, options);
+
+    % Calculate n and p doping
+    n = par.nb * exp(-(V(1) + V(2))/par.VT);
+    p = par.pb * exp(-(V(3) + V(4))/par.VT);
+    
     % Calculate the recominbation rates
     R = zeros(1,5);
     R(1) = par.beta * n * p;
