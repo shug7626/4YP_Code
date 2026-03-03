@@ -11,17 +11,17 @@ function x = calculate_Jd_F(par, n, p, V)
     R(4) = par.vpE * p;
     R(5) = par.vnH * n;
     
-    % Calculate the dark current constants
+    % Calculate the dark current constants (converting E from eV to J by removing q)
     Jd = zeros(1,5);
     Jd(1) = par.q * par.b * par.beta * par.ni2 * exp(par.Vbi/par.VT);
     Jd(2) = (par.q * par.b * par.dH * par.gv / (par.taup * par.gvH)) ...
-        * exp((par.Ev - par.EvH)/(par.q * par.VT));
+        * exp((par.Ev - par.EvH)/par.VT);
     Jd(3) = (par.q * par.b * par.dE * par.gc / (par.taun * par.gcE)) ...
-        * exp(-(par.Ec - par.EcE)/(par.q * par.VT));
+        * exp(-(par.Ec - par.EcE)/par.VT);
     Jd(4) = (par.q * par.vpE * par.dH * par.gv / par.gvH) ...
-        * exp((par.Ev - par.EvH)/(par.q * par.VT));
+        * exp((par.Ev - par.EvH)/par.VT);
     Jd(5) = (par.q * par.vnH * par.dE * par.gc / par.gcE) ...
-        * exp(-(par.Ec - par.EcE)/(par.q * par.VT));
+        * exp(-(par.Ec - par.EcE)/par.VT);
     
     % Calculate the potential barrier functions
     F = zeros(1,5);
