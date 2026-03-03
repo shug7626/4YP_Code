@@ -1,5 +1,5 @@
 % Code based on the log form of the three diode model, with series and
-% shunt resistors for a perovskite on silicon tandem cell
+% shunt resistors for a silicon on silicon tandem cell
 
 %% Fetch parameters and settings
 par = parameters();
@@ -92,7 +92,7 @@ v02 = 0.5;
 v0 = [v01, v02];
 
 % Find where the total current is zero
-func = @(v) evaluate_tandem_pvk_si_Voc(v, par);
+func = @(v) evaluate_tandem_si_si_Voc(v, par);
 Voc_sol = fsolve(func, v0, options);
 res.Voc1 = Voc_sol(1);
 res.Voc2 = Voc_sol(2);
@@ -116,7 +116,7 @@ x0 = [j0, v01, v02];
 
 for iter = 1:par.N
     % Solve
-    fun = @(x)evaluate_tandem_pvk_si(x, res.V(iter), par);
+    fun = @(x)evaluate_tandem_si_si(x, res.V(iter), par);
     x_sol = fsolve(fun, x0, options);
     
     % Unpack output
