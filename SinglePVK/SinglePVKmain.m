@@ -64,15 +64,32 @@ par.Q0 = sqrt(2 * par.q * par.N0 * par.epsA * par.eps0 * par.VT);
 % Set the fsolve options
 options = optimoptions('fsolve', 'Display', 'none');
 
-V = linspace(0, 0.725, 20);
+% Calculate Voc by finding the voltage for J = 0
+Voc0 = par.Vbi * 0.9;
+Voc_func = @(v) calculate_JPSC(par, v, options);
+Voc = fzero(Voc_func, Voc0);
+
+
+
+%% Solve for J up to Voc
+V = linspace(0, Voc, par.N);
 J = zeros(size(V));
 
-for iter = 1:20
-    % Calculate J
+for iter = 1:length(V)
+    % Calculate J at V
     J(iter) = calculate_JPSC(par, V(iter), options);
 end
 
+
+
+%% Plot J-V
+figure(1);
 plot(V, J);
+xline(0);
+yline(0);
+xlabel('Bias Voltage (V)');
+ylabel('Current Density (mA cm-2)');
+title('Single Perovskite Solar Cell Current Density - Voltage Plot');
 
 
 
