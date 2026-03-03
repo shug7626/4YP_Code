@@ -33,3 +33,25 @@ Jsc = par.q * sum(etac .* (ones(size(R)) - R) .* a .* (spectrums.bs .* par.valid
 
 % Convert to mA
 Jsc = Jsc * 1e3;
+
+
+
+%% Calculate constants
+% Thermal voltage (V)
+par.VT = par.k * par.T / par.q;
+
+% Built-in voltage (V) (converting the energies from eV to J)
+par.Vbi = (par.EcE - par.EvH) + par.VT*log((par.dH * par.dE)/(par.gvH * par.gcE));
+
+% Debye length (m)
+par.LD = sqrt((par.epsA * par.VT)/(par.q * par.N0));
+par.omegaE = sqrt((par.epsA * par.N0)/(par.epsE * par.dE));
+par.omegaH = sqrt((par.epsA * par.N0)/(par.epsH * par.dH));
+
+% Intrinsic carrier concentration
+par.ni2 = par.gc * par.gv * exp(-(par.Ec - par.Ev)/(par.k * par.T));
+
+% Q(V) pre-multiplier
+par.Q0 = sqrt(2 * par.q * par.N0 * par.epsA * par.VT);
+
+
