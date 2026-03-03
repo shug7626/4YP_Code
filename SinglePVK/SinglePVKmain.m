@@ -10,3 +10,26 @@ par = parameters();
 spectrum_table = readmatrix("Spectrum_full.xlsx");
 spectrums.wavelengths = spectrum_table(:,1);
 spectrums.bs_cumulative = spectrum_table(:,2);
+
+% Switch from the cumulative spectrum to the spectrum density
+spectrums.bs = zeros(size(spectrums.bs_cumulative));
+spectrums.bs(1) = spectrums.bs_cumulative(1);
+spectrums.bs(2:end) = spectrums.bs_cumulative(2:end) - spectrums.bs_cumulative(1:end-1);
+
+% Convert the wavelengths to energy (eV) and converting from nm to m
+E = par.h * par.c ./ (spectrums.wavelengths / 1e9);
+
+% Create a mask of valid energies
+par.validE = E >= (par.Ec - par.Ev);
+
+% Create vectors for the reflectivity, absorptivity, and probability of
+% electron collection
+R = par.validE * par.R;
+a = par.validE * par.a;
+etac = par.validE * par.etac;
+
+% Evaluate the short circuit current (A cm-2)
+Jsc = par.q * sum(etac .* (ones(size(R)) - R) .* a .* (spectrums.bs .* par.validE));
+
+% Convert to mA
+Jsc = Jsc * 1e3;
