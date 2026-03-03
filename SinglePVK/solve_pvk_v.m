@@ -9,16 +9,16 @@ function F = solve_pvk_v(x, V, p)
     Q = x(5);
     
     % V1 equation
-    F(1) = (-p.OmegaE * Q) - evaluate(V1);
+    F(1) = (-p.omegaE * Q) - evaluate_Q(V1, p);
     
     % V2 equation
-    F(2) = -Q - evaluate(V2);
+    F(2) = -Q - evaluate_Q(V2, p);
     
     % V3 equation
-    F(3) = Q - evaluate(V3);
+    F(3) = Q - evaluate_Q(V3, p);
     
     % V4 equation
-    F(4) = (-p.OmegaH * Q) - evaluate(V4);
+    F(4) = (-p.omegaH * Q) - evaluate_Q(V4, p);
     
     % Total voltage
     F(5) = V1 + V2 + V3 + V4 - (p.Vbi - V);
