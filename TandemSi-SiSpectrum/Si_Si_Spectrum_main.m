@@ -31,8 +31,8 @@ par.validE2 = E >= par.Eg2;
 % Create vectors for the reflectivity, aspectrums.bsorptivity, and probability
 R1 = par.validE1 * par.R1;
 R2 = par.validE2 * par.R2;
-a1 = par.validE1 * par.a1;
-a2 = par.validE2 * par.a2;
+a1 = par.validE1 * (1 - exp(-par.a1 * par.thick1));
+a2 = par.validE2 * (1 - exp(-par.a2 * par.thick2));
 etac1 = par.validE1 * par.etac1;
 etac2 = par.validE2 * par.etac2;
 

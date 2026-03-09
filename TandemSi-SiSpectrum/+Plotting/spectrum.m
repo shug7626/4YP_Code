@@ -17,10 +17,10 @@ function [fig, s] = spectrum(s, p, set)
     index = find(s.wavelengths < max_wavelength, 1, 'last');
     
     % Calculate the spectrum which excited electrons in cell 1
-    s.cell1 = p.etac1 .* (ones(size(p.R1)) - p.R1) .* p.a1 .* (s.bs .* p.validE1);
+    s.cell1 = p.etac1 .* (ones(size(p.R1)) - p.R1) .* (ones(size(p.R1)) - exp(-p.a1 * p.thick1)) .* (s.bs .* p.validE1);
     
     % Calculate for cell 2
-    s.cell2 = p.etac2 .* p.a2 .* (s.bs2 .* p.validE2);
+    s.cell2 = p.etac2 .* (ones(size(p.R2)) - exp(-p.a2 * p.thick2)) .* (s.bs2 .* p.validE2);
     
     % Plot up to that index
     plot(s.wavelengths(1:index), s.bs(1:index), 'DisplayName', 'Photon Spectrum');
