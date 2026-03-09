@@ -30,9 +30,10 @@ function par = parameters()
     par.beta1 = 0;
     par.eps1 = 11.7 * 8.854e-14;
     par.R1 = 0.05;
-    par.a1 = 0.95;
+    par.a1 = 1.3e7;             % (m-1)
     par.etac1 = 0.95;
-    par.Eg1 = 1.7867;         % (eV)
+    par.Eg1 = 1.7867;           % (eV)
+    par.thick1 = 300e-9;        % Thickness of the active layer (m)
 
     % Cell 2 (Bottom)
     par.Rs2 = 1e-4;
@@ -51,9 +52,10 @@ function par = parameters()
     par.beta2 = 0;
     par.eps2 = 11.7 * 8.854e-14;
     par.R2 = 0.08;
-    par.a2 = 0.85;
+    par.a2 = 2.1e4;
     par.etac2 = 0.95;
     par.Eg2 = 1.11;
+    par.thick2 = 180e-6;
     
     % Total series resistance
     par.Rs = par.Rs1 + par.Rs2;
