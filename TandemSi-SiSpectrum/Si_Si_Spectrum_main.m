@@ -11,15 +11,17 @@ set = plotting_settings();
 % Import the spectrum data
 spectrum_table = readmatrix("Spectrum_full.xlsx");
 spectrums.wavelengths = spectrum_table(:,1);
-spectrums.spectrums.bs_cumulative = spectrum_table(:,2);      % (photons cm-2 s-1)
+spectrums.bs_cumulative = spectrum_table(:,2);      % (photons cm-2 s-1)
 
-% Switch from the cumulative spectrum to the photon flux
+% Switch from the cumulative spectrum to the photon flux density
 cumulative_spec = 0;
-spectrums.bs = zeros(size(spectrums.spectrums.bs_cumulative));
-for i = 1:length(spectrums.wavelengths)
-    spectrums.bs(i) = spectrums.spectrums.bs_cumulative(i) - cumulative_spec;
-    cumulative_spec = cumulative_spec + spectrums.bs(i);
-end
+spectrums.bs = zeros(size(spectrums.bs_cumulative));
+spectrums.bs(1) = spectrums.bs_cumulative(1);
+spectrums.bs(2:end) = spectrums.bs_cumulative(2:end) - spectrums.bs_cumulative(1:end-1);
+% for i = 1:length(spectrums.wavelengths)
+%     spectrums.bs(i) = spectrums.bs_cumulative(i) - cumulative_spec;
+%     cumulative_spec = cumulative_spec + spectrums.bs(i);
+% end
 
 % Convert the spectrums.wavelengths to photon energies (converting from nm to m)
 E = par.h * par.c ./(spectrums.wavelengths / 1e9);  % (eV)
