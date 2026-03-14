@@ -18,10 +18,6 @@ cumulative_spec = 0;
 spectrums.bs = zeros(size(spectrums.bs_cumulative));
 spectrums.bs(1) = spectrums.bs_cumulative(1);
 spectrums.bs(2:end) = spectrums.bs_cumulative(2:end) - spectrums.bs_cumulative(1:end-1);
-% for i = 1:length(spectrums.wavelengths)
-%     spectrums.bs(i) = spectrums.bs_cumulative(i) - cumulative_spec;
-%     cumulative_spec = cumulative_spec + spectrums.bs(i);
-% end
 
 % Convert the spectrums.wavelengths to photon energies (converting from nm to m)
 E = par.h * par.c ./(spectrums.wavelengths / 1e9);  % (eV)
@@ -30,7 +26,17 @@ E = par.h * par.c ./(spectrums.wavelengths / 1e9);  % (eV)
 par.validE1 = E >= par.Eg1;
 par.validE2 = E >= par.Eg2;
 
-% Create vectors for the reflectivity, aspectrums.bsorptivity, and probability
+% Add interpolation to the mask
+% Find the index of the last suitable energy
+indices1 = find(par.validE1);
+last1 = indices1(end);
+indices2 = find(par.validE2);
+last2 = indices2(end);
+% Find the fraction between the last full and next photon energy
+par.validE1(last1 + 1) = (E(last1) - par.Eg1)/(E(last1) - E(last1 + 1));
+par.validE2(last2 + 1) = (E(last2) - par.Eg2)/(E(last2) - E(last2 + 1));
+
+% Create vectors for the reflectivity, absorptivity, and probability
 R1 = par.validE1 * par.R1;
 R2 = par.validE2 * par.R2;
 a1 = par.validE1 * (1 - exp(-par.a1 * par.thick1));
