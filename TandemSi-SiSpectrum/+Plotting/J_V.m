@@ -17,16 +17,16 @@ function fig = J_V(res)
     xline(0);
     yline(0);
     xlabel('Cell 1 Voltage (V)');
-    ylabel('Current Density (mA/cm2)');
-    title('Cell 1 Current Density - Voltage Plot');
+    ylabel('Cell 1 Current Density (mA/cm2)');
+    title('Cell 1 J - V');
 
     ax3 = nexttile;
     plot(res.V2T,res.J);
     xline(0);
     yline(0);
     xlabel('Cell 2 Voltage (V)');
-    ylabel('Cell 2 Current Density - Votlage Plot');
-    title('Cell 2 Current Density - Voltage Plot');
+    ylabel('Cell 2 Current Density (mA/cm2)');
+    title('Cell 2 J - V');
 
     linkaxes([ax1, ax2, ax3], 'y');
 end
