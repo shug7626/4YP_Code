@@ -1,9 +1,8 @@
 % Code based on the log form of the three diode model, with series and
 % shunt resistors for a silicon on silicon tandem cell
 
-%% Fetch parameters and settings
+%% Fetch parameters
 par = parameters();
-set = plotting_settings();
 
 
 
@@ -167,6 +166,9 @@ fprintf('Efficiency: %5.3f%%\n', Efficiency);
 
 
 %% Plots
+% Fetch plotting settings
+set = plotting_settings();
+
 % Current - Voltage Plot
 if set.plot1
     fig1 = Plotting.J_V(res);
