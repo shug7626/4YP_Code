@@ -1,6 +1,7 @@
 % Voltage Area Plot
 
 function fig = V_Area(res)
+    clf(figure(2));
     fig = figure(2);
     Y = [(res.V1T.') (res.V2T.')];
     x = res.V;
