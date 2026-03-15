@@ -26,6 +26,10 @@ E = par.h * par.c ./(spectrums.wavelengths / 1e9);  % (eV)
 par.validE1 = E >= par.Eg1;
 par.validE2 = E >= par.Eg2;
 
+% Convert the energy masks to doubles
+par.validE1 = double(par.validE1);
+par.validE2 = double(par.validE2);
+
 % Add interpolation to the mask
 % Find the index of the last suitable energy
 indices1 = find(par.validE1);
