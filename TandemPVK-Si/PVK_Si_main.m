@@ -55,6 +55,7 @@ Jsc2 = par.q * sum(etac2 .* (ones(size(R2))-R2) .* a2 .* (spectrums.bs2 .* par.v
 
 % Convert to (mA cm-2)
 Jsc1 = Jsc1 * 1e3;
+par.Jsc1 = Jsc1;
 Jsc2 = Jsc2 * 1e3;
 
 
@@ -86,7 +87,7 @@ par.Jillum2 = Jsc2 + Jdiff02 + Jrad02 + Jscr02;
 
 %% Calculate PVK Constants
 % Built-in voltage (V) (converting the energies from eV to J)
-par.Vbi = (par.EcE - par.EvH) + par.VT*log((par.dH * par.dE)/(par.gvH * par.gcE));
+par.Vbi1 = (par.EcE - par.EvH) + par.VT*log((par.dH * par.dE)/(par.gvH * par.gcE));
 
 % nb and pb
 par.nb = (par.dE * par.gc / par.gcE) * exp((par.EcE - par.Ec)/par.VT);
@@ -115,3 +116,8 @@ v0 = par.Vbi2 / 2;
 % Find where the silicon current is zero
 si_Voc_func = @(v) evaluate_si_Voc(v, par);
 res.Voc2 = fzero(si_Voc_func, v0);
+
+% Calculate PVK Voc by finding the voltage for J = 0
+Voc0 = par.Vbi1 * 0.9;
+pvk_Voc_func = @(v) calculate_JPSC(par, v, options);
+res.Voc1 = fzero(pvk_Voc_func, Voc0);
