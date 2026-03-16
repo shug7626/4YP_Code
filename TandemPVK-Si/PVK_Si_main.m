@@ -59,4 +59,59 @@ Jsc2 = Jsc2 * 1e3;
 
 
 
-%%
+%% Silicon Diode Constant Calculations
+% Thermal voltage
+par.VT = par.k*par.T/par.q;
+
+% Built in voltage
+par.Vbi2 = par.VT * log(par.Na2 * par.Nd2 / (par.ni2 ^ 2));
+
+% Diffusion current constant
+Jdiff02 = par.q * (par.ni2^2) * ((par.Dn2 / (par.Na2 * par.Ln2)) + (par.Dp2 / (par.Nd2 * par.Lp2)));
+par.Jdiffd2 = par.q * par.Nd2 * par.Na2 * ((par.Dn2 / (par.Na2 * par.Ln2)) + (par.Dp2 / (par.Nd2 * par.Lp2)));
+
+% Radiative recombination current constant
+Jrad02 = par.beta2 * ((par.n2 * par.p2) - (par.ni2 ^ 2));
+par.Jradd2 = par.beta2 * ((par.n2 * par.p2 * exp(par.Vbi2/par.VT)) - (par.Nd2 * par.Na2));
+
+% Recombination in the depletion region (SCR) current constant
+Jscr02 = par.ni2 * sqrt(2 * par.q * par.eps2 * ((1/par.Na2) + (1/par.Nd2)) * par.Vbi2 / (par.tn2 * par.tp2));
+par.Jscrd2 = sqrt(2 * par.q * par.eps2 * (par.Nd2 + par.Na2) * par.Vbi2 / (par.tn2 * par.tp2));
+
+
+% Illumination current (mA m-2)
+par.Jillum2 = Jsc2 + Jdiff02 + Jrad02 + Jscr02;
+
+
+
+%% Calculate PVK Constants
+% Built-in voltage (V) (converting the energies from eV to J)
+par.Vbi = (par.EcE - par.EvH) + par.VT*log((par.dH * par.dE)/(par.gvH * par.gcE));
+
+% nb and pb
+par.nb = (par.dE * par.gc / par.gcE) * exp((par.EcE - par.Ec)/par.VT);
+par.pb = (par.dH * par.gv / par.gvH) * exp((par.Ev - par.EvH)/par.VT);
+
+% Debye length (m)
+par.LD = sqrt((par.epsA * par.eps0 * par.VT)/(par.q * par.N0));
+par.omegaE = sqrt((par.epsA * par.eps0 * par.N0)/(par.epsE * par.eps0 * par.dE));
+par.omegaH = sqrt((par.epsA * par.eps0 * par.N0)/(par.epsH * par.eps0 * par.dH));
+
+% Intrinsic carrier concentration
+par.ni2 = par.gc * par.gv * exp(-(par.Ec - par.Ev)/(par.k * par.T));
+
+% Q(V) pre-multiplier
+par.Q0 = sqrt(2 * par.q * par.N0 * par.epsA * par.eps0 * par.VT);
+
+
+
+%% Calculate the open circuit voltage of the cell
+% Set fsolve to not display each calculation
+options = optimoptions('fsolve', 'Display', 'none');
+
+% Set initial guess for the silicon Voc
+v0 = par.Vbi2 / 2;
+
+% Find where the silicon current is zero
+si_Voc_func = @(v) evaluate_si_Voc(v, par);
+res.Voc2 = fzero(si_Voc_func, v0);
