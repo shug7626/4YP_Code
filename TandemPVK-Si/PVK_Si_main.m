@@ -121,3 +121,34 @@ res.Voc2 = fzero(si_Voc_func, v0);
 Voc0 = par.Vbi1 * 0.9;
 pvk_Voc_func = @(v) calculate_JPSC(par, v, options);
 res.Voc1 = fzero(pvk_Voc_func, Voc0);
+
+
+
+%% Set range of voltages and vectors to store results
+res.V = linspace(0, (res.Voc1 + res.Voc2), par.N);
+res.V1 = zeros(size(res.V));
+res.V2 = zeros(size(res.V));
+res.J = zeros(size(res.V));
+
+
+
+%% Calculate J for each V
+% Set initial guess
+j0 = (Jsc1 + Jsc2) / 2;
+v01 = res.Voc1/2;
+v02 = res.Voc2/2;
+x0 = [j0, v01, v02];
+
+for iter = 1:par.N
+    % Solve
+    fun = @(x)evaluate_tandem_pvk_si(x, res.V(iter), par, options);
+    x_sol = fsolve(fun, x0, options);
+    
+    % Unpack output
+    res.J(iter) = real(x_sol(1));
+    res.V1(iter) = real(x_sol(2));
+    res.V2(iter) = real(x_sol(3));
+end
+
+
+
