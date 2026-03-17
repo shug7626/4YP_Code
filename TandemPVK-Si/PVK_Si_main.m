@@ -108,7 +108,7 @@ par.Q0 = sqrt(2 * par.q * par.N0 * par.epsA * par.eps0 * par.VT);
 
 %% Calculate the open circuit voltage of the cell
 % Set fsolve to not display each calculation
-options = optimoptions('fsolve', 'Display', 'none');
+options = optimoptions('fsolve', 'Display', 'none', 'FunctionTolerance', 1e-16, 'OptimalityTolerance', 1e-16, 'StepTolerance', 1e-16);
 
 % Set initial guess for the silicon Voc
 v0 = par.Vbi2 / 2;
@@ -134,7 +134,8 @@ res.J = zeros(size(res.V));
 
 %% Calculate J for each V
 % Find the dark current constant to be used for the current initial guess
-jd0 = min([Jsc1 Jsc2]) / (exp((res.Voc1 + res.Voc2)/par.VT) - 1);
+n_estimate = 1.1;
+jd0 = min([Jsc1 Jsc2]) / (exp((res.Voc1 + res.Voc2)/(n_estimate * par.VT)) - 1);
 
 % Pre-allocate
 V = res.V;
@@ -144,7 +145,7 @@ V2 = res.V2;
 
 parfor iter = 1:par.N
     % Set the initial guesses
-    j0 = min([Jsc1 Jsc2]) - jd0 * (exp(V(iter)/par.VT) - 1);
+    j0 = min([Jsc1 Jsc2]) - jd0 * (exp(V(iter)/(n_estimate * par.VT)) - 1);
     v0 = V(iter)/2;
     x0 = [j0, v0, v0];
     
