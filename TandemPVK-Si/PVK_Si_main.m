@@ -136,21 +136,31 @@ res.J = zeros(size(res.V));
 % Find the dark current constant to be used for the current initial guess
 jd0 = min([Jsc1 Jsc2]) / (exp((res.Voc1 + res.Voc2)/par.VT) - 1);
 
-for iter = 1:par.N
+% Pre-allocate
+V = res.V;
+J = res.J;
+V1 = res.V1;
+V2 = res.V2;
+
+parfor iter = 1:par.N
     % Set the initial guesses
-    j0 = min([Jsc1 Jsc2]) - jd0 * (exp(res.V(iter)/par.VT) - 1);
-    v0 = res.V(iter)/2;
+    j0 = min([Jsc1 Jsc2]) - jd0 * (exp(V(iter)/par.VT) - 1);
+    v0 = V(iter)/2;
     x0 = [j0, v0, v0];
     
     % Solve
-    fun = @(x)evaluate_tandem_pvk_si(x, res.V(iter), par, options);
+    fun = @(x)evaluate_tandem_pvk_si(x, V(iter), par, options);
     x_sol = fsolve(fun, x0, options);
     
     % Unpack output
-    res.J(iter) = real(x_sol(1));
-    res.V1(iter) = real(x_sol(2));
-    res.V2(iter) = real(x_sol(3));
+    J(iter) = real(x_sol(1));
+    V1(iter) = real(x_sol(2));
+    V2(iter) = real(x_sol(3));
 end
 
-
+% Unpack the results
+res.V = V;
+res.J = J;
+res.V1 = V1;
+res.V2 = V2;
 
