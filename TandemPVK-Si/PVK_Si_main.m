@@ -164,3 +164,60 @@ res.J = J;
 res.V1 = V1;
 res.V2 = V2;
 
+
+
+%% Calculate Contribution of Each Cell to the Series Resistor Voltage
+% Cell 1 series resistor voltage
+res.Vs1 = -res.J * par.A * par.Rs1;
+
+% Cell 2 series resistor voltage
+res.Vs2 = -res.J * par.A * par.Rs2;
+
+% Sum of series resistor voltages
+res.Vs = res.Vs1 + res.Vs2;
+
+% Total cell contributions
+res.V1T = res.V1 + res.Vs1;
+res.V2T = res.V2 + res.Vs2;
+
+
+
+%% Calculate the Efficiency
+% Incident photon power (converting to (mW cm-2) from (W cm-2))
+Pin = sum(spectrums.bs .* E) * par.q * 1e3;
+Pout = max(res.J .* res.V);
+Efficiency = Pout / Pin * 100;
+
+% Print the efficiency
+fprintf('Efficiency: %5.3f%%\n', Efficiency);
+
+
+
+%% Plots
+% Fetch plotting settings
+set = plot_settings();
+
+% Current - Voltage Plot
+if set.plot1
+    fig1 = Plotting.J_V(res);
+end
+
+% Voltage area plot
+if set.plot2
+    fig2 = Plotting.V_Area(res);
+end
+
+% Voltage - Voltage Bias plot
+if set.plot3
+    fig3 = Plotting.V_VBias(res);
+end
+
+% Power - Voltage plot
+if set.plot4
+    fig4 = Plotting.P_V(res);
+end
+
+% Spectrum Plot
+if set.plot5
+    [fig5, spectrums] = Plotting.spectrum(spectrums, par, set);
+end
