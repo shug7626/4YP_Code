@@ -133,13 +133,15 @@ res.J = zeros(size(res.V));
 
 
 %% Calculate J for each V
-% Set initial guess
-j0 = (Jsc1 + Jsc2) / 2;
-v01 = res.Voc1/2;
-v02 = res.Voc2/2;
-x0 = [j0, v01, v02];
+% Find the dark current constant to be used for the current initial guess
+jd0 = min([Jsc1 Jsc2]) / (exp((res.Voc1 + res.Voc2)/par.VT) - 1);
 
 for iter = 1:par.N
+    % Set the initial guesses
+    j0 = min([Jsc1 Jsc2]) - jd0 * (exp(res.V(iter)/par.VT) - 1);
+    v0 = res.V(iter)/2;
+    x0 = [j0, v0, v0];
+    
     % Solve
     fun = @(x)evaluate_tandem_pvk_si(x, res.V(iter), par, options);
     x_sol = fsolve(fun, x0, options);
