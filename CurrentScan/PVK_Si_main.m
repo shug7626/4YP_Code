@@ -125,40 +125,63 @@ res.Voc1 = fzero(pvk_Voc_func, Voc0);
 
 
 %% Set range of voltages and vectors to store results
-res.V = linspace(0, (res.Voc1 + res.Voc2), par.N);
-res.V1 = zeros(size(res.V));
-res.V2 = zeros(size(res.V));
-res.J = zeros(size(res.V));
+J = linspace(0, min([Jsc1 Jsc2]), par.N);
+V1 = zeros(size(J));
+V2 = zeros(size(J));
+V = zeros(size(J));
 
 
 
-%% Calculate J for each V
-% Find the dark current constant to be used for the current initial guess
+%% Calculate V, V1, V2 for a given J
+% Find the constants to be used for the initial guesses
 n_estimate = 1.1;
-jd0 = min([Jsc1 Jsc2]) / (exp((res.Voc1 + res.Voc2)/(n_estimate * par.VT)) - 1);
+jd02 = Jsc2 / (exp((res.Voc2 - par.Vbi2) / (n_estimate * par.VT)));
 
-% Pre-allocate
-V = res.V;
-J = res.J;
-V1 = res.V1;
-V2 = res.V2;
+for iter = 1:(par.N - 1)
+    % Set the initial guess
+    v02 = par.Vbi2 + (n_estimate * par.VT * log((Jsc2 - J(iter))/jd02));
+    if abs(v02) > res.Voc2
+        v02 = res.Voc2;
+    end
 
-parfor iter = 1:par.N
-    % Set the initial guesses
-    j0 = min([Jsc1 Jsc2]) - jd0 * (exp(V(iter)/(n_estimate * par.VT)) - 1);
-    v0 = V(iter)/2;
-    x0 = [j0, v0, v0];
-    
-    % Solve
-    fun = @(x)evaluate_tandem_pvk_si(x, V(iter), par, options);
-    x_sol = fsolve(fun, x0, options);
-    
-    % Unpack output
-    J(iter) = real(x_sol(1));
-    V1(iter) = real(x_sol(2));
-    V2(iter) = real(x_sol(3));
+    % Initialise the functions to be used
+    si_V_func = @(v2) evaluate_Si_V(v2, J(iter), par);
+
+    % Use fzero to find the corresponding voltage
+    V2(iter) = fzero(si_V_func, v02);
 end
 
+% Add the final voltages
+V2(end) = 0;
+
+
+% %% Calculate J for each V
+% % Find the dark current constant to be used for the current initial guess
+% n_estimate = 1.1;
+% jd0 = min([Jsc1 Jsc2]) / (exp((res.Voc1 + res.Voc2)/(n_estimate * par.VT)) - 1);
+% 
+% % % Pre-allocate
+% % V = res.V;
+% % J = res.J;
+% % V1 = res.V1;
+% % V2 = res.V2;
+% 
+% parfor iter = 1:par.N
+%     % Set the initial guesses
+%     j0 = min([Jsc1 Jsc2]) - jd0 * (exp(V(iter)/(n_estimate * par.VT)) - 1);
+%     v0 = V(iter)/2;
+%     x0 = [j0, v0, v0];
+% 
+%     % Solve
+%     fun = @(x)evaluate_tandem_pvk_si(x, V(iter), par, options);
+%     x_sol = fsolve(fun, x0, options);
+% 
+%     % Unpack output
+%     J(iter) = real(x_sol(1));
+%     V1(iter) = real(x_sol(2));
+%     V2(iter) = real(x_sol(3));
+% end
+% 
 % Unpack the results
 res.V = V;
 res.J = J;
