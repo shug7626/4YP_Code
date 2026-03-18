@@ -159,16 +159,26 @@ parfor iter = 2:par.N
     V(iter) = V1(iter) + V2(iter) + v_s;
 end
 
-% % Add the final voltages
-% V1(1) = V1(2);
-% V2(1) = V2(2);
-% V(1) = V(2);
-
 % Unpack the results
 res.V = V;
 res.J = J;
 res.V1 = V1;
 res.V2 = V2;
+
+
+
+%% Add the voltages at V = 0, J = Jsc
+% Set the initial guesses
+v01 = 0;
+v02 = 0;
+
+% Setup the functions to solve
+pvk_V_func = @(v1) evaluate_PVK_V(v1, min([Jsc1 Jsc2]), par, options);
+si_V_func = @(v2) evaluate_Si_V(v2, min([Jsc1 Jsc2]), par);
+
+% Use fzero to find the corresponding voltage
+V1(1) = fzero(pvk_V_func, v01);
+V2(1) = fzero(si_V_func, v02);
 
 
 
