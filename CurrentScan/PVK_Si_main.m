@@ -135,10 +135,14 @@ V = zeros(size(J));
 %% Calculate V, V1, V2 for a given J
 % Find the constants to be used for the initial guesses
 n_estimate = 1.1;
+jd01 = Jsc1 / (exp((res.Voc1 - par.Vbi1) / (n_estimate * par.VT)));
 jd02 = Jsc2 / (exp((res.Voc2 - par.Vbi2) / (n_estimate * par.VT)));
 
+% Loop through the current densities to calculate the corresponding
+% voltages
 for iter = 1:(par.N - 1)
-    % Set the initial guess
+    % Set the initial guesses
+    v01 = par.Vbi1 + (n_estimate * par.VT * log((Jsc1 - J(iter))/jd01));
     v02 = par.Vbi2 + (n_estimate * par.VT * log((Jsc2 - J(iter))/jd02));
 
     % Initialise the functions to be used
@@ -150,6 +154,12 @@ end
 
 % Add the final voltages
 V2(end) = 0;
+
+% Unpack the results
+res.V = V;
+res.J = J;
+res.V1 = V1;
+res.V2 = V2;
 
 
 % %% Calculate J for each V
@@ -178,12 +188,6 @@ V2(end) = 0;
 %     V1(iter) = real(x_sol(2));
 %     V2(iter) = real(x_sol(3));
 % end
-% 
-% Unpack the results
-res.V = V;
-res.J = J;
-res.V1 = V1;
-res.V2 = V2;
 
 
 
