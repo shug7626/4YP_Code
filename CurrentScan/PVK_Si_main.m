@@ -168,17 +168,25 @@ res.V2 = V2;
 
 
 %% Add the voltages at V = 0, J = Jsc
-% Set the initial guesses
-v01 = 0;
-v02 = 0;
+if Jsc1 == min([Jsc1 Jsc2])
+    % Set the initial guess
+    v02 = V2(2);
 
-% Setup the functions to solve
-pvk_V_func = @(v1) evaluate_PVK_V(v1, min([Jsc1 Jsc2]), par, options);
-si_V_func = @(v2) evaluate_Si_V(v2, min([Jsc1 Jsc2]), par);
+    % Setup the functions to solve
+    si_V_func = @(v2) evaluate_Si_V(v2, min([Jsc1 Jsc2]), par);
 
-% Use fzero to find the corresponding voltage
-V1(1) = fzero(pvk_V_func, v01);
-V2(1) = fzero(si_V_func, v02);
+    % Use fzero to find the corresponding voltage
+    V2(1) = fzero(si_V_func, v02);
+else
+    % Set the initial guess
+    v01 = 0;
+    
+    % Setup the functions to solve
+    pvk_V_func = @(v1) evaluate_PVK_V(v1, min([Jsc1 Jsc2]), par, options);
+
+    % Use fzero to find the corresponding voltage
+    V1(1) = fzero(pvk_V_func, v01);
+end
 
 
 
