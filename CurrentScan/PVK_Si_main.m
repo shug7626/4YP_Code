@@ -140,54 +140,34 @@ jd02 = Jsc2 / (exp((res.Voc2 - par.Vbi2) / (n_estimate * par.VT)));
 
 % Loop through the current densities to calculate the corresponding
 % voltages
-for iter = 1:(par.N - 1)
+parfor iter = 1:(par.N - 1)
     % Set the initial guesses
     v01 = par.Vbi1 + (n_estimate * par.VT * log((Jsc1 - J(iter))/jd01));
     v02 = par.Vbi2 + (n_estimate * par.VT * log((Jsc2 - J(iter))/jd02));
 
     % Initialise the functions to be used
+    pvk_V_func = @(v1) evaluate_PVK_V(v1, J(iter), par, options);
     si_V_func = @(v2) evaluate_Si_V(v2, J(iter), par);
 
     % Use fzero to find the corresponding voltage
+    V1(iter) = fzero(pvk_V_func, v01);
     V2(iter) = fzero(si_V_func, v02);
+
+    % Calculate the total cell voltage
+    v_s = J(iter) * (par.Rs1 + par.Rs2) * par.A;
+    V(iter) = V1(iter) + V2(iter) + v_s;
 end
 
 % Add the final voltages
+V1(end) = 0;
 V2(end) = 0;
+V(end) = 0;
 
 % Unpack the results
 res.V = V;
 res.J = J;
 res.V1 = V1;
 res.V2 = V2;
-
-
-% %% Calculate J for each V
-% % Find the dark current constant to be used for the current initial guess
-% n_estimate = 1.1;
-% jd0 = min([Jsc1 Jsc2]) / (exp((res.Voc1 + res.Voc2)/(n_estimate * par.VT)) - 1);
-% 
-% % % Pre-allocate
-% % V = res.V;
-% % J = res.J;
-% % V1 = res.V1;
-% % V2 = res.V2;
-% 
-% parfor iter = 1:par.N
-%     % Set the initial guesses
-%     j0 = min([Jsc1 Jsc2]) - jd0 * (exp(V(iter)/(n_estimate * par.VT)) - 1);
-%     v0 = V(iter)/2;
-%     x0 = [j0, v0, v0];
-% 
-%     % Solve
-%     fun = @(x)evaluate_tandem_pvk_si(x, V(iter), par, options);
-%     x_sol = fsolve(fun, x0, options);
-% 
-%     % Unpack output
-%     J(iter) = real(x_sol(1));
-%     V1(iter) = real(x_sol(2));
-%     V2(iter) = real(x_sol(3));
-% end
 
 
 
