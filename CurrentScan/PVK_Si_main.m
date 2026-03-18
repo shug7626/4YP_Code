@@ -125,7 +125,8 @@ res.Voc1 = fzero(pvk_Voc_func, Voc0);
 
 
 %% Set range of voltages and vectors to store results
-J = linspace(0, min([Jsc1 Jsc2]), par.N);
+J_negative = logspace(-3, log10(min([Jsc1 Jsc2])), par.N);
+J = min([Jsc1 Jsc2]) - J_negative;
 V1 = zeros(size(J));
 V2 = zeros(size(J));
 V = zeros(size(J));
@@ -140,7 +141,7 @@ jd02 = Jsc2 / (exp((res.Voc2 - par.Vbi2) / (n_estimate * par.VT)));
 
 % Loop through the current densities to calculate the corresponding
 % voltages
-parfor iter = 1:(par.N - 1)
+parfor iter = 2:par.N
     % Set the initial guesses
     v01 = par.Vbi1 + (n_estimate * par.VT * log((Jsc1 - J(iter))/jd01));
     v02 = par.Vbi2 + (n_estimate * par.VT * log((Jsc2 - J(iter))/jd02));
@@ -158,10 +159,10 @@ parfor iter = 1:(par.N - 1)
     V(iter) = V1(iter) + V2(iter) + v_s;
 end
 
-% Add the final voltages
-V1(end) = 0;
-V2(end) = 0;
-V(end) = 0;
+% % Add the final voltages
+% V1(1) = V1(2);
+% V2(1) = V2(2);
+% V(1) = V(2);
 
 % Unpack the results
 res.V = V;
