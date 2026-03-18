@@ -140,9 +140,6 @@ jd02 = Jsc2 / (exp((res.Voc2 - par.Vbi2) / (n_estimate * par.VT)));
 for iter = 1:(par.N - 1)
     % Set the initial guess
     v02 = par.Vbi2 + (n_estimate * par.VT * log((Jsc2 - J(iter))/jd02));
-    if abs(v02) > res.Voc2
-        v02 = res.Voc2;
-    end
 
     % Initialise the functions to be used
     si_V_func = @(v2) evaluate_Si_V(v2, J(iter), par);
