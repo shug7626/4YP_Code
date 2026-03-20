@@ -130,6 +130,7 @@ J = min([Jsc1 Jsc2]) - J_negative;
 V1 = zeros(size(J));
 V2 = zeros(size(J));
 V = zeros(size(J));
+v_s = zeros(size(J));
 
 
 
@@ -155,15 +156,9 @@ parfor iter = 2:par.N
     V2(iter) = fzero(si_V_func, v02);
 
     % Calculate the total cell voltage
-    v_s = J(iter) * (par.Rs1 + par.Rs2) * par.A;
-    V(iter) = V1(iter) + V2(iter) + v_s;
+    v_s(iter) = -J(iter) * (par.Rs1 + par.Rs2) * par.A;
+    V(iter) = V1(iter) + V2(iter) + v_s(iter);
 end
-
-% Unpack the results
-res.V = V;
-res.J = J;
-res.V1 = V1;
-res.V2 = V2;
 
 
 
@@ -187,6 +182,18 @@ else
     % Use fzero to find the corresponding voltage
     V1(1) = fzero(pvk_V_func, v01);
 end
+
+% Include the series resistances voltage
+v_s(1) = -J(1) * (par.Rs1 + par.Rs2) * par.A;
+
+% Calculate the total voltage at Jsc
+V(1) = V1(1) + V2(1) + v_s(1);
+
+% Unpack the results
+res.V = V;
+res.J = J;
+res.V1 = V1;
+res.V2 = V2;
 
 
 
