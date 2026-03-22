@@ -1,0 +1,1 @@
+% Function to return the total cell value
