@@ -1,7 +1,7 @@
 % Function to calculate and return the short circuit current densities
 % based on the incident photon flux and material parameters
 
-function [Jsc1, Jsc2, bs2] = calculate_Jsc(par, spectrums, thick1, thick2)
+function [Jsc1, Jsc2] = calculate_Jsc(par, spectrums, thick1, thick2)
     % Unpack the energy spetrum
     E = spectrums.E;
 
