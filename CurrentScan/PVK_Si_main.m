@@ -125,7 +125,7 @@ res.Voc1 = fzero(pvk_Voc_func, Voc0);
 
 
 %% Set range of voltages and vectors to store results
-J_negative = logspace(-3, log10(min([Jsc1 Jsc2])), par.N);
+J_negative = logspace(-4, log10(min([Jsc1 Jsc2])), par.N);
 J = min([Jsc1 Jsc2]) - J_negative;
 V1 = zeros(size(J));
 V2 = zeros(size(J));
