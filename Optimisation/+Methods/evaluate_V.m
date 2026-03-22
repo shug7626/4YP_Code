@@ -1,11 +1,14 @@
 % Function to return the total cell voltage
 
 function V = evaluate_V(J, Jsc1, Jsc2, par, options)
+    % Illumination current (mA m-2)
+    Jillum2 = Jsc2 + par.Jdiff02 + par.Jrad02 + par.Jscr02;
+
     % Set initial guess for the silicon Voc
     v0 = par.Vbi2 / 2;
     
     % Find where the silicon current is zero
-    si_Voc_func = @(v) evaluate_si_Voc(v, par);
+    si_Voc_func = @(v) evaluate_si_Voc(v, Jillum2, par);
     Voc2 = fzero(si_Voc_func, v0);
     
     % Calculate PVK Voc by finding the voltage for J = 0

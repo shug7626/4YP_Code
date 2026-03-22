@@ -1,5 +1,5 @@
-function F = evaluate_si_Voc(v, params)
+function F = evaluate_si_Voc(v, Jillum2, params)
     F(1) = ((v - params.Vbi2) / params.VT) + log(abs((params.Jdiffd2 + params.Jradd2) ...
         + (params.Jscrd2 * exp(-(v - params.Vbi2)/(2 * params.VT))))) ...
-        - log(abs(params.Jillum2 - (v / (params.A * params.Rsh2))));
+        - log(abs(Jillum2 - (v / (params.A * params.Rsh2))));
 end
