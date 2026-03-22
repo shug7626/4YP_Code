@@ -1,0 +1,1 @@
+% Function to calculate and return the silicon diode constants
