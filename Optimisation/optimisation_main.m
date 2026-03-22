@@ -9,3 +9,11 @@
 % of values.
 % Starting with the maximum of those values, use a numerical method to find
 % the true MPP in the set range.
+
+
+%% Unpack the Parameters
+par = parameters();
+
+% Set the range of values to calculate the MPP for
+PVKRange = linspace(par.thick1Min, par.thick1Max, par.N);
+SiliconRange = linspace(par.thick2Min, par.thick2Max, par.N);
