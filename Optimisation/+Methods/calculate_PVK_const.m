@@ -1,6 +1,6 @@
 % Function to calculate the perovskite constants
 
-function calculate_PVK_const(par)
+function par = calculate_PVK_const(par)
     % Built-in voltage (V) (converting the energies from eV to J)
     par.Vbi1 = (par.EcE - par.EvH) + par.VT*log((par.dH * par.dE)/(par.gvH * par.gcE));
     

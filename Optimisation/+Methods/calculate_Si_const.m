@@ -1,6 +1,6 @@
 % Function to calculate and return the silicon diode constants
 
-function calculate_Si_const(par)
+function par = calculate_Si_const(par)
     % Built in voltage
     par.Vbi2 = par.VT * log(par.Na2 * par.Nd2 / (par.ni2 ^ 2));
     

@@ -21,6 +21,9 @@ SiliconRange = linspace(par.thick2Min, par.thick2Max, par.N);
 % Thermal voltage
 par.VT = par.k*par.T/par.q;
 
+% Set fsolve to not display each calculation
+options = optimoptions('fsolve', 'Display', 'none', 'FunctionTolerance', 1e-16, 'OptimalityTolerance', 1e-16, 'StepTolerance', 1e-16);
+
 
 
 %% Process the Spectrum
@@ -40,7 +43,10 @@ spectrums.E = par.h * par.c ./(spectrums.wavelengths / 1e9);  % (eV)
 
 
 %% Calculate the Silicon and PVK constants
-Methods.calculate_Si_const(par);
-Methods.calculate_PVK_const(par);
+par = Methods.calculate_Si_const(par);
+par = Methods.calculate_PVK_const(par);
 
 
+
+%% Calculate the Short Circuit Current Densities
+[Jsc1, Jsc2] = Methods.calculate_Jsc(par, spectrums, PVKRange(20), SiliconRange(20));
