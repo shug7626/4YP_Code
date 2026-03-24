@@ -1,10 +1,10 @@
-% Script to calculate the the dark current density constant and the
+% Script to calculate the the dark currenrest density constant and the
 % potential barrier function and then calculate the current through the
 % PSC
 
 % Input V is the internal voltages V1-4
 
-function J = calculate_JPSC(par, Vin, options)
+function J = calculate_JPSC(par, Vin, thick1, options)
     % Set the initial conditions
     V0 = (par.Vbi1 - Vin)/4;
     Q0 = Methods.evaluate_Q(V0, par);
@@ -32,10 +32,10 @@ function J = calculate_JPSC(par, Vin, options)
     
     % Calculate the dark current constants (converting b from nm to m)
     Jd = zeros(1,5);
-    Jd(1) = par.q * par.thick1 * par.beta * par.ni2 * exp(par.Vbi1/par.VT) * 1e-9;
-    Jd(2) = (par.q * par.thick1 * par.dH * par.gv / (par.taup * par.gvH)) ...
+    Jd(1) = par.q * thick1 * par.beta * par.ni2 * exp(par.Vbi1/par.VT) * 1e-9;
+    Jd(2) = (par.q * thick1 * par.dH * par.gv / (par.taup * par.gvH)) ...
         * exp((par.Ev - par.EvH)/(par.VT)) * 1e-9;
-    Jd(3) = (par.q * par.thick1 * par.dE * par.gc / (par.taun * par.gcE)) ...
+    Jd(3) = (par.q * thick1 * par.dE * par.gc / (par.taun * par.gcE)) ...
         * exp(-(par.Ec - par.EcE)/(par.VT)) * 1e-9;
     Jd(4) = (par.q * par.vpE * par.dH * par.gv / par.gvH) ...
         * exp((par.Ev - par.EvH)/(par.VT));

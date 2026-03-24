@@ -1,6 +1,6 @@
 % Function to return the total cell voltage
 
-function V = evaluate_V(J, Jsc1, Jsc2, par, options)
+function V = evaluate_V(J, Jsc1, Jsc2, thick1, par, options)
     % Illumination current (mA m-2)
     Jillum2 = Jsc2 + par.Jdiff02 + par.Jrad02 + par.Jscr02;
 
@@ -17,7 +17,7 @@ function V = evaluate_V(J, Jsc1, Jsc2, par, options)
     
     % Calculate PVK Voc by finding the voltage for J = 0
     Voc0 = par.Vbi1 * 0.9;
-    pvk_Voc_func = @(v) Methods.calculate_JPSC(par, v, options);
+    pvk_Voc_func = @(v) Methods.calculate_JPSC(par, v, thick1, options);
     Voc1 = fzero(pvk_Voc_func, Voc0);
 
 
