@@ -9,7 +9,7 @@ function F = solve_pvk_v(x, V, p)
     Q = x(5);
     
     % V1 equation
-    F(1) = (-p.omegaE * Q) - evaluate_Q(V1, p);
+    F(1) = (-p.omegaE * Q) - Methods.evaluate_Q(V1, p);
     
     % V2 equation
     F(2) = -Q - evaluate_Q(V2, p);
@@ -18,7 +18,7 @@ function F = solve_pvk_v(x, V, p)
     F(3) = Q - evaluate_Q(V3, p);
     
     % V4 equation
-    F(4) = (-p.omegaH * Q) - evaluate_Q(V4, p);
+    F(4) = (-p.omegaH * Q) - Methods.evaluate_Q(V4, p);
     
     % Total voltage
     F(5) = V1 + V2 + V3 + V4 - (p.Vbi1 - V);

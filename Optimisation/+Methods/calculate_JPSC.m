@@ -7,11 +7,11 @@
 function J = calculate_JPSC(par, Vin, options)
     % Set the initial conditions
     V0 = (par.Vbi1 - Vin)/4;
-    Q0 = evaluate_Q(V0, par);
+    Q0 = Methods.evaluate_Q(V0, par);
     x0 = [V0, V0, V0, V0, Q0];
     
     % Solve for the internal voltages V1-4
-    Vfunc = @(x) solve_pvk_v(x, Vin, par);
+    Vfunc = @(x) Methods.solve_pvk_v(x, Vin, par);
     V = fsolve(Vfunc, x0, options);
 
     % Calculate n and p concentrations

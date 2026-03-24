@@ -2,5 +2,5 @@
 % voltage
 
 function F = evaluate_PVK_V(v1, J, par, options)
-    F = calculate_JPSC(par, v1, options) - (v1/(par.Rsh1 * par.A)) - J;
+    F = Methods.calculate_JPSC(par, v1, options) - (v1/(par.Rsh1 * par.A)) - J;
 end
