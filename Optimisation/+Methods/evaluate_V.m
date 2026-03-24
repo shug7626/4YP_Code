@@ -8,11 +8,11 @@ function V = evaluate_V(J, Jsc1, Jsc2, thick1, par, options)
     v0 = par.Vbi2 / 2;
 
     % Create input structures
-    voc2_in = par;
-    voc2_in.Jillum2 = Jillum2;
+    v2_in = par;
+    v2_in.Jillum2 = Jillum2;
     
     % Find where the silicon current is zero
-    si_Voc_func = @(v) Methods.evaluate_si_Voc(v, voc2_in);
+    si_Voc_func = @(v) Methods.evaluate_si_Voc(v, v2_in);
     Voc2 = fzero(si_Voc_func, v0);
     
     % Calculate PVK Voc by finding the voltage for J = 0
@@ -32,7 +32,7 @@ function V = evaluate_V(J, Jsc1, Jsc2, thick1, par, options)
 
     % Initialise the functions to be used
     pvk_V_func = @(v1) Methods.evaluate_PVK_V(v1, J, Jsc1, thick1, par, options);
-    si_V_func = @(v2) Methods.evaluate_Si_V(v2, J, par);
+    si_V_func = @(v2) Methods.evaluate_Si_V(v2, J, v2_in);
 
     % Use fzero to find the corresponding voltage
     V1 = fzero(pvk_V_func, v01);
