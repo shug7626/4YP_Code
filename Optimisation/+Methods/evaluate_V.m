@@ -31,7 +31,7 @@ function V = evaluate_V(J, Jsc1, Jsc2, thick1, par, options)
     v02 = par.Vbi2 + (n_estimate * par.VT * log((Jsc2 - J)/jd02));
 
     % Initialise the functions to be used
-    pvk_V_func = @(v1) Methods.evaluate_PVK_V(v1, J, par, options);
+    pvk_V_func = @(v1) Methods.evaluate_PVK_V(v1, J, Jsc1, thick1, par, options);
     si_V_func = @(v2) Methods.evaluate_Si_V(v2, J, par);
 
     % Use fzero to find the corresponding voltage
