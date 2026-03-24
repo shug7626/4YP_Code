@@ -12,10 +12,10 @@ function F = solve_pvk_v(x, V, p)
     F(1) = (-p.omegaE * Q) - Methods.evaluate_Q(V1, p);
     
     % V2 equation
-    F(2) = -Q - evaluate_Q(V2, p);
+    F(2) = -Q - Methods.evaluate_Q(V2, p);
     
     % V3 equation
-    F(3) = Q - evaluate_Q(V3, p);
+    F(3) = Q - Methods.evaluate_Q(V3, p);
     
     % V4 equation
     F(4) = (-p.omegaH * Q) - Methods.evaluate_Q(V4, p);
