@@ -17,7 +17,7 @@ function V = evaluate_V(J, Jsc1, Jsc2, thick1, par, options)
     
     % Calculate PVK Voc by finding the voltage for J = 0
     Voc0 = par.Vbi1 * 0.9;
-    pvk_Voc_func = @(v) Methods.calculate_JPSC(par, v, thick1, options);
+    pvk_Voc_func = @(v) Methods.calculate_JPSC(par, v, Jsc1, thick1, options);
     Voc1 = fzero(pvk_Voc_func, Voc0);
 
 

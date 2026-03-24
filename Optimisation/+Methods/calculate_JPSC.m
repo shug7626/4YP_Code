@@ -4,7 +4,7 @@
 
 % Input V is the internal voltages V1-4
 
-function J = calculate_JPSC(par, Vin, thick1, options)
+function J = calculate_JPSC(par, Vin, Jsc1, thick1, options)
     % Set the initial conditions
     V0 = (par.Vbi1 - Vin)/4;
     Q0 = Methods.evaluate_Q(V0, par);
@@ -57,5 +57,5 @@ function J = calculate_JPSC(par, Vin, thick1, options)
     F_sol = F(maxI);
     
     % Calculate the current density through the PSC current source
-    J = par.Jsc1 - Jd_sol * exp(-F_sol/par.VT);
+    J = Jsc1 - Jd_sol * exp(-F_sol/par.VT);
 end
