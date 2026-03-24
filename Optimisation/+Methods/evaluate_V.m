@@ -27,8 +27,8 @@ function V = evaluate_V(J, Jsc1, Jsc2, thick1, par, options)
     jd02 = Jsc2 / (exp((Voc2 - par.Vbi2) / (n_estimate * par.VT)));
 
     % Set the initial guesses
-    v01 = par.Vbi1 + (n_estimate * par.VT * log((Jsc1 - J(iter))/jd01));
-    v02 = par.Vbi2 + (n_estimate * par.VT * log((Jsc2 - J(iter))/jd02));
+    v01 = par.Vbi1 + (n_estimate * par.VT * log((Jsc1 - J)/jd01));
+    v02 = par.Vbi2 + (n_estimate * par.VT * log((Jsc2 - J)/jd02));
 
     % Initialise the functions to be used
     pvk_V_func = @(v1) Methods.evaluate_PVK_V(v1, J, par, options);
