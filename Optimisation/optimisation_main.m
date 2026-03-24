@@ -48,5 +48,17 @@ par = Methods.calculate_PVK_const(par);
 
 
 
-%% Calculate the Short Circuit Current Densities
+%% Test
+% Calculate the short circuit current densities
 [Jsc1, Jsc2] = Methods.calculate_Jsc(par, spectrums, PVKRange(20), SiliconRange(20));
+
+% Calculate the corresponding voltage
+V = Methods.evaluate_V(1.6, Jsc1, Jsc2, PVKRange(20), par, options);
+
+% Create a negative power function
+P = @(j) -1*j*Methods.evaluate_V(j, Jsc1, Jsc2, PVKRange(20), par, options);
+
+% Use fmincon to find the minimum negative power
+powOptions = optimoptions('fmincon', 'Display','none');
+[Jmpp, MPP] = fmincon(P, min([Jsc1, Jsc2])*0.9, [], [], [], [], 0, min([Jsc1 Jsc2]), [], powOptions);
+MPP = -1*MPP;
