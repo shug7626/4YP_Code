@@ -68,9 +68,6 @@ par = Methods.calculate_PVK_const(par);
 %% Calculate the MPP for a Range of Thicknesses
 % Preallocate memory for the storage of the MPPs
 MPP = zeros(N);
-Jmpp = zeros(N);
-Jsc1S = zeros(N);
-Jsc2S = zeros(N);
 
 % Set the fmincon settings
 powOptions = optimoptions('fmincon', 'Display','none');
@@ -84,13 +81,13 @@ parfor iter1 = 1:N
         % Create the power function
         P = @(j) -1*j*Methods.evaluate_V(j, Jsc1, Jsc2, PVKRange(iter1), par, options);
 
-        % Use fmincon to find the minimum negative power
-        [Jmpp_res, MPP_res] = fmincon(P, min([Jsc1 Jsc2])*0.9, [], [], [], [], 0, min([Jsc1 Jsc2]), [], powOptions);
+        % % Use fmincon to find the minimum negative power
+        % [Jmpp_res, MPP_res] = fmincon(P, min([Jsc1 Jsc2])*0.95, [], [], [], [], 0, min([Jsc1 Jsc2]), [], powOptions);
+        
+        % Use fminbnd to find the minimum negative power
+        [Jmpp_res, MPP_res] = fminbnd(P, 0, min([Jsc1 Jsc2]));
 
         % Store the results
-        Jsc1S(iter1, iter2) = Jsc1;
-        Jsc2S(iter1, iter2) = Jsc2;
-        Jmpp(iter1, iter2) = Jmpp_res;
         MPP(iter1, iter2) = -1 * MPP_res;
     end
 end
