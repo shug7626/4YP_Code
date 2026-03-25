@@ -94,3 +94,9 @@ parfor iter1 = 1:N
         MPP(iter1, iter2) = -1 * MPP_res;
     end
 end
+
+
+
+%% Plots
+% Surface plot
+fig1 = Plotting.Surface(PVKRange, SiliconRange, MPP);
