@@ -14,9 +14,12 @@
 %% Unpack the Parameters
 par = parameters();
 
+% Number of points
+N = par.N;
+
 % Set the range of values to calculate the MPP for
-PVKRange = linspace(par.thick1Min, par.thick1Max, par.N);
-SiliconRange = linspace(par.thick2Min, par.thick2Max, par.N);
+PVKRange = linspace(par.thick1Min, par.thick1Max, N);
+SiliconRange = linspace(par.thick2Min, par.thick2Max, N);
 
 % Thermal voltage
 par.VT = par.k*par.T/par.q;
@@ -49,16 +52,45 @@ par = Methods.calculate_PVK_const(par);
 
 
 %% Test
-% Calculate the short circuit current densities
-[Jsc1, Jsc2] = Methods.calculate_Jsc(par, spectrums, PVKRange(20), SiliconRange(20));
+% % Calculate the short circuit current densities
+% [Jsc1, Jsc2] = Methods.calculate_Jsc(par, spectrums, PVKRange(6), SiliconRange(6));
+% 
+% % Create a negative power function
+% P = @(j) -1*j*Methods.evaluate_V(j, Jsc1, Jsc2, PVKRange(6), par, options);
+% 
+% % Use fmincon to find the minimum negative power
+% powOptions = optimoptions('fmincon', 'Display','none');
+% [Jmpp, MPP] = fmincon(P, min([Jsc1, Jsc2])*0.9, [], [], [], [], 0, min([Jsc1 Jsc2]), [], powOptions);
+% MPP = -1*MPP;
 
-% Calculate the corresponding voltage
-V = Methods.evaluate_V(1.6, Jsc1, Jsc2, PVKRange(20), par, options);
 
-% Create a negative power function
-P = @(j) -1*j*Methods.evaluate_V(j, Jsc1, Jsc2, PVKRange(20), par, options);
 
-% Use fmincon to find the minimum negative power
+%% Calculate the MPP for a Range of Thicknesses
+% Preallocate memory for the storage of the MPPs
+MPP = zeros(N);
+Jmpp = zeros(N);
+Jsc1S = zeros(N);
+Jsc2S = zeros(N);
+
+% Set the fmincon settings
 powOptions = optimoptions('fmincon', 'Display','none');
-[Jmpp, MPP] = fmincon(P, min([Jsc1, Jsc2])*0.9, [], [], [], [], 0, min([Jsc1 Jsc2]), [], powOptions);
-MPP = -1*MPP;
+
+% Perform the MPP calculations
+parfor iter1 = 1:N
+    for iter2 = 1:N
+        % Calculate the short circuit current densities
+        [Jsc1, Jsc2] = Methods.calculate_Jsc(par, spectrums, PVKRange(iter1), SiliconRange(iter2));
+        
+        % Create the power function
+        P = @(j) -1*j*Methods.evaluate_V(j, Jsc1, Jsc2, PVKRange(iter1), par, options);
+
+        % Use fmincon to find the minimum negative power
+        [Jmpp_res, MPP_res] = fmincon(P, min([Jsc1 Jsc2])*0.9, [], [], [], [], 0, min([Jsc1 Jsc2]), [], powOptions);
+
+        % Store the results
+        Jsc1S(iter1, iter2) = Jsc1;
+        Jsc2S(iter1, iter2) = Jsc2;
+        Jmpp(iter1, iter2) = Jmpp_res;
+        MPP(iter1, iter2) = -1 * MPP_res;
+    end
+end
