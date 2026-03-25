@@ -69,8 +69,8 @@ par = Methods.calculate_PVK_const(par);
 % Preallocate memory for the storage of the MPPs
 MPP = zeros(N);
 
-% Set the fmincon settings
-powOptions = optimoptions('fmincon', 'Display','none');
+% % Set the fmincon settings
+% powOptions = optimoptions('fmincon', 'Display','none');
 
 % Perform the MPP calculations
 parfor iter1 = 1:N
