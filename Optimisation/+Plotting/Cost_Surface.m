@@ -1,0 +1,1 @@
+% Function to produce a plot of the cost per watt for various thicknesses
