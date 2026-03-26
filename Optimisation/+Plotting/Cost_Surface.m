@@ -14,7 +14,7 @@ function fig = Cost_Surface(PVKRange, SiRange, MPP, par)
     surf(PVKRange, SiRange*1e6, cost);
 
     % Labels
-    title('Plot of the Cost per Watt for the Range of Thicknesses');
+    title('Cost per Watt for the Range of Thicknesses');
     xlabel('PVK Thickness (nm)', 'Interpreter', 'latex');
     ylabel('Silicon Thickness ($\mu$m)', 'Interpreter', 'latex');
     zlabel('Cost per Watt ($\mathsterling$/W)', 'Interpreter', 'latex');

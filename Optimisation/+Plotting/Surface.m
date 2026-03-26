@@ -11,7 +11,7 @@ function fig = Surface(PVKRange, SiliconRange, MPP)
     surf(PVKRange, SiliconRange, MPP);
 
     % Label
-    title('Plot of the Maximum Power Point (MPP) for the Range of Thicknesses');
+    title('Maximum Power Point (MPP) for the Range of Thicknesses');
     xlabel('PVK Thickness (nm)', 'Interpreter', 'latex');
     ylabel('Silicon Thickness ($\mu$m)', 'Interpreter', 'latex');
     zlabel('MPP (mW)', 'Interpreter', 'latex');
