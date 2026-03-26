@@ -13,8 +13,16 @@
 tic;
 par = parameters();
 
+% Set the number of points per 'zoom in'
+N = 5;
+
 % Number of 'zoom in's
-N = par.N;
+NTotal = par.N;
+NTotal = 1;
+
+% Set the boundaries of the thicknesses
+PVKBound = [par.thick1Min par.thick1Max];
+SiBound = [par.thick2Min par.thick2Max];
 
 % Thermal voltage
 par.VT = par.k*par.T/par.q;
@@ -52,3 +60,54 @@ par = Methods.calculate_PVK_const(par);
 
 time1 = toc;
 fprintf('Time to initialise = %f seconds\n', time1);
+%% Calculate the MPP for a Range of Thicknesses
+tic;
+fprintf('Starting the calculation of the MPPs\n');
+
+% Preallocate memory for storing the MPP calculations and associated
+% thicknesses
+MPP = zeros([NTotal N N]);
+PVKThicknesses = zeros([NTotal N]);
+SiThicknesses = zeros([NTotal N]);
+
+% Create a temporary MPP matrix
+MPPtemp = zeros([N 1]);
+
+% Perform the MPP calculations
+for iterTotal = 1:NTotal
+
+    % Set the points to calculate the MPP for
+    PVKRange = linspace(PVKBound(1), PVKBound(2), N);
+    SiliconRange = linspace(SiBound(1), SiBound(2), N);
+    
+    % Begin the For loop to calculate MPP
+    parfor iter = 1:N^2
+
+        % Find the point to calculate the MPP for
+        iter1 = floor((iter - 1)/N) + 1;
+        iter2 = mod((iter - 1), N) + 1;
+
+        % Calculate the short circuit current densities
+        [Jsc1, Jsc2] = Methods.calculate_Jsc(par, spectrums, PVKRange(iter1), SiliconRange(iter2));
+
+        % Create the power function
+        P = @(j) -1*j*Methods.evaluate_V(j, Jsc1, Jsc2, PVKRange(iter1), par, options);
+        
+        % Use fminbnd to find the minimum negative power
+        [Jmpp_res, MPP_res] = fminbnd(P, 0, min([Jsc1 Jsc2]));
+
+        % Store the results
+        MPPtemp(iter) = -1 * MPP_res;
+    end
+
+    % Store the results in the MPP and thicknesses matrices
+    MPP(iterTotal, :, :) = reshape(MPPtemp, N, N);
+    PVKThicknesses(iterTotal, :) = PVKRange;
+    SiThicknesses(iterTotal, :) = SiliconRange;
+end
+
+
+
+time2 = toc;
+fprintf('Time to calculate MPP = %f seconds\n', time2);
+%% Surface Plots
