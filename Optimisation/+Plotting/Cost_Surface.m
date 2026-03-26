@@ -1,6 +1,6 @@
 % Function to produce a plot of the cost per watt for various thicknesses
 
-function fig = Cost_Surface(PVKRange, SiRange, MPP, par)
+function [fig, cost] = Cost_Surface(PVKRange, SiRange, MPP, par)
     fig = figure(2);
 
     % Create the cost per area matrix
