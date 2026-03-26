@@ -1,0 +1,1 @@
+% Function to calculate the cost per watt for a set of thicknesses
