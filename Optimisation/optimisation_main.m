@@ -82,7 +82,7 @@ end
 
 %% Surface Plots
 fig1 = Plotting.Surface(PVKRange, SiliconRange, MPP);
-fig2 = Plotting.Cost_Surface(PVKRange, SiliconRange, MPP, par);
+[fig2, cost] = Plotting.Cost_Surface(PVKRange, SiliconRange, MPP, par);
 
 
 
@@ -97,3 +97,14 @@ MPP_Si_Thick = SiliconRange(SiPos) * 1e6;
 fprintf('Maximum Discrete MPP = %f mW\n', maxMPP);
 fprintf('Occuring at PVK Thickness %f nm \n', MPP_PVK_Thick);
 fprintf('and Silicon Thickness %f %cm \n',  MPP_Si_Thick, char(181));
+
+% Find the min Cost per Watt and associated thicknesses
+minCost = min(cost, [], 'all');
+[SiPos, PVKPos] = find(cost == minCost);
+Cost_PVK_Thick = PVKRange(PVKPos);
+Cost_Si_Thick = SiliconRange(SiPos) * 1e6;
+
+% Display min cost
+fprintf('\nMinimum Discrete Cost per Watt = %f £/W \n', minCost);
+fprintf('Occuring at PVK Thickness %f nm \n', Cost_PVK_Thick);
+fprintf('and Silicon Thickness %f %cm \n', Cost_Si_Thick, char(181));
