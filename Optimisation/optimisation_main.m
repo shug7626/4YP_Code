@@ -89,6 +89,7 @@ fprintf('Time for the range of thicknesses calculations = %f seconds\n', time2);
 %% Surface Plots
 fig1 = Plotting.Surface(PVKRange, SiliconRange, MPP);
 [fig2, cost] = Plotting.Cost_Surface(PVKRange, SiliconRange, MPP, par);
+drawnow;
 
 
 
