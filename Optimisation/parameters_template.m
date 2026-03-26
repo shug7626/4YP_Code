@@ -7,17 +7,22 @@
 
 function par = parameters()
     % Calculation parameters
-    par.N = 100;        % Number of points to perform the initial calculation on
+    par.N = 12;        % Number of points to perform the initial calculation on
 
     % Parameters
     par.T = 300;
     par.A = 1;
 
-    % Variables
+    % Thickness Variables
     par.thick1Min = 300;                   % (nm)
     par.thick1Max = 800;
-    par.thick2Min = 150e-6;                % (m)
+    par.thick2Min = 100e-6;                % (m)
     par.thick2Max = 250e-6;
+
+    % Cost
+    par.baselineCost = 0.01;             % Production cost per area (£/cm2)
+    par.PVKCost = 20;                    % PVK cost per thickness per area (£/cm3)
+    par.SiCost = 0.2;                     % Si cost per thickness per area (£/cm3)
 
     % Cell 1 (Top - PVK)
     par.Rs1 = 1e-3;
