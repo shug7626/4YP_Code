@@ -56,7 +56,7 @@ time1 = toc;
 fprintf('Time to initialise = %f seconds\n', time1);
 %% Calculate the MPP for a Range of Thicknesses
 tic;
-fprintf('Starting the calculation of the MPPs');
+fprintf('Starting the calculation of the MPPs\n');
 % Preallocate memory for the storage of the MPPs
 MPP = zeros(N);
 
@@ -134,7 +134,7 @@ drawnow;
 
 
 
-%% Calculate the Optimal Thicknesses Numerically
+%% Calculate the Optimum Thicknesses Numerically
 tic;
 % Set the fmincon settings
 powOptions = optimoptions('fmincon', ...
@@ -158,6 +158,12 @@ upperBounds = [PVKRange(end), SiliconRange(end)];
 % Set the initial guesses as the max of the discrete calculations
 x0 = [MPP_PVK_Thick, MPP_Si_Thick / 1e6];
 
+% Shift the initial guess if necessary
+x0(1) = max(x0(1), lowerBounds(1)*1.0001);
+x0(2) = max(x0(2), lowerBounds(2)*1.0001);
+x0(1) = min(x0(1), upperBounds(1)*0.9999);
+x0(2) = min(x0(2), upperBounds(2)*0.9999);
+
 % Use fmincon to find the optimal thicknesses for MPP
 fprintf('\n<strong>Finding maximum MPP thicknesses using fmincon</strong>\n');
 [MPP_thicknesses, min_negMPP] = fmincon(negMPP, x0, [], [], [], [], lowerBounds, upperBounds, [], powOptions);
@@ -176,6 +182,12 @@ cost_watt = @(x) Methods.evaluate_cost_watt(x, par, spectrums, options);
 
 % Set the intitial guesses from the discrete calculation
 x0 = [Cost_PVK_Thick, Cost_Si_Thick / 1e6];
+
+% Shift the initial guess if necessary
+x0(1) = max(x0(1), lowerBounds(1)*1.0001);
+x0(2) = max(x0(2), lowerBounds(2)*1.0001);
+x0(1) = min(x0(1), upperBounds(1)*0.9999);
+x0(2) = min(x0(2), upperBounds(2)*0.9999);
 
 % Use fmincon to find the optimal thicknesses
 fprintf('\n<strong>Finding minimum cost per watt using fmincon</strong>\n');
