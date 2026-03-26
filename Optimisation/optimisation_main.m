@@ -12,6 +12,7 @@
 
 
 %% Unpack the Parameters
+tic;
 par = parameters();
 
 % Number of points
@@ -50,7 +51,9 @@ par = Methods.calculate_Si_const(par);
 par = Methods.calculate_PVK_const(par);
 
 
-
+time1 = toc;
+fprintf('Time to initialise = %f seconds\n', time1);
+tic;
 %% Calculate the MPP for a Range of Thicknesses
 % Preallocate memory for the storage of the MPPs
 MPP = zeros(N);
@@ -79,7 +82,8 @@ parfor iter1 = 1:N
 end
 
 
-
+time2 = toc;
+fprintf('Time to perform the range of thicknesses calculations = %f seconds\n', time2);
 %% Surface Plots
 fig1 = Plotting.Surface(PVKRange, SiliconRange, MPP);
 [fig2, cost] = Plotting.Cost_Surface(PVKRange, SiliconRange, MPP, par);
@@ -123,7 +127,7 @@ plot3(ax, Cost_PVK_Thick, Cost_Si_Thick, minCost, 'r*');
 text(ax, Cost_PVK_Thick, Cost_Si_Thick, minCost, 'Discrete Min Cost per Watt');
 
 
-
+tic;
 %% Calculate the Optimal Thicknesses Numerically
 % Set the fmincon settings
 powOptions = optimoptions('fmincon', ...
@@ -156,6 +160,9 @@ MPP_PVK_Thick = MPP_thicknesses(1);
 MPP_Si_Thick = MPP_thicknesses(2) * 1e6;
 maxMPP = -1 * min_negMPP;
 
+time3 = toc;
+fprintf('Time to perform the numerical MPP calculation = %f seconds\n', time3);
+tic;
 
 % Set the Cost/Watt function
 cost_watt = @(x) Methods.evaluate_cost_watt(x, par, spectrums, options);
@@ -170,6 +177,9 @@ fprintf('Finding minimum cost per watt using fmincon\n');
 % Store results
 Cost_PVK_Thick = cost_watt_thicknesses(1);
 Cost_Si_Thick = cost_watt_thicknesses(2) * 1e6;
+
+time4 = toc;
+fprintf('Time to perform the numerical cost per watt = %f seconds\n', time4);
 
 
 
