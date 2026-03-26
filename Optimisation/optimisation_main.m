@@ -216,3 +216,16 @@ fprintf('Occuring at PVK Thickness %f nm \n', Cost_PVK_Thick);
 fprintf('and Silicon Thickness %f %cm \n', Cost_Si_Thick, char(181));
 
 fprintf('\nTotal time = %f seconds\n', (time1 + time2 + time3 + time4));
+
+
+
+%% Add the Numerical Results to the Surface Plots
+ax = fig1.CurrentAxes;
+hold(ax, 'on');
+plot3(ax, MPP_PVK_Thick, MPP_Si_Thick, maxMPP, 'r*');
+text(ax, MPP_PVK_Thick, MPP_Si_Thick, maxMPP, 'Numerical MPP');
+
+ax = fig2.CurrentAxes;
+hold(ax, 'on');
+plot3(ax, Cost_PVK_Thick, Cost_Si_Thick, minCost, 'r*');
+text(ax, Cost_PVK_Thick, Cost_Si_Thick, minCost, 'Numerical Min Cost per Watt');
