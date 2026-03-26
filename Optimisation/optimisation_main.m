@@ -80,7 +80,20 @@ end
 
 
 
-%% Plots
-% Surface plots
+%% Surface Plots
 fig1 = Plotting.Surface(PVKRange, SiliconRange, MPP);
 fig2 = Plotting.Cost_Surface(PVKRange, SiliconRange, MPP, par);
+
+
+
+%% Display Initial Results
+% Find the max MPP and its associated thicknesses
+maxMPP = max(MPP, [], 'all');
+[SiPos, PVKPos] = find(MPP == maxMPP);
+MPP_PVK_Thick = PVKRange(PVKPos);
+MPP_Si_Thick = SiliconRange(SiPos) * 1e6;
+
+% Display MPP
+fprintf('Maximum Discrete MPP = %f mW\n', maxMPP);
+fprintf('Occuring at PVK Thickness %f nm \n', MPP_PVK_Thick);
+fprintf('and Silicon Thickness %f %cm \n',  MPP_Si_Thick, char(181));
