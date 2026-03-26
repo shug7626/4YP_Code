@@ -130,6 +130,8 @@ hold(ax, 'on');
 plot3(ax, Cost_PVK_Thick, Cost_Si_Thick, minCost, 'r*');
 text(ax, Cost_PVK_Thick, Cost_Si_Thick, minCost, 'Discrete Min Cost per Watt');
 
+drawnow;
+
 
 
 %% Calculate the Optimal Thicknesses Numerically
