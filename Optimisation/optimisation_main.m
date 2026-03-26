@@ -51,20 +51,6 @@ par = Methods.calculate_PVK_const(par);
 
 
 
-%% Test
-% % Calculate the short circuit current densities
-% [Jsc1, Jsc2] = Methods.calculate_Jsc(par, spectrums, PVKRange(6), SiliconRange(6));
-% 
-% % Create a negative power function
-% P = @(j) -1*j*Methods.evaluate_V(j, Jsc1, Jsc2, PVKRange(6), par, options);
-% 
-% % Use fmincon to find the minimum negative power
-% powOptions = optimoptions('fmincon', 'Display','none');
-% [Jmpp, MPP] = fmincon(P, min([Jsc1, Jsc2])*0.9, [], [], [], [], 0, min([Jsc1 Jsc2]), [], powOptions);
-% MPP = -1*MPP;
-
-
-
 %% Calculate the MPP for a Range of Thicknesses
 % Preallocate memory for the storage of the MPPs
 MPP = zeros(N);
