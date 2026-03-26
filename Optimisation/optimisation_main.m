@@ -121,3 +121,44 @@ ax = fig2.CurrentAxes;
 hold(ax, 'on');
 plot3(ax, Cost_PVK_Thick, Cost_Si_Thick, minCost, 'r*');
 text(ax, Cost_PVK_Thick, Cost_Si_Thick, minCost, 'Discrete Min Cost per Watt');
+
+
+
+%% Calculate the Optimal Thicknesses Numerically
+% Set the fmincon settings
+powOptions = optimoptions('fmincon', ...
+    'StepTolerance', 1e-10, ...
+    'OptimalityTolerance', 1e-10, ...
+    'Display', 'iter', ...
+    'UseParallel', true);
+
+% Start a parallel pool if one doesn't already exist
+if isempty(gcp('nocreate'))
+    parpool;
+end
+
+% Set the MPP negative power function
+negMPP = @(x) -1*Methods.evaluate_MPP(x, par, spectrums, options);
+
+% Define the boundaries
+lowerBounds = [PVKRange(1), SiliconRange(1)];
+upperBounds = [PVKRange(end), SiliconRange(end)];
+
+% Set the initial guesses as the max of the discrete calculations
+x0 = [MPP_PVK_Thick, MPP_Si_Thick / 1e6];
+
+% Use fmincon to find the optimal thicknesses for MPP
+fprintf('Finding Maximum MPP Thicknesses using fmincon\n')
+[MPP_thicknesses, min_negMPP] = fmincon(negMPP, x0, [], [], [], [], lowerBounds, upperBounds, [], powOptions);
+
+% Store results
+MPP_PVK_Thick = MPP_thicknesses(1);
+MPP_Si_Thick = MPP_thicknesses(2) * 1e6;
+maxMPP = -1 * min_negMPP;
+
+
+
+% Display Numerical Results
+fprintf('Maximum Numerical MPP = %f mW\n', maxMPP);
+fprintf('Occuring at PVK Thickness %f nm \n', MPP_PVK_Thick);
+fprintf('and Silicon Thickness %f %cm \n',  MPP_Si_Thick, char(181));
