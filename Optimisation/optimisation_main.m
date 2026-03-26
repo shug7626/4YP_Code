@@ -148,7 +148,7 @@ upperBounds = [PVKRange(end), SiliconRange(end)];
 x0 = [MPP_PVK_Thick, MPP_Si_Thick / 1e6];
 
 % Use fmincon to find the optimal thicknesses for MPP
-fprintf('Finding Maximum MPP Thicknesses using fmincon\n')
+fprintf('Finding maximum MPPthicknesses using fmincon\n');
 [MPP_thicknesses, min_negMPP] = fmincon(negMPP, x0, [], [], [], [], lowerBounds, upperBounds, [], powOptions);
 
 % Store results
@@ -157,8 +157,28 @@ MPP_Si_Thick = MPP_thicknesses(2) * 1e6;
 maxMPP = -1 * min_negMPP;
 
 
+% Set the Cost/Watt function
+cost_watt = @(x) Methods.evaluate_cost_watt(x, par, spectrums, options);
+
+% Set the intitial guesses from the discrete calculation
+x0 = [Cost_PVK_Thick, Cost_Si_Thick / 1e6];
+
+% Use fmincon to find the optimal thicknesses
+fprintf('Finding minimum cost per watt using fmincon\n');
+[cost_watt_thicknesses, minCost] = fmincon(cost_watt, x0, [], [], [], [], lowerBounds, upperBouds, [], powOptions);
+
+% Store results
+Cost_PVK_Thick = cost_watt_thicknesses(1);
+Cost_Si_Thick = cost_watt_thicknesses(2) * 1e6;
+
+
 
 % Display Numerical Results
 fprintf('Maximum Numerical MPP = %f mW\n', maxMPP);
 fprintf('Occuring at PVK Thickness %f nm \n', MPP_PVK_Thick);
 fprintf('and Silicon Thickness %f %cm \n',  MPP_Si_Thick, char(181));
+
+% Display min cost
+fprintf('\nMinimum Discrete Cost per Watt = %f £/W \n', minCost);
+fprintf('Occuring at PVK Thickness %f nm \n', Cost_PVK_Thick);
+fprintf('and Silicon Thickness %f %cm \n', Cost_Si_Thick, char(181));
