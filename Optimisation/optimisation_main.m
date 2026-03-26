@@ -95,5 +95,6 @@ end
 
 
 %% Plots
-% Surface plot
+% Surface plots
 fig1 = Plotting.Surface(PVKRange, SiliconRange, MPP);
+fig2 = Plotting.Cost_Surface(PVKRange, SiliconRange, MPP, par);
