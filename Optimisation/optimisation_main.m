@@ -51,10 +51,12 @@ par = Methods.calculate_Si_const(par);
 par = Methods.calculate_PVK_const(par);
 
 
+
 time1 = toc;
 fprintf('Time to initialise = %f seconds\n', time1);
-tic;
 %% Calculate the MPP for a Range of Thicknesses
+tic;
+fprintf('Starting the calculation of the MPPs');
 % Preallocate memory for the storage of the MPPs
 MPP = zeros(N);
 
@@ -128,8 +130,9 @@ plot3(ax, Cost_PVK_Thick, Cost_Si_Thick, minCost, 'r*');
 text(ax, Cost_PVK_Thick, Cost_Si_Thick, minCost, 'Discrete Min Cost per Watt');
 
 
-tic;
+
 %% Calculate the Optimal Thicknesses Numerically
+tic;
 % Set the fmincon settings
 powOptions = optimoptions('fmincon', ...
     'StepTolerance', 1e-10, ...
