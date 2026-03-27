@@ -6,9 +6,17 @@ function fig = SurfaceV2(PVKRange, SiRange, MPP, par)
     % Change the silicon thickness units
     SiRange = SiRange * 1e6;
 
+    % Create a temporary MPP matrix for reshaping
+    MPPsize1 = size(PVKRange(1, :));
+    MPPsize = zeros(MPPsize1(2));
+
     % Plot using a For loop
-    for iter = 1:par.NTotal
-        surf(PVKRange(iter, :), SiRange(iter, :), MPP(iter, :, :));
+    for iter = 1:par.N
+        % Reshape MPP into the size of MPPtemp
+        MPPtemp = reshape(MPP(iter, :), size(MPPsize));
+
+        % Plot the surface
+        surf(PVKRange(iter, :), SiRange(iter, :), MPPtemp);
         hold on;
     end
 
