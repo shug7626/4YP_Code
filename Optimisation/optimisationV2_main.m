@@ -18,7 +18,6 @@ N = 5;
 
 % Number of 'zoom in's
 NTotal = par.N;
-NTotal = 1;
 
 % Set the boundaries of the thicknesses
 PVKBound = [par.thick1Min par.thick1Max];
@@ -104,6 +103,31 @@ for iterTotal = 1:NTotal
     MPP(iterTotal, :, :) = reshape(MPPtemp, N, N);
     PVKThicknesses(iterTotal, :) = PVKRange;
     SiThicknesses(iterTotal, :) = SiliconRange;
+
+    % Find where the max MPP is
+    maxMPP = max(MPP(iterTotal, :, :), [], 'all');
+    [MPPPVKPos, MPPSiPos] = find(MPP(iterTotal, :, :) == maxMPP);
+
+    % Set the bounds based on the max position
+    if MPPPVKPos == 1
+        PVKBound(2) = PVKRange(MPPPVKPos + 1);
+    elseif MPPPVKPos == N
+        PVKBound(1) = PVKRange(MPPPVKPos - 1);
+    else
+        PVKBound(1) = PVKRange(MPPPVKPos - 1);
+        PVKBound(2) = PVKRange(MPPPVKPos + 1);
+    end
+
+    if MPPSiPos == 1
+        SiBound(2) = SiliconRange(MPPSiPos + 1);
+    elseif MPPSiPos == N
+        SiBound(1) = SiliconRange(MPPSiPos - 1);
+    else
+        SiBound(1) = SiliconRange(MPPSiPos - 1);
+        SiBound(2) = SiliconRange(MPPSiPos + 1);
+    end
+
+    fprintf('Loop %d complete\n', iterTotal)
 end
 
 
@@ -111,3 +135,4 @@ end
 time2 = toc;
 fprintf('Time to calculate MPP = %f seconds\n', time2);
 %% Surface Plots
+fig1 = Plotting.SurfaceV2(PVKThicknesses, SiThicknesses, MPP, par);
