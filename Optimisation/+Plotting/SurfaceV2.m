@@ -1,6 +1,7 @@
 % Function to produce a surface plot of the MPPs from optimisationV2_main
 
 function fig = SurfaceV2(PVKRange, SiRange, MPP, par)
+    close(1);
     fig = figure(1);
 
     % Change the silicon thickness units
