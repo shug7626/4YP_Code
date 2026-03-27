@@ -26,8 +26,8 @@ function [Jsc1, Jsc2] = calculate_Jsc(par, spectrums, thick1, thick2)
     % Create vectors for the reflectivity, absorptivity, and probability
     R1 = ValidE1 * par.R1;
     R2 = ValidE2 * par.R2;
-    a1 = ValidE1 * (1 - exp(-par.a1 * thick1));
-    a2 = ValidE2 * (1 - exp(-par.a2 * thick2));
+    a1 = ValidE1 * (1 - exp(-par.a1 * thick1 * 1e-7));
+    a2 = ValidE2 * (1 - exp(-par.a2 * thick2 * 1e2));
     etac1 = ValidE1 * par.etac1;
     etac2 = ValidE2 * par.etac2;
     
