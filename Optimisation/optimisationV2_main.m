@@ -136,3 +136,21 @@ time2 = toc;
 fprintf('Time to calculate MPP = %f seconds\n', time2);
 %% Surface Plots
 fig1 = Plotting.SurfaceV2(PVKThicknesses, SiThicknesses, MPP, par);
+
+
+
+%% Display the Results
+% Find the MPP and its position
+[maxMPP, linearPos] = max(MPP, [], 'all');
+[iteration, MPPSiPos, MPPPVKPos] = ind2sub(size(MPP), linearPos);
+
+% Find the corresponding thicknesses
+MPPPVKThick = PVKThicknesses(iteration, MPPPVKPos);
+MPPSiThick = SiThicknesses(iteration, MPPSiPos) * 1e6;
+
+% Display the results
+fprintf('\n<strong>Results:</strong>\n');
+fprintf('Max MPP = %f mW\n', maxMPP);
+fprintf('Occuring at:\n');
+fprintf('Perovskite thickness = %f nm\n', MPPPVKThick);
+fprintf('Silicon thickness = %f %cm\n', MPPSiThick, char(181));
