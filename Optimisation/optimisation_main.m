@@ -206,7 +206,7 @@ fprintf('Time to perform the numerical cost per watt = %f seconds\n', time4);
 
 
 %% Display the Numerical Results
-fprintf('\n<strong>Results from the Numerical MPP and Cost Calculations</strong>\n');
+fprintf('\n<strong>Results from the Numerical MPP and Cost Calculations:</strong>\n');
 
 % Display Numerical Results
 fprintf('Maximum Numerical MPP = %f mW\n', maxMPP);
