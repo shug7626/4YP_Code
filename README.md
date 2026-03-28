@@ -12,7 +12,7 @@ The method used to calculate the voltage for a given current density input doesn
 Both optimisation scripts take a significant time to perform the calculations. Ensure N is suitably sized for desired accuracy and computation time.
 
 ## Present Simulation and Optimisation
-For both the simulation and optimisation programs, ensure `parameters_template.m` is copied and renamed to `parameters.m`. Also include the cumulative wavelength spectrum in the same folder and named `Spectrum_full.xlsx`.<br/>
+For both the simulation and optimisation programs, ensure `parameters_template.m` is copied and renamed to `parameters.m`. Also include your own cumulative wavelength spectrum in the same folder and name it `Spectrum_full.xlsx`.<br/>
 The present simulator uses a current scanning method. It can be found in the `CurrentScan` folder and run using the `PVK_Si_main.m script`.<br/>
 There are two simulators currently being used, both use the current scanning method to find the Maximum Power Point (MPP). They can both be found in the `Optimisation` folder.
 
