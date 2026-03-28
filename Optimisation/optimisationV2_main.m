@@ -71,6 +71,7 @@ SiThicknesses = zeros([NTotal N]);
 
 % Create a temporary MPP matrix
 MPPtemp = zeros([N 1]);
+MPPtemp2 = zeros(N);
 
 % Perform the MPP calculations
 for iterTotal = 1:NTotal
@@ -99,29 +100,36 @@ for iterTotal = 1:NTotal
         MPPtemp(iter) = -1 * MPP_res;
     end
 
+    % Reshape the MPPtemp matrix
+    MPPtemp2 = reshape(MPPtemp, N, N);
+
     % Store the results in the MPP and thicknesses matrices
-    MPP(iterTotal, :, :) = reshape(MPPtemp, N, N);
+    MPP(iterTotal, :, :) = MPPtemp2;
     PVKThicknesses(iterTotal, :) = PVKRange;
     SiThicknesses(iterTotal, :) = SiliconRange;
 
     % Find where the max MPP is
-    maxMPP = max(MPP(iterTotal, :, :), [], 'all');
-    [MPPPVKPos, MPPSiPos] = find(MPP(iterTotal, :, :) == maxMPP);
+    maxMPP = max(MPPtemp2, [], 'all');
+    [MPPSiPos, MPPPVKPos] = find(MPPtemp2 == maxMPP, 1);
 
     % Set the bounds based on the max position
-    if MPPPVKPos == 1
+    if MPPPVKPos <= 1
+        PVKBound(1) = PVKRange(1);
         PVKBound(2) = PVKRange(MPPPVKPos + 1);
-    elseif MPPPVKPos == N
+    elseif MPPPVKPos >= N
         PVKBound(1) = PVKRange(MPPPVKPos - 1);
+        PVKBound(2) = PVKRange(N);
     else
         PVKBound(1) = PVKRange(MPPPVKPos - 1);
         PVKBound(2) = PVKRange(MPPPVKPos + 1);
     end
 
-    if MPPSiPos == 1
+    if MPPSiPos <= 1
+        SiBound(1) = SiliconRange(1);
         SiBound(2) = SiliconRange(MPPSiPos + 1);
-    elseif MPPSiPos == N
+    elseif MPPSiPos >= N
         SiBound(1) = SiliconRange(MPPSiPos - 1);
+        SiBound(2) = SiliconRange(N);
     else
         SiBound(1) = SiliconRange(MPPSiPos - 1);
         SiBound(2) = SiliconRange(MPPSiPos + 1);
