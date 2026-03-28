@@ -2,9 +2,7 @@
 % thicknesses
 
 function fig = Surface(PVKRange, SiliconRange, MPP)
-    if ishandle(1)
-        close(1);
-    end
+    clf(figure(1));
     fig = figure(1);
 
     % Change the silicon thickness units to be in micometers
