@@ -83,6 +83,9 @@ parfor iter1 = 1:N
     end
 end
 
+% Transpose the MPP matrix
+MPP = MPP';
+
 
 time2 = toc;
 fprintf('Time for the range of thicknesses calculations = %f seconds\n', time2);
@@ -96,7 +99,7 @@ drawnow;
 %% Display Initial Results
 % Find the max MPP and its associated thicknesses
 maxMPP = max(MPP, [], 'all');
-[MPPSiPos, MPPPVKPos] = find(MPP == maxMPP);
+[MPPSiPos, MPPPVKPos] = find(MPP == maxMPP, 1);
 MPP_PVK_Thick = PVKRange(MPPPVKPos);
 MPP_Si_Thick = SiliconRange(MPPSiPos) * 1e6;
 
@@ -108,7 +111,7 @@ fprintf('and Silicon Thickness %f %cm \n',  MPP_Si_Thick, char(181));
 
 % Find the min Cost per Watt and associated thicknesses
 minCost = min(cost, [], 'all');
-[CostSiPos, CostPVKPos] = find(cost == minCost);
+[CostSiPos, CostPVKPos] = find(cost == minCost, 1);
 Cost_PVK_Thick = PVKRange(CostPVKPos);
 Cost_Si_Thick = SiliconRange(CostSiPos) * 1e6;
 
