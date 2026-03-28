@@ -17,7 +17,7 @@ par = parameters();
 N = 5;
 
 % Number of 'zoom in's
-NTotal = par.N;
+NTotal = par.N2;
 
 % Set the boundaries of the thicknesses
 PVKBound = [par.thick1Min par.thick1Max];

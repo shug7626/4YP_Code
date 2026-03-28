@@ -22,15 +22,15 @@ It varies the current density and calculates the resulting voltage across the ce
 There are 5 plots available to output, ranging from the J-V plots to the absorbed incident spectrum. Specific plots to be displayed can be set in `plot_settings.m`. `plot_settings.m` should be created by copying and renaming `plot_settings_template.m`.
 
 ## optimisation_main.m
-`optimisation_main.m` calculates a grid of NxN MPPs between the limits, both set in `parameters.m`.<br/>
-Due to the complexity of finding the MPP for each thickness and that the number of MPPs calculated increases with $\text{N}^2$, ensure N is set to the lowest suitable value. Depending on CPU performance and number of parallel processes used, N=24 will take at least 20 minutes.<br/>
+`optimisation_main.m` calculates a grid of `NxN` MPPs between the limits, both set in `parameters.m`.<br/>
+Due to the complexity of finding the MPP for each thickness and that the number of MPPs calculated increases with $\text{N}^2$, ensure `N` is set to the lowest suitable value. Depending on CPU performance and number of parallel processes used, `N=24` will take at least 20 minutes.<br/>
 It then uses the maximum MPP from the grid as the initial guess for a numerical solver to find the maximum MPP.<br/>
 It also calculates the Cost per Watt from the grid of MPPs. Three different costs can be set in `parameters.m`: baselineCost, PVKCost, and SiCost.<br/>
 Again, the minimum Cost per Watt from the grid is used as the input to a numerical solver to find the minimim Cost per Watt.
 
 ## optimisationV2_main.m
-`optimisationV2_main.m` calculates a 5x5 grid of MPPs between the limits and 'zooms in' to the maximum of that grid. The number of 'zoom ins' is set by N in the parameters file. In the worst case scenario the search boundary will half with each loop, in the best case it will quarter.<br/>
-As N sets the number of loops performed, computation time increases linearly with N. As an example, N=10 will take at least 10 minutes but will be more precise than the value found in `optimisation.m`<br/>
+`optimisationV2_main.m` calculates a 5x5 grid of MPPs between the limits and 'zooms in' to the maximum of that grid. The number of 'zoom ins' is set by `N2` in the parameters file. In the worst case scenario the search boundary will half with each loop, in the best case it will quarter.<br/>
+As `N2` sets the number of loops performed, computation time increases linearly with `N2`. As an example, `N2=10` will take at least 10 minutes but will be more precise than the value found in `optimisation.m`<br/>
 At present `optimisationV2_main.m` doesn't calculate the minimum cost per watt or use the result as input to a numerical solver.
 
 
