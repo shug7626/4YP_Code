@@ -16,4 +16,7 @@ function par = calculate_silicon_const(Na, Nd, par)
     % Recombination in the depletion region (SCR) current constant
     par.Jscr02 = par.ni2 * sqrt(2 * par.q * par.eps2 * ((1/Na) + (1/Nd)) * par.Vbi2 / (par.tn2 * par.tp2));
     par.Jscrd2 = sqrt(2 * par.q * par.eps2 * (Nd + Na) * par.Vbi2 / (par.tn2 * par.tp2));
+
+    % Depletion region width
+    par.W2 = sqrt(2 * par.eps2 * par.Vbi2 * ((1/Na) + (1/Nd)) / par.q);
 end
