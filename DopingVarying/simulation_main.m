@@ -150,6 +150,11 @@ if set.plot_V_area == 1
     fig2 = Plotting.V_Area(res, set);
 end
 
+% Plot the voltage - volage plots
+if set.plot_v_v == 1
+    fig3 = Plotting.V_VBias(res, set);
+end
+
 % Plot the P-V plot
 if set.plot_p_v == 1
     fig4 = Plotting.P_V(res, set);
