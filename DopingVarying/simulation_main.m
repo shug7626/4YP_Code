@@ -35,4 +35,4 @@ res = Methods.calculate_Jsc(par, res);
 res = Methods.calculate_silicon_const(par.Na2, par.Nd2, par, res);
 
 % Calculate the PVK constants
-res = Methods.calculate_pvk_const(res, par);
+res = Methods.calculate_pvk_const(par.thick1, res, par, options);
