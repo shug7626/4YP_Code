@@ -8,7 +8,7 @@
 
 function par = parameters()
     % Calculation parameters
-    par.N = 10;        % Number of points to perform the initial calculation on
+    par.N = 1000;        % Number of points to perform the simulation for
     par.N2 = 10;        % Number of loops to be performed
 
     % Parameters
@@ -18,10 +18,10 @@ function par = parameters()
     % Optimisation Variables
     par.thick1Min = 100;                % (nm)
     par.thick1Max = 800;
-    par.NdMin = 1e13;                   % (cm-3)
-    par.NdMax = 1e19;
-    par.NaMin = 1e13;
-    par.NaMax = 1e19;
+    par.NdMin = 1e14;                   % (cm-3)
+    par.NdMax = 1e16;
+    par.NaMin = 1e18;
+    par.NaMax = 1e20;
 
     % Cost
     par.baselineCost = 0.01;            % Production cost per area (£/cm2)
@@ -29,7 +29,7 @@ function par = parameters()
     par.SiCost = 0.2;                   % Si cost per thickness per area (£/cm3)
 
     % Cell 1 (Top - PVK)
-    par.thick1 = 300;
+    par.thick1 = 550;                   % PAL thickness (nm)
     par.Rs1 = 1e-3;
     par.Rsh1 = 1e4;
     par.beta = 10e-11;
@@ -52,17 +52,18 @@ function par = parameters()
     par.epsE = 10;
     par.epsH = 3;
     par.R1 = 0.05;
-    par.a1 = 9.5e4;                     % (cm-1)
+    par.a1 = 6e4;                     % (cm-1)
     par.etac1 = 0.95;
 
     % Cell 2 (Bottom - Si)
     par.Rs2 = 1e-3;
-    par.Rsh2 = 1e4;
+    par.Rsh2 = 1e5;
     par.ni2 = 1e10;
-    par.Nd2 = 2e20;
-    par.Na2 = 3e18;
-    par.n2 = par.Nd2;
-    par.p2 = par.Na2;
+    par.Nd2 = 1e14;                     % (cm-3)
+    par.Na2 = 1e20;
+    % par.n2 = par.Nd2;                 % Assuming n = Nd when calculating
+    % the silicon constants
+    % par.p2 = par.Na2;
     par.Dn2 = 38.7;
     par.Dp2 = 11.61;
     par.tn2 = 30e-6;
@@ -70,11 +71,11 @@ function par = parameters()
     par.Ln2 = sqrt(par.Dn2*par.tn2);
     par.Lp2 = sqrt(par.Dp2*par.tp2);
     par.beta2 = 0;
-    par.eps2 = 11.7 * 8.854e-14;
-    par.R2 = 0.08;
-    par.a2 = 2e2;                     % (cm-1)
-    par.etac2 = 0.95;
-    par.Eg2 = 1.11;
+    par.eps2 = 11.7 * 8.854e-14;        % (F cm-2)
+    par.R2 = 0.03;
+    par.a2 = 1e4;                       % (cm-1)
+    par.etac2 = 0.97;
+    par.Eg2 = 1.12;
     
     % Total series resistance
     par.Rs = par.Rs1 + par.Rs2;
@@ -84,7 +85,5 @@ function par = parameters()
     par.k = 1.38e-23;
     par.h = 4.136e-15;          % (eV s)
     par.c = 2.998e8;            % (m s-1)
-    par.eps0 = 8.854e-12;
+    par.eps0 = 8.854e-12;       % (F m-1)
 end
-
-
