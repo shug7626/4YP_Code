@@ -143,6 +143,12 @@ fprintf('Efficiency: %5.3f%%\n', Efficiency);
 % Fetch the settings
 set = plot_settings();
 
+% Plot the J_V plots
 if set.plot_j_v == 1
     fig1 = Plotting.J_V(res, set);
+end
+
+% Plot the P-V plot
+if set.plot_p_v == 1
+    fig4 = Plotting.P_V(res, set);
 end
