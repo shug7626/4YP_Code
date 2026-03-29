@@ -136,3 +136,13 @@ Efficiency = Pout / Pin * 100;
 
 % Print the efficiency
 fprintf('Efficiency: %5.3f%%\n', Efficiency);
+
+
+
+%% Plots
+% Fetch the settings
+set = plot_settings();
+
+if set.plot_j_v == 1
+    fig1 = Plotting.J_V(res, set);
+end
