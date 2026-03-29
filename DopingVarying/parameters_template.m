@@ -21,7 +21,7 @@ function par = parameters()
     par.NdMin = 1e13;                   % (cm-3)
     par.NdMax = 1e19;
     par.NaMin = 1e13;
-    par.NdMax = 1e19;
+    par.NaMax = 1e19;
 
     % Cost
     par.baselineCost = 0.01;            % Production cost per area (£/cm2)
