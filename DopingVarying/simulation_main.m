@@ -141,21 +141,26 @@ fprintf('Efficiency: %5.3f%%\n', Efficiency);
 set = plot_settings();
 
 % Plot the J_V plots
-if set.plot_j_v == 1
+if set.plot_j_v
     fig1 = Plotting.J_V(res, set);
 end
 
 % Plot the voltage area plot
-if set.plot_V_area == 1
+if set.plot_V_area
     fig2 = Plotting.V_Area(res, set);
 end
 
 % Plot the voltage - volage plots
-if set.plot_v_v == 1
+if set.plot_v_v
     fig3 = Plotting.V_VBias(res, set);
 end
 
 % Plot the P-V plot
-if set.plot_p_v == 1
+if set.plot_p_v
     fig4 = Plotting.P_V(res, set);
+end
+
+% Plot the spectrum data
+if set.plot_spectrum
+    fig5 = Plotting.spectrum(res.spectrums, set, par, res);
 end
