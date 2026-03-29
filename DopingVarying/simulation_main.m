@@ -22,8 +22,11 @@ powOptions = optimoptions('fmincon', ...
 % Calculate the thermal voltage
 par.VT = par.k*par.T/par.q;
 
+% Calculate the built in voltage of the silicon
+res.Vbi2 = par.VT * log(par.Na2 * par.Nd2 / (par.ni2 ^ 2));
+
 % Calculate the silicon depletion region width
-res.W2 = sqrt(2 * par.eps2 * res.Vbi2 * ((1/Na) + (1/Nd)) / par.q);         % (cm)
+res.W2 = sqrt(2 * par.eps2 * res.Vbi2 * ((1/par.Na2) + (1/par.Nd2)) / par.q);         % (cm)
 
 % Calculate the short circuit current densities
 res = Methods.calculate_Jsc(par, res);
