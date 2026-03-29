@@ -50,4 +50,8 @@ function res = calculate_Jsc(par, res)
     % Convert to (mA cm-2)
     res.Jsc1 = Jsc1 * 1e3;
     res.Jsc2 = Jsc2 * 1e3;
+
+    % Return the spectrum data
+    spectrums.E = E;
+    res.spectrums = spectrums;
 end
