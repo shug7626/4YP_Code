@@ -71,7 +71,7 @@ parfor iter = 2:par.N
 
     % Calculate the total cell voltage
     v_s(iter) = -J(iter) * (par.Rs1 + par.Rs2) * par.A;
-    V(iter) = V1(iter) + V2(iter) - v_s(iter);
+    V(iter) = V1(iter) + V2(iter) + v_s(iter);
 end
 
 
@@ -101,7 +101,7 @@ end
 v_s(1) = -J(1) * (par.Rs1 + par.Rs2) * par.A;
 
 % Calculate the total voltage at Jsc
-V(1) = V1(1) + V2(1) - v_s(1);
+V(1) = V1(1) + V2(1) + v_s(1);
 
 % Unpack the results
 res.V = V;
@@ -118,9 +118,6 @@ res.Vs1 = -res.J * par.A * par.Rs1;
 
 % Cell 2 series resistor voltage
 res.Vs2 = -res.J * par.A * par.Rs2;
-
-% Sum of series resistor voltages
-res.Vs = res.Vs1 + res.Vs2;
 
 % Total cell contributions
 res.V1T = res.V1 + res.Vs1;
