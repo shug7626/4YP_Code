@@ -25,6 +25,9 @@ par.VT = par.k*par.T/par.q;
 % Calculate the silicon depletion region width
 res.W2 = sqrt(2 * par.eps2 * res.Vbi2 * ((1/Na) + (1/Nd)) / par.q);         % (cm)
 
+% Calculate the short circuit current densities
+res = Methods.calculate_Jsc(par, res);
+
 % Calculate the silicon constants
 res = Methods.calculate_silicon_const(par.Na2, par.Nd2, par, res);
 
