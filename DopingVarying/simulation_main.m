@@ -101,7 +101,7 @@ end
 v_s(1) = -J(1) * (par.Rs1 + par.Rs2) * par.A;
 
 % Calculate the total voltage at Jsc
-V(1) = V1(1) + V2(1) + v_s(1);
+V(1) = V1(1) + V2(1) - v_s(1);
 
 % Unpack the results
 res.V = V;
@@ -146,6 +146,11 @@ set = plot_settings();
 % Plot the J_V plots
 if set.plot_j_v == 1
     fig1 = Plotting.J_V(res, set);
+end
+
+% Plot the voltage area plot
+if set.plot_V_area == 1
+    fig2 = Plotting.V_Area(res, set);
 end
 
 % Plot the P-V plot
