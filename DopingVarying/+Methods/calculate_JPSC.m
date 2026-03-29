@@ -4,23 +4,23 @@
 
 % Input V is the internal voltages V1-4
 
-function J = calculate_JPSC(par, Vin, Jsc1, thick1, options)
+function J = calculate_JPSC(par, res, Vin, thick1, options)
     % Set the initial conditions
-    V0 = (par.Vbi1 - Vin)/4;
-    Q0 = Methods.evaluate_Q(V0, par);
+    V0 = (res.Vbi1 - Vin)/4;
+    Q0 = Methods.evaluate_Q(V0, par, res);
     x0 = [V0, V0, V0, V0, Q0];
     
     % Solve for the internal voltages V1-4
-    Vfunc = @(x) Methods.solve_pvk_v(x, Vin, par);
+    Vfunc = @(x) Methods.solve_pvk_v(x, Vin, par, res);
     V = fsolve(Vfunc, x0, options);
 
     % Calculate n and p concentrations
-    n = par.nb * exp(-(V(1) + V(2))/par.VT);
-    p = par.pb * exp(-(V(3) + V(4))/par.VT);
+    n = res.nb * exp(-(V(1) + V(2))/par.VT);
+    p = res.pb * exp(-(V(3) + V(4))/par.VT);
     
     % Calculate n- and p+ concentrations
-    nn = par.nb * exp(-(V(1) + V(2) + V(3))/par.VT);
-    pp = par.nb * exp(-(V(2) + V(3) + V(4))/par.VT);
+    nn = res.nb * exp(-(V(1) + V(2) + V(3))/par.VT);
+    pp = res.nb * exp(-(V(2) + V(3) + V(4))/par.VT);
     
     % Calculate the recominbation rates
     R = zeros(1,5);
@@ -32,7 +32,7 @@ function J = calculate_JPSC(par, Vin, Jsc1, thick1, options)
     
     % Calculate the dark current constants (converting b from nm to m)
     Jd = zeros(1,5);
-    Jd(1) = par.q * thick1 * par.beta * par.ni2 * exp(par.Vbi1/par.VT) * 1e-9;
+    Jd(1) = par.q * thick1 * par.beta * res.ni2 * exp(res.Vbi1/par.VT) * 1e-9;
     Jd(2) = (par.q * thick1 * par.dH * par.gv / (par.taup * par.gvH)) ...
         * exp((par.Ev - par.EvH)/(par.VT)) * 1e-9;
     Jd(3) = (par.q * thick1 * par.dE * par.gc / (par.taun * par.gcE)) ...
@@ -57,5 +57,5 @@ function J = calculate_JPSC(par, Vin, Jsc1, thick1, options)
     F_sol = F(maxI);
     
     % Calculate the current density through the PSC current source
-    J = Jsc1 - Jd_sol * exp(-F_sol/par.VT);
+    J = res.Jsc1 - Jd_sol * exp(-F_sol/par.VT);
 end
