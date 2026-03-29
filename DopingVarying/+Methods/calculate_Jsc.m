@@ -1,0 +1,1 @@
+% Script to calculate the short circuit current densities
