@@ -7,6 +7,11 @@
 % alternative, to find the maximum MPP within the bounds set in the
 % parameters file
 
+% Start the parallel pool if one doesn't already exist
+if isempty(gcp('nocreate'))
+    parpool;
+end
+
 
 %% Fetch and process the parameters
 tic;
@@ -59,37 +64,16 @@ fprintf('Starting the calculation of the MPPs\n');
 
 % Use a parfor loop to loop through each option
 parfor iter = 1:N^3
-    % Initialise a blank res structure
-    res = struct();
-
     % Decode the iter number to find the specific variables
     pvk_thick = pvk_thicks(floor((iter - 1)/(N ^ 2)) + 1);
     Nd = Nds(floor((mod(iter - 1, N^2))/N) + 1);
     Na = Nas(mod((iter - 1), N) + 1);
 
-    % Calculate the built in voltage of the silicon
-    res.Vbi2 = par.VT * log(Na * Nd / (par.ni2 ^ 2));
-    
-    % Calculate the silicon depletion region width
-    res.W2 = sqrt(2 * par.eps2 * res.Vbi2 * ((1/Na) + (1/Nd)) / par.q);         % (cm)
-    
-    % Calculate the short circuit current densities
-    res = Methods.calculate_Jsc(par, res, pvk_thick);
-    
-    % Calculate the silicon constants
-    res = Methods.calculate_silicon_const(Na, Nd, par, res);
-    
-    % Calculate the PVK constants
-    res = Methods.calculate_pvk_const(pvk_thick, res, par, options);
+    % Create the input variable structure
+    in = [pvk_thick Nd, Na];
 
-    % Create the negative power function
-    P = @(j) -1*j*Methods.evaluate_V(j, pvk_thick, res, par, options);
-
-    % Use fminbnd to find the minimum negative power
-    [Jmpp_res, MPP_res] = fminbnd(P, 0, min([res.Jsc1 res.Jsc2]));
-    
-    % Store the result
-    MPP_temp(iter) = -1 * MPP_res;
+    % Calculate the MPP
+    MPP_temp(iter) = Methods.evaluate_MPP(in, par, options);
 end
 
 
@@ -122,3 +106,9 @@ fprintf('Silicon Acceptor Concentration = %e cm%c%c\n', MPPna, char(8315), char(
 
 time.disp_init = toc;
 fprintf('\nTotal Time = %f seconds\n', sum(structfun(@(x) sum(x(:)), time)));
+%% Calculate the Optimum Variables Numerically
+tic;
+% Start the parallel pool if one doesn't already exist
+if isempty(gcp('nocreate'))
+    parpool;
+end
