@@ -106,9 +106,43 @@ fprintf('Silicon Acceptor Concentration = %e cm%c%c\n', MPPna, char(8315), char(
 
 time.disp_init = toc;
 fprintf('\nTotal Time = %f seconds\n', sum(structfun(@(x) sum(x(:)), time)));
-%% Calculate the Optimum Variables Numerically
+%% Calculate the Optimum MPP and Variables Numerically
 tic;
 % Start the parallel pool if one doesn't already exist
 if isempty(gcp('nocreate'))
     parpool;
 end
+
+% Create the negative MPP function
+negMPP = @(x) -1*Methods.evaluate_MPP(x, par, options);
+
+% Define the variable boundaries
+lowerBounds = [pvk_thicks(1), Nds(1), Nas(1)];
+upperBounds = [pvk_thicks(end), Nds(end), Nas(end)];
+
+% Set the initial guess as the max MPP
+x0 = [MPPpvkThick, MPPnd, MPPna];
+
+% Shift the initial guess if necessary
+x0(1) = max(x0(1), lowerBounds(1) * 1.0001);
+x0(2) = max(x0(2), lowerBounds(2) * 1.0001);
+x0(3) = max(x0(3), lowerBounds(3) * 1.0001);
+x0(1) = min(x0(1), upperBounds(1) * 0.9999);
+x0(2) = min(x0(2), upperBounds(2) * 0.9999);
+x0(3) = min(x0(3), upperBounds(3) * 0.9999);
+
+% Use fmincon to find the minimum negative MPP
+fprintf('\n<strong>Finding maximum MPP thicknesses using fmincon</strong>\n');
+[MPPvars, min_negMPP] = fmincon(negMPP, x0, [], [], [], [], lowerBounds, upperBounds, [], powOptions);
+
+% Store results
+maxPVKthick = MPPvars(1);
+maxNd = MPPvars(2);
+maxNa = MPPvars(3);
+numMaxMPP = -1 * min_negMPP;
+
+
+
+time.num_MPP = toc;
+fprintf('Maximum MPP Found in %f seconds/n', time.num_MPP);
+%% Calculate the Optimum Cost per Watt
