@@ -1,6 +1,6 @@
 % Script to calculate the short circuit current densities
 
-function res = calculate_Jsc(par, res)
+function res = calculate_Jsc(par, res, pvk_thick)
     % Import the spectrum data
     spectrum_table = readmatrix("Spectrum_full.xlsx");
     spectrums.wavelengths = spectrum_table(:,1);
@@ -35,7 +35,7 @@ function res = calculate_Jsc(par, res)
     % Create vectors for the reflectivity, absorptivity, and probability
     R1 = spectrums.validE1 * par.R1;
     R2 = spectrums.validE2 * par.R2;
-    a1 = spectrums.validE1 * (1 - exp(-par.a1 * par.thick1 * 1e-7));
+    a1 = spectrums.validE1 * (1 - exp(-par.a1 * pvk_thick * 1e-7));
     a2 = spectrums.validE2 * (1 - exp(-par.a2 * res.W2));
     etac1 = spectrums.validE1 * par.etac1;
     etac2 = spectrums.validE2 * par.etac2;

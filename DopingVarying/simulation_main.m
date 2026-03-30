@@ -29,7 +29,7 @@ res.Vbi2 = par.VT * log(par.Na2 * par.Nd2 / (par.ni2 ^ 2));
 res.W2 = sqrt(2 * par.eps2 * res.Vbi2 * ((1/par.Na2) + (1/par.Nd2)) / par.q);         % (cm)
 
 % Calculate the short circuit current densities
-res = Methods.calculate_Jsc(par, res);
+res = Methods.calculate_Jsc(par, res, par.thick1);
 
 % Calculate the silicon constants
 res = Methods.calculate_silicon_const(par.Na2, par.Nd2, par, res);
