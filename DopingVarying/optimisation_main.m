@@ -52,19 +52,48 @@ MPP_temp = zeros(1, N^3);
 %% Calculate the MPP over the Ranges
 fprintf('Starting the calculation of the MPPs\n');
 
-% Temporary for checking dimensions
-pvk_thicks = linspace(0, N^3 - N^2, N);
-Nds = linspace(0, N^2 - N, N);
-Nas = linspace(1, N, N);
+% % Temporary for checking dimensions
+% pvk_thicks = linspace(0, N^3 - N^2, N);
+% Nds = linspace(0, N^2 - N, N);
+% Nas = linspace(1, N, N);
 
 % Use a parfor loop to loop through each option
-for iter = 1:N^3
+parfor iter = 1:N^3
+    % Initialise a blank res structure
+    res = struct();
+
+    % Decode the iter number to find the specific variables
     pvk_thick = pvk_thicks(floor((iter - 1)/(N ^ 2)) + 1);
-    % Nd = Nds(mod(floor((iter)/N), N) + 1);
     Nd = Nds(floor((mod(iter - 1, N^2))/N) + 1);
     Na = Nas(mod((iter - 1), N) + 1);
 
-    MPP_temp(iter) = sum([pvk_thick Nd Na]);
+    % Calculate the built in voltage of the silicon
+    res.Vbi2 = par.VT * log(Na * Nd / (par.ni2 ^ 2));
+    
+    % Calculate the silicon depletion region width
+    res.W2 = sqrt(2 * par.eps2 * res.Vbi2 * ((1/Na) + (1/Nd)) / par.q);         % (cm)
+    
+    % Calculate the short circuit current densities
+    res = Methods.calculate_Jsc(par, res);
+    
+    % Calculate the silicon constants
+    res = Methods.calculate_silicon_const(Na, Nd, par, res);
+    
+    % Calculate the PVK constants
+    res = Methods.calculate_pvk_const(pvk_thick, res, par, options);
+
+    % Create the negative power function
+    P = @(j) -1*j*Methods.evaluate_V(, pvk_thick, res, par, options);
+
+    % Use fminbnd to find the minimum negative power
+    [Jmpp_res, MPP_res] = fminbnd(P, 0, min([res.Jsc1 res.Jsc2]));
+    
+    % Store the result
+    MPP_temp(iter) = -1 * MPP_res;
 end
 
 fprintf('MPP Calculation Complete\n');
+
+
+
+%% Write the Result of the Initial Calculation to the Command Window
