@@ -41,8 +41,8 @@ tic;
 pvk_thicks = linspace(par.thick1Min, par.thick1Max, N);
 
 % Si doping concentrations
-Nds = linspace(log10(par.NdMin), log10(par.NdMax), N);
-Nas = linspace(log10(par.NaMin), log10(par.NaMax), N);
+Nds = logspace(log10(par.NdMin), log10(par.NdMax), N);
+Nas = logspace(log10(par.NaMin), log10(par.NaMax), N);
 
 % Create the MPP matrix to store the results
 MPPs = zeros(par.N2, par.N2, N);
