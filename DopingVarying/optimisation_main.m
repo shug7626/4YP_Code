@@ -57,11 +57,6 @@ time.matrix = toc;
 tic;
 fprintf('Starting the calculation of the MPPs\n');
 
-% % Temporary for checking dimensions
-% pvk_thicks = linspace(0, N^3 - N^2, N);
-% Nds = linspace(0, N^2 - N, N);
-% Nas = linspace(1, N, N);
-
 % Use a parfor loop to loop through each option
 parfor iter = 1:N^3
     % Initialise a blank res structure
