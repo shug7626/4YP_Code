@@ -41,8 +41,8 @@ tic;
 pvk_thicks = linspace(par.thick1Min, par.thick1Max, N);
 
 % Si doping concentrations
-Nds = linspace(par.NdMin, par.NdMax, N);
-Nas = linspace(par.NaMin, par.NaMax, N);
+Nds = linspace(log10(par.NdMin), log10(par.NdMax), N);
+Nas = linspace(log10(par.NaMin), log10(par.NaMax), N);
 
 % Create the MPP matrix to store the results
 MPPs = zeros(par.N2, par.N2, N);
@@ -98,12 +98,17 @@ time.initial = toc;
 fprintf('MPP Calculation Complete in %f seconds\n', time.initial);
 %% Write the Result of the Initial Calculation to the Command Window
 tic;
-% Find the max MPP
+% Find the max MPP and associated variable positions
 maxMPP = max(MPP_temp, [], 'all');
 MPPpos = find(MPP_temp == maxMPP, 1);
-MPPpvkThick = pvk_thicks(floor((MPPpos - 1)/(N ^ 2)) + 1);
-MPPnd = Nds(floor((mod(MPPpos - 1, N^2))/N) + 1);
-MPPna = Nas(mod((MPPpos - 1), N) + 1);
+varPos = [(floor((MPPpos - 1)/(N ^ 2)) + 1) ...
+    (floor((mod(MPPpos - 1, N^2))/N) + 1) ...
+    (mod((MPPpos - 1), N) + 1)];
+
+% Find the associated variable values
+MPPpvkThick = pvk_thicks(varPos(1));
+MPPnd = Nds(varPos(2));
+MPPna = Nas(varPos(3));
 
 % Display results
 fprintf('<strong>Results from the Initial Calculations:</strong>\n');
