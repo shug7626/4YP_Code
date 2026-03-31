@@ -50,6 +50,8 @@ function s = calculate_spectrums(par)
     % absorption coefficient for each wavelength/energy
     for iter = 1:length(s.wavelengths)
         lambda = s.wavelengths(iter);
+
+        % Calculate the PVK refractive index and absorptivity
         if lambda < PVK(1, 1)
             s.PVK(iter, 1) = PVK(1, 2);
             s.PVK(iter, 2) = PVK(1, 4);
@@ -70,7 +72,8 @@ function s = calculate_spectrums(par)
             s.PVK(iter, 2) = PVK(index, 4) + ...
                 frac * (PVK(index2, 4) - PVK(index, 4));
         end
-
+        
+        % Calculate the Si refractive index and absorptivity
         if lambda < Si(1, 1)
             s.Si(iter, 1) = Si(1, 2);
             s.Si(iter, 2) = Si(1, 4);
@@ -92,4 +95,10 @@ function s = calculate_spectrums(par)
                 frac * (Si(index2, 4) - Si(index, 4));
         end
     end
+
+    %% Calculate the Reflectivity Vectors
+    % Assuming light has a refractive index of 1 across the considered
+    % frequency range
+    s.PVK(:, 3) = ((1 - s.PVK(:, 1)) ./ (1 + s.PVK(:, 1))).^2;
+    s.Si(:, 3) = ((s.PVK(:, 1) - s.Si(:, 1)) ./ (s.PVK(:, 1) + s.Si(:, 1))).^2;
 end
