@@ -146,3 +146,5 @@ numMaxMPP = -1 * min_negMPP;
 time.num_MPP = toc;
 fprintf('Maximum MPP Found in %f seconds/n', time.num_MPP);
 %% Calculate the Optimum Cost per Watt
+tic;
+% Create the negative cost function
