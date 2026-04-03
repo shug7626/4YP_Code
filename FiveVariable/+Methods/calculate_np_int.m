@@ -3,8 +3,9 @@
 
 function ret = calculate_np_int(x, L, S, D, W, a)
     % Unpack the input
-    x1 = x(1) * 1e-2;
+    x1 = x(1) * 1e-2;               % (cm)
     x2 = x(2) * 1e-2;
+    W = W * 1e-2;
 
     % Calculate the integral function
     ret = (cosh(x2 / L) - ...
