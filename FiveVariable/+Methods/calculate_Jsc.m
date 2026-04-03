@@ -3,8 +3,6 @@
 function res = calculate_Jsc(x, par, res, spectrums)
     % Unpack the input
     pvk_thick = x(1);
-    si_n_thick = x(2);
-    si_p_thick = x(3);
 
     % % Create vectors for the reflectivity, absorptivity, and probability
     R1 = spectrums.PVK(:, 3);
