@@ -12,6 +12,11 @@ function res = calculate_const(x, par, spectrums)
     % Calculate the built in voltage of the silicon
     res.Vbi2 = par.VT * log(Na * Nd / (par.ni2 ^ 2));
 
-    % Calculate the silicon depletion region width
-    res.W2 = sqrt(2 * par.eps2 * res.Vbi2 * ((1/Na) + (1/Nd)) / par.q);
+    % Calculate the silicon depletion region widths
+    w_pre = sqrt((2 * par.eps2 * res.Vbi2)/(par.q * ((1/Na) + (1/Nd))));
+    res.wn = (1/Nd) * w_pre;
+    res.wp = (1/Na) * w_pre;
+
+    % Calculate the short circuit current densities
+    res = Methods.calculate_Jsc(x, par, res, spectrums);
 end
