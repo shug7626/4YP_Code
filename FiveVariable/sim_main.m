@@ -28,7 +28,7 @@ par.VT = par.k*par.T/par.q;
 vars = [par.thick1, par.thick2n, par.thick2p, par.Nd2, par.Na2];
 
 % Calculate the constants to be used for the voltage calculations
-res = Methods.calculate_const(vars, par, spectrums);
+res = Methods.calculate_const(vars, par, spectrums, options);
 
 
 
