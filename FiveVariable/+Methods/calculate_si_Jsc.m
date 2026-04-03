@@ -6,7 +6,7 @@ function [Jsc, res] = calculate_si_Jsc(bs2, par, res, spectrums)
     Wp = (par.thick2p * 1e-6) - (res.wp * 1e2);
 
     % Generate the array of integrations for the p-type (front)
-    p_func = @(a) integral(@(x) Methods.calculate_front_int(x, par.Ln2, par.Sfront, par.Dn2, Wp, a), 0, Wp, 'ArrayValued', true);
+    p_func = @(a) integral(@(x) Methods.calculate_front_int(x, par, Wp, a), 0, Wp, 'ArrayValued', true);
     int_res_p = -1 * arrayfun(p_func, spectrums.Si(:, 2));
 
     % Calculate the array of integrations for the n-type (rear)
