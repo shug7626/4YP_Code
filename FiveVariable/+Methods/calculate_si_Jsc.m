@@ -13,8 +13,9 @@ function [Jsc, res] = calculate_si_Jsc(bs2, par, res, spectrums)
     n_func = @(a) integral(@(x) Methods.calculate_rear_int(x, Wn, Wp, par, res, a), 0, Wn, 'ArrayValued', true);
     int_res_n = -1 * arrayfun(n_func, spectrums.Si(:, 2));
 
-    % % Calculate the array of integrations for the depletion region
-    % int_res_d = arrayfun(@(c) integral(@(x) Methods.calculate_d_int(x, c), Wn, Wn + res.wn + res.wp, 'ArrayValued', true), spectrums.wavelengths);
+    % Calculate the array of integrations for the depletion region
+    d_func = @(a) integral(@(x) Methods.calculate_d_int(x, a), Wp, (Wp + (res.wp + res.wn)*1e2), 'ArrayValued', true);
+    int_res_d = arrayfun(d_func, spectrums.Si(:, 2));
 
     % Calculate the current due to the bulk p-type
     Jp = par.q * sum(bs2 .* spectrums.Si(:,2) .* int_res_p);
@@ -22,9 +23,9 @@ function [Jsc, res] = calculate_si_Jsc(bs2, par, res, spectrums)
     % Calculate the current due to the bulk n-type
     Jn = par.q * sum(bs2 .* spectrums.Si(:,2) .* int_res_n);
 
-    % % Calculate the current due to the depletion region
-    % Jd = par.q * sum(bs2 .* spectrums.Si(:,1) .* int_res_d);
+    % Calculate the current due to the depletion region
+    Jd = par.q * sum(bs2 .* spectrums.Si(:,2) .* int_res_d);
 
     % % Return the total current density
-    Jsc = Jp + Jn;
+    Jsc = Jp + Jn + Jd;
 end
