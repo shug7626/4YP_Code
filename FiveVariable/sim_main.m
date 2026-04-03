@@ -34,3 +34,14 @@ res = Methods.calculate_const(vars, par, spectrums, options);
 
 time.const = toc;
 fprintf('Constants calculated in %f seconds\n', time.const);
+%% Pre-allocate Memory for Calculating the Range of Voltages
+tic;
+J_negative = logspace(-4, log10(min([res.Jsc1 res.Jsc2])), par.N);
+J = min([res.Jsc1 res.Jsc2]) - J_negative;
+V1 = zeros(size(J));
+V2 = zeros(size(J));
+V = zeros(size(J));
+v_s = zeros(size(J));
+
+
+time.allocate = toc;
