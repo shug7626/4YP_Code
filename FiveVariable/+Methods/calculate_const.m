@@ -16,4 +16,7 @@ function res = calculate_const(x, par, spectrums)
 
     % Calculate the short circuit current densities
     res = Methods.calculate_Jsc(x, par, res, spectrums);
+
+    % Calculate the silicon constants
+    res = Methods.calculate_silicon_const(Na, Nd, par, res);
 end
