@@ -14,7 +14,7 @@ function res = calculate_Jsc(x, par, res, spectrums)
     
     % Evaluate Jsc1 and Jsc2
     Jsc1 = par.q * sum((1-R1) .* a1 .* spectrums.bs .* spectrums.validE1);  % (A cm-2)
-    Jsc2 = Methods.calculate_si_Jsc(bs2, par, res, spectrums);
+    [Jsc2, res] = Methods.calculate_si_Jsc(bs2, par, res, spectrums);
     
     % Convert to (mA cm-2)
     res.Jsc1 = Jsc1 * 1e3;
