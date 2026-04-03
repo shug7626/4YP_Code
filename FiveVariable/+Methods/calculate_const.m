@@ -1,8 +1,9 @@
 % Function to return a results structure with the constants required to
 % calculate the voltage from the input current density
 
-function res = calculate_const(x, par, spectrums)
+function res = calculate_const(x, par, spectrums, options)
     % Unpack the input variables
+    pvk_thick = x(1);
     Nd = x(4);
     Na = x(5);
 
@@ -16,6 +17,9 @@ function res = calculate_const(x, par, spectrums)
 
     % Calculate the short circuit current densities
     res = Methods.calculate_Jsc(x, par, res, spectrums);
+
+    % Calculate the PVK constants
+    res = Methods.calculate_pvk_const(pvk_thick, res, par, options);
 
     % Calculate the silicon constants
     res = Methods.calculate_silicon_const(Na, Nd, par, res);
