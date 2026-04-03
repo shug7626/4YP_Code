@@ -2,8 +2,8 @@
 
 function Jsc = calculate_si_Jsc(bs2, par, res, spectrums)
     % Calculate the widths
-    Wn = (par.thick2n * 1e-6) - res.wn;                 % (m)
-    Wp = (par.thick2p * 1e-6) - res.wp;
+    Wn = (par.thick2n * 1e-6) - (res.wn * 1e2);                 % (m)
+    Wp = (par.thick2p * 1e-6) - (res.wp * 1e2);
 
     % Generate the array of integrations for the n-type
     n_func = @(a) integral(@(x) Methods.calculate_np_int([x, Wn - x], par.Lp2, par.Srear, par.Dp2, Wn, a), 0, Wn, 'ArrayValued', true);
