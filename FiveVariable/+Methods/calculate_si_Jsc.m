@@ -2,19 +2,19 @@
 
 function [Jsc, res] = calculate_si_Jsc(bs2, par, res, spectrums)
     % Calculate the widths
-    Wn = (par.thick2n * 1e-6) - (res.wn * 1e2);                 % (m)
-    Wp = (par.thick2p * 1e-6) - (res.wp * 1e2);
+    res.Wn = (par.thick2n * 1e-6) - (res.wn * 1e-2);                 % (m)
+    res.Wp = (par.thick2p * 1e-6) - (res.wp * 1e-2);
 
     % Generate the array of integrations for the p-type (front)
-    p_func = @(a) integral(@(x) Methods.calculate_front_int(x, par, Wp, a), 0, Wp, 'ArrayValued', true);
-    res.int_res_p = -1 * arrayfun(p_func, spectrums.Si(:, 2));
+    p_func = @(a) integral(@(x) Methods.calculate_front_int(x, par, res.Wp, a), 0, res.Wp, 'ArrayValued', true);
+    res.int_res_p = arrayfun(p_func, spectrums.Si(:, 2));
 
     % Calculate the array of integrations for the n-type (rear)
-    n_func = @(a) integral(@(x) Methods.calculate_rear_int(x, Wn, Wp, par, res, a), 0, Wn, 'ArrayValued', true);
-    res.int_res_n = -1 * arrayfun(n_func, spectrums.Si(:, 2));
+    n_func = @(a) integral(@(x) Methods.calculate_rear_int(x, res.Wn, res.Wp, par, res, a), 0, res.Wn, 'ArrayValued', true);
+    res.int_res_n = arrayfun(n_func, spectrums.Si(:, 2));
 
     % Calculate the array of integrations for the depletion region
-    d_func = @(a) integral(@(x) Methods.calculate_d_int(x, a), Wp, Wp + ((res.wp + res.wn)*1e2), 'ArrayValued', true);
+    d_func = @(a) integral(@(x) Methods.calculate_d_int(x, a), res.Wp, res.Wp + ((res.wp + res.wn)*1e2), 'ArrayValued', true);
     res.int_res_d = arrayfun(d_func, spectrums.Si(:, 2));
 
     % Calculate the current due to the bulk p-type
