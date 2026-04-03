@@ -55,7 +55,7 @@ function s = calculate_spectrums(par)
         if lambda < PVK(1, 1)
             s.PVK(iter, 1) = PVK(1, 2);
             s.PVK(iter, 2) = PVK(1, 4);
-        elseif lambda > PVK(end, 1)
+        elseif lambda >= PVK(end, 1)
             s.PVK(iter, 1) = PVK(end, 2);
             s.PVK(iter, 2) = PVK(end, 4);
         else
@@ -77,7 +77,7 @@ function s = calculate_spectrums(par)
         if lambda < Si(1, 1)
             s.Si(iter, 1) = Si(1, 2);
             s.Si(iter, 2) = Si(1, 4);
-        elseif lambda > Si(end, 1)
+        elseif lambda >= Si(end, 1)
             s.Si(iter, 1) = Si(end, 2);
             s.Si(iter, 2) = Si(end, 4);
         else
