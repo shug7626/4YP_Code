@@ -18,7 +18,7 @@ function [Jsc, res] = calculate_si_Jsc(bs2, par, res, spectrums)
     res.int_res_d = arrayfun(d_func, spectrums.Si(:, 2));
 
     % Calculate the current due to the bulk p-type
-    Jp = par.q * sum(bs2 .* spectrums.Si(:,2) .* res.int_res_p);
+    Jp = par.q * sum(bs2 .* spectrums.Si(:,2) .* res.int_res_p);        % (A cm-2)
 
     % Calculate the current due to the bulk n-type
     Jn = par.q * sum(bs2 .* spectrums.Si(:,2) .* res.int_res_n);
