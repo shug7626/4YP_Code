@@ -25,4 +25,9 @@ function plots = plot_res(res, spectrums, par, set)
     if set.plot_spectrum
         plots(5) = Plotting.spectrum(spectrums, set, par, res);
     end
+
+    % Plot the absorption diagram
+    if set.plot_absorption
+        plots(6) = Plotting.absorption(res, par, spectrums, set);
+    end
 end
