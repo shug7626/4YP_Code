@@ -1,0 +1,9 @@
+% Function to return the collection probability for a distance away from
+% the depletion region
+
+function col_prob = collect_prob(x, S, L, D, W)
+    col_prob = cosh(x/L) - ...
+        (((((S*L/D)*cosh(W/L)) + sinh(W/L)) ...
+        / (((S*L/D)*sinh(W/L)) + cosh(W/L))) ...
+        * sinh(x/L));
+end
