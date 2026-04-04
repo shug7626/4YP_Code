@@ -35,11 +35,15 @@ res = Methods.calculate_const(vars, par, spectrums, options);
 time.const = toc;
 fprintf('Constants calculated in %f seconds\n', time.const);
 %% Warning if Depletion Region Touches Either Side
-if res.Wn * 1e-2 >= par.thick2n * 1e-6
+if res.wn * 1e-2 >= par.thick2n * 1e-6
     fprintf(2,'Warning: n-type depletion region too wide\n');
+    fprintf(2,'n-type depletion width = %f %cm\n', res.wn * 1e4, char(181));
+    fprintf(2,'n-type silicon width = %f %cm\n', par.thick2n, char(181));
 end
-if res.Wp * 1e-2 >= par.thick2p * 1e-6
+if res.wp * 1e-2 >= par.thick2p * 1e-6
     fprintf(2,'Warning: p-type depletion region too wide\n');
+    fprintf(2,'p-type depletion width = %f %cm\n', res.wp * 1e4, char(181));
+    fprintf(2,'p-type silicon width = %f %cm\n', par.thick2p, char(181));
 end
 
 
