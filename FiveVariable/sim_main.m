@@ -50,7 +50,7 @@ end
 
 %% Pre-allocate Memory for Calculating the Range of Voltages
 tic;
-J_negative = logspace(-4, log10(min([res.Jsc1 res.Jsc2])), par.N);
+J_negative = logspace(-3, log10(min([res.Jsc1 res.Jsc2])), par.N);
 J = min([res.Jsc1 res.Jsc2]) - J_negative;
 V1 = zeros(size(J));
 V2 = zeros(size(J));
@@ -90,7 +90,7 @@ end
 
 %% Add the Voltages at V=0, J=Jsc
 if res.Jsc1 == min([res.Jsc1 res.Jsc2])
-    % Set the initial guess
+    % Set the initial guesses
     v02 = V2(2);
 
     % Initialise the function
