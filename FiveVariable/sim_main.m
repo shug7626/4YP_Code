@@ -34,6 +34,16 @@ res = Methods.calculate_const(vars, par, spectrums, options);
 
 time.const = toc;
 fprintf('Constants calculated in %f seconds\n', time.const);
+%% Warning if Depletion Region Touches Either Side
+if res.Wn * 1e-2 >= par.thick2n * 1e-6
+    fprintf(2,'Warning: n-type depletion region too wide\n');
+end
+if res.Wp * 1e-2 >= par.thick2p * 1e-6
+    fprintf(2,'Warning: p-type depletion region too wide\n');
+end
+
+
+
 %% Pre-allocate Memory for Calculating the Range of Voltages
 tic;
 J_negative = logspace(-4, log10(min([res.Jsc1 res.Jsc2])), par.N);
@@ -137,7 +147,7 @@ fprintf('Efficiency: %5.3f%%\n', Efficiency);
 
 
 time.aditional = toc;
-fprintf('Total time = %f seconds\n', sum(structfun(@(x) sum(x(:)), time)));
+fprintf('Total calculation time = %f seconds\n', sum(structfun(@(x) sum(x(:)), time)));
 %% Plots
 % Fetch the settings
 set = Data.plot_settings();
