@@ -31,9 +31,9 @@ function fig = absorption(res, par, s, setting)
     layer_pos = sum(depth' <= depths, 1);
 
     % Plot the total incident spectrum
-    yline(sum(s.bs), ...
-            'DisplayName', 'Cumulative Incident Spectrum', ...
-            'LineWidth', setting.line_width);
+    % yline(sum(s.bs), ...
+    %         'DisplayName', 'Cumulative Incident Spectrum', ...
+    %         'LineWidth', setting.line_width);
     hold on;
 
     % Calculate the spectrum at the top of the PVK
@@ -81,7 +81,8 @@ function fig = absorption(res, par, s, setting)
     absorption = zeros(size(depth));
 
     % Calculate the PVK electron generation (all absorbed photons)
-    absorption(1:layer_pos(1)-1) = spectrum(1:layer_pos(1)-1) - spectrum(2:layer_pos(1));
+    absorption(2:layer_pos(1)) = spectrum(1:layer_pos(1)-1) - spectrum(2:layer_pos(1));
+    absorption(1) = absorption(2);
 
     % Calculate the bulk p-type generation
     bulk_p_func = @(x) ((spectrum(x) - spectrum(x+1)) ...
