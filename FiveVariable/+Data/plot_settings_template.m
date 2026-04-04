@@ -26,4 +26,8 @@ function set = plot_settings()
     set.plot_spectrum = 1;
     set.individual_spectrums = 1;
     set.total_spectrum = 0;
+
+    % Absorption diagram plot
+    set.plot_absorption = 1;
+    set.absorption_N = 10000;
 end
