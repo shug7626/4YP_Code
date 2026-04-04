@@ -36,14 +36,14 @@ time.const = toc;
 fprintf('Constants calculated in %f seconds\n', time.const);
 %% Warning if Depletion Region Touches Either Side
 if res.wn * 1e-2 >= par.thick2n * 1e-6
-    fprintf(2,'Warning: n-type depletion region too wide\n');
+    fprintf(2,'\nWarning: n-type depletion region too wide\n');
     fprintf(2,'n-type depletion width = %f %cm\n', res.wn * 1e4, char(181));
-    fprintf(2,'n-type silicon width = %f %cm\n', par.thick2n, char(181));
+    fprintf(2,'n-type silicon width = %f %cm\n\n', par.thick2n, char(181));
 end
 if res.wp * 1e-2 >= par.thick2p * 1e-6
-    fprintf(2,'Warning: p-type depletion region too wide\n');
+    fprintf(2,'\nWarning: p-type depletion region too wide\n');
     fprintf(2,'p-type depletion width = %f %cm\n', res.wp * 1e4, char(181));
-    fprintf(2,'p-type silicon width = %f %cm\n', par.thick2p, char(181));
+    fprintf(2,'p-type silicon width = %f %cm\n\n', par.thick2p, char(181));
 end
 
 
@@ -156,27 +156,5 @@ fprintf('Total calculation time = %f seconds\n', sum(structfun(@(x) sum(x(:)), t
 % Fetch the settings
 set = Data.plot_settings();
 
-% Plot the J_V plots
-if set.plot_j_v
-    fig1 = Plotting.J_V(res, set);
-end
-
-% Plot the voltage area plot
-if set.plot_V_area
-    fig2 = Plotting.V_Area(res, set);
-end
-
-% Plot the voltage - volage plots
-if set.plot_v_v
-    fig3 = Plotting.V_VBias(res, set);
-end
-
-% Plot the P-V plot
-if set.plot_p_v
-    fig4 = Plotting.P_V(res, set);
-end
-
-% Plot the spectrum data
-if set.plot_spectrum
-    fig5 = Plotting.spectrum(spectrums, set, par, res);
-end
+% Call the plotting function
+plots = Methods.plot_res(res, spectrums, par, set);
