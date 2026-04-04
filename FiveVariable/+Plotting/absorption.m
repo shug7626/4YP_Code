@@ -33,7 +33,7 @@ function fig = absorption(res, par, s, setting)
     % Plot the total incident spectrum
     yline(sum(s.bs), ...
             'DisplayName', 'Cumulative Incident Spectrum', ...
-            'LineWidth', setting.small_line_width);
+            'LineWidth', setting.line_width);
     hold on;
 
     % Calculate the spectrum at the top of the PVK
@@ -65,7 +65,7 @@ function fig = absorption(res, par, s, setting)
     % Plot the spectrum
     plot(depth, spectrum, ...
             'DisplayName', 'Cumulative Spectrum', ...
-            'LineWidth', setting.small_line_width);
+            'LineWidth', setting.line_width);
 
     % Right y-axis label
     ylabel('Cumulative Spectrum', ...
@@ -105,7 +105,7 @@ function fig = absorption(res, par, s, setting)
     % Plot the absorption
     plot(depth, absorption, ...
             'DisplayName', 'Electrons Generated', ...
-            'LineWidth', setting.small_line_width);
+            'LineWidth', setting.line_width);
     
     % Left y-axis label
     ylabel('Electrons Generated', ...
