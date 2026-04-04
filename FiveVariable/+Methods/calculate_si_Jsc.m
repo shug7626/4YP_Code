@@ -1,7 +1,7 @@
 % Function to return the photo generation current for the silicon cell
 
 function [Jsc, res] = calculate_si_Jsc(bs2, par, res, spectrums)
-    % Calculate the widths
+    % Calculate the bulk widths
     res.Wn = (par.thick2n * 1e-6) - (res.wn * 1e-2);                 % (m)
     res.Wp = (par.thick2p * 1e-6) - (res.wp * 1e-2);
 
