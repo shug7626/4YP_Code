@@ -61,7 +61,7 @@ v_s = zeros(size(J));
 time.allocate = toc;
 %% Calculate V, V1, V2, Vs for a given J
 tic;
-fprintf('Starting the Calculation of the Voltages\n');
+fprintf('Starting the calculation of the Voltages\n');
 % Calculate constants to be used in the initial guesses
 n_estimate = 1.1;
 jd01 = res.Jsc1 / exp((res.Voc1 - res.Vbi1) / (n_estimate * par.VT));
