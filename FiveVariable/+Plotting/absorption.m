@@ -124,7 +124,8 @@ function fig = absorption(res, par, s, setting)
         'FontSize', setting.axes_font);
     
     % Add a legend
-    legend();
+    lgd = legend();
+    lgd.FontSize = setting.legend_font;
     
 
 

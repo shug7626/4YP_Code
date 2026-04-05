@@ -23,7 +23,8 @@ function fig = V_Area(res, setting)
     yline(res.Voc1 + res.Voc2, 'r');
 
     % Add a legend
-    legend({'V1T','V2T','Total Voltage'});
+    lgd = legend({'V1T','V2T','Total Voltage'});
+    lgd.FontSize = setting.legend_font;
 
     % Tile and labels
     title('Voltage Contribution from the Two Layers', ...

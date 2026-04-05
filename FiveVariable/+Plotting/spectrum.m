@@ -61,6 +61,7 @@ function fig = spectrum(s, setting, par, res)
         'FontSize', setting.axes_font);
 
     % Add a legend
-    legend();
+    lgd = legend();
+    lgd.FontSize = setting.legend_font;
     hold off
 end

@@ -2,9 +2,10 @@
 
 function set = plot_settings()
     % Plots font sizing
-    set.title_font = 18;
-    set.axes_font = 14;
-    set.axes_numbers = 12;
+    set.title_font = 24;
+    set.axes_font = 22;
+    set.axes_numbers = 16;
+    set.legend_font = 16;
 
     % Line Widths
     set.line_width = 2;
