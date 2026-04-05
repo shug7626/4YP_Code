@@ -1,6 +1,9 @@
 % Function to tell the main program which plots to produce
 
 function set = plot_settings()
+    % Options
+    set.title = 1;
+    
     % Plots font sizing
     set.title_font = 24;
     set.axes_font = 22;
