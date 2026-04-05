@@ -18,12 +18,12 @@ function fig = V_Area(res, setting)
     V_total = res.V1T + res.V2T;
     plot(x, V_total, 'k-', 'LineWidth', setting.line_width);
 
-    % Add lines to show the open circuit voltage of the entire cell
-    xline(res.Voc1 + res.Voc2, 'r');
-    yline(res.Voc1 + res.Voc2, 'r');
+    % % Add lines to show the open circuit voltage of the entire cell
+    % xline(res.Voc1 + res.Voc2, 'r');
+    % yline(res.Voc1 + res.Voc2, 'r');
 
     % Add a legend
-    lgd = legend({'V1T','V2T','Total Voltage'});
+    lgd = legend({'PVK Cell','Silicon Cell','Total Voltage'});
     lgd.FontSize = setting.legend_font;
 
     % Tile and labels
