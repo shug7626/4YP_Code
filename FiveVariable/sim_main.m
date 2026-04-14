@@ -50,12 +50,14 @@ end
 
 %% Pre-allocate Memory for Calculating the Range of Voltages
 tic;
-J_negative = logspace(-3, log10(min([res.Jsc1 res.Jsc2])), par.N);
+J_negative = logspace(-2, log10(min([res.Jsc1 res.Jsc2])), par.N);
 J = min([res.Jsc1 res.Jsc2]) - J_negative;
 V1 = zeros(size(J));
 V2 = zeros(size(J));
 V = zeros(size(J));
 v_s = zeros(size(J));
+V_internal = zeros([4 par.N]);
+Q_internal = zeros(size(J));
 
 
 time.allocate = toc;
@@ -68,7 +70,7 @@ jd01 = res.Jsc1 / exp((res.Voc1 - res.Vbi1) / (n_estimate * par.VT));
 jd02 = res.Jsc2 / exp((res.Voc2 - res.Vbi2) / (n_estimate * par.VT));
 
 % Loop throught J to calculate the voltages
-parfor iter = 2:par.N
+for iter = 2:par.N
     % Set the initial guesses
     v01 = res.Vbi1 + (n_estimate * par.VT * log((res.Jsc1 - J(iter))/jd01));
     v02 = res.Vbi2 + (n_estimate * par.VT * log((res.Jsc2 - J(iter))/jd02));
@@ -84,6 +86,11 @@ parfor iter = 2:par.N
     % Calculate the total cell voltage
     v_s(iter) = -J(iter) * (par.Rs1 + par.Rs2) * par.A;
     V(iter) = V1(iter) + V2(iter) + v_s(iter);
+
+    % Find the internal PSC potential drops
+    [J_temp, V_temp] = Methods.calculate_JPSC(par, res, V1(iter), par.thick1, options);
+    V_internal(:,iter) = V_temp(1:4);
+    Q_internal(iter) = V_temp(5);
 end
 
 
@@ -121,6 +128,8 @@ res.J = J;
 res.V1 = V1;
 res.V2 = V2;
 res.v_s = v_s;
+res.V_internal = V_internal;
+res.Q_internal = Q_internal;
 
 
 time.voltages = toc;
