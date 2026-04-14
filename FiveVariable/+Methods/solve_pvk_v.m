@@ -9,16 +9,20 @@ function F = solve_pvk_v(x, V, p, res)
     Q = x(5);
     
     % V1 equation
-    F(1) = (-res.omegaE * Q) - Methods.evaluate_Q(V1, p, res);
+    % F(1) = (-res.omegaE * Q) - Methods.evaluate_Q(V1, p, res);
+    F(1) = Methods.evaluate_Q(-V1, p, res) + (res.omegaE * Q);
     
     % V2 equation
-    F(2) = -Q - Methods.evaluate_Q(V2, p, res);
+    % F(2) = -Q - Methods.evaluate_Q(V2, p, res);
+    F(2) = Methods.evaluate_Q(-V2, p, res) + Q;
     
     % V3 equation
-    F(3) = Q - Methods.evaluate_Q(V3, p, res);
+    % F(3) = Q - Methods.evaluate_Q(V3, p, res);
+    F(3) = Methods.evaluate_Q(V3, p, res) - Q;
     
     % V4 equation
-    F(4) = (-res.omegaH * Q) - Methods.evaluate_Q(V4, p, res);
+    % F(4) = (-res.omegaH * Q) - Methods.evaluate_Q(V4, p, res);
+    F(4) = Methods.evaluate_Q(-V4, p, res) + (res.omegaH * Q);
     
     % Total voltage
     F(5) = V1 + V2 + V3 + V4 - (res.Vbi1 - V);
