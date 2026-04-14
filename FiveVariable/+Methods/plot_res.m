@@ -30,4 +30,10 @@ function plots = plot_res(res, spectrums, par, set)
     if set.plot_absorption
         plots(6) = Plotting.absorption(res, par, spectrums, set);
     end
+
+    % Plot the PSC internal potential drops
+    if set.plot_internal_PSC
+        plots_temp = Plotting.V_PSC_internal(res, set);
+        plots(7:8) = plots_temp;
+    end
 end
