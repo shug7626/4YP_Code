@@ -4,7 +4,7 @@
 
 % Input V is the internal voltages V1-4
 
-function J = calculate_JPSC(par, res, Vin, thick1, options)
+function [J,V] = calculate_JPSC(par, res, Vin, thick1, options)
     % Set the initial conditions
     V0 = (res.Vbi1 - Vin)/4;
     Q0 = Methods.evaluate_Q(V0, par, res);
@@ -53,7 +53,7 @@ function J = calculate_JPSC(par, res, Vin, thick1, options)
     % Find the position of the maximum recombination rate and return the
     % corresponding Jd and F
     [maxR, maxI] = max(R);
-    Jd_sol = Jd(maxI);
+    Jd_sol = Jd(maxI) * 1e-1;
     F_sol = F(maxI);
     
     % Calculate the current density through the PSC current source
