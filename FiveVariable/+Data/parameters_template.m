@@ -25,8 +25,8 @@ function par = parameters()
     par.thick2nMax = 300;
 
     % Si p-type thicknesses (um)
-    par.thick2pMin = 100;
-    par.thick2pMax = 300;
+    par.thick2pMin = 0.1;
+    par.thick2pMax = 10;
 
     % Si doping concentrations (cm-3)
     par.NdMin = 1e14;
@@ -40,15 +40,15 @@ function par = parameters()
     par.SiCost = 0.2;                   % Si cost per thickness per area (£/cm3)
 
     %% Cell 1 (Top - PVK)
-    par.thick1 = 800;                   % PAL thickness (nm)
+    par.thick1 = 665;                   % PAL thickness (nm)
     par.Rs1 = 1e-3;
-    par.Rsh1 = 1e4;
+    par.Rsh1 = 1e5;
     par.beta = 10e-11;
     par.taun = 3e-11;
     par.taup = 3e-10;
     par.vnH = 30;
     par.vpE = 30;
-    par.N0 = 1.6e25;
+    par.N0 = 5e23;
     par.dE = 5e24;
     par.dH = 5e24;
     par.gc = 8.1e24;
@@ -81,7 +81,7 @@ function par = parameters()
     par.Srear = 10;
     par.beta2 = 0;
     par.eps2 = 11.7 * 8.854e-14;        % (F cm-2)
-    par.Eg2 = 1.12;
+    par.Eg2 = 1.1;
 
     %% Constants
     par.q = 1.602e-19;

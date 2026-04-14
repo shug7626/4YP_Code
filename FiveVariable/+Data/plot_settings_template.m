@@ -2,7 +2,7 @@
 
 function set = plot_settings()
     % Options
-    set.title = 1;
+    set.title = 0;
     
     % Plots font sizing
     set.title_font = 24;
@@ -18,20 +18,23 @@ function set = plot_settings()
     set.plot_j_v = 1;
 
     % Voltage area plot
-    set.plot_V_area = 1;
+    set.plot_V_area = 0;
 
     % Voltage - voltage plots
-    set.plot_v_v = 1;
+    set.plot_v_v = 0;
 
     % P-V plot
-    set.plot_p_v = 1;
+    set.plot_p_v = 0;
 
     % Spectrums plot
-    set.plot_spectrum = 1;
+    set.plot_spectrum = 0;
     set.individual_spectrums = 1;
     set.total_spectrum = 0;
 
     % Absorption diagram plot
-    set.plot_absorption = 1;
+    set.plot_absorption = 0;
     set.absorption_N = 10000;
+
+    % PSC internal potential drops plots
+    set.plot_internal_PSC = 1;
 end
